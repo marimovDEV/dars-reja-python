@@ -26,7 +26,9 @@ export default function App() {
   const isGameSubdomain = typeof window !== 'undefined' && (
     window.location.hostname.startsWith('game.') ||
     window.location.pathname === '/game' ||
-    window.location.search.includes('app=game')
+    window.location.pathname.startsWith('/create') ||
+    window.location.search.includes('app=game') ||
+    window.location.search.includes('mode=create')
   );
 
   const [lessons, setLessons] = useState<Lesson[]>([]);
