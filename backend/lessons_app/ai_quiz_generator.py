@@ -4,9 +4,32 @@ import json
 import random
 from .models import Lesson
 
+def shuffle_question_options(q):
+    """
+    Randomly shuffles the 4 options of a question and updates correctOptionIndex accordingly
+    so that correct answers are evenly distributed among A (0), B (1), C (2), D (3).
+    """
+    options = list(q.get('options', []))
+    if len(options) != 4:
+        return q
+    
+    orig_idx = q.get('correctOptionIndex', 0)
+    if not isinstance(orig_idx, int) or orig_idx < 0 or orig_idx >= 4:
+        orig_idx = 0
+        
+    correct_value = options[orig_idx]
+    
+    # Shuffle options randomly
+    random.shuffle(options)
+    new_correct_idx = options.index(correct_value)
+    
+    q['options'] = options
+    q['correctOptionIndex'] = new_correct_idx
+    return q
+
 def validate_and_clean_questions(questions):
     """
-    Strictly validates and sanitizes AI generated JSON questions.
+    Strictly validates, sanitizes, and randomly shuffles option positions.
     """
     valid = []
     if not isinstance(questions, list):
@@ -21,9 +44,9 @@ def validate_and_clean_questions(questions):
         if not question_text or not isinstance(options, list) or len(options) != 4:
             continue
         if not isinstance(correct_idx, int) or correct_idx < 0 or correct_idx > 3:
-            continue
+            correct_idx = 0
             
-        valid.append({
+        shuffled_q = shuffle_question_options({
             "question": str(question_text),
             "type": "single_choice",
             "options": [str(opt) for opt in options],
@@ -32,6 +55,7 @@ def validate_and_clean_questions(questions):
             "lessonId": int(q.get('lessonId', 1)),
             "durationSeconds": int(q.get('durationSeconds', 20))
         })
+        valid.append(shuffled_q)
     return valid
 
 def generate_ai_quiz(lesson_numbers, question_count=10, difficulty="mixed", include_code=True, language="uz"):
@@ -84,7 +108,7 @@ Darslar materiallari:
 TALABLAR:
 1. Har bir savol tanlangan darslar materiallaridan kelib chiqishi shart.
 2. Har bir savolda aniq 4 ta variant bo'lsin.
-3. 'correctOptionIndex' (0, 1, 2, 3) to'g'ri ko'rsatilsin.
+3. 'correctOptionIndex' (0, 1, 2, 3) to'g'ri ko'rsatilsin va variantlar orasida tasodifiy aralashtirilsin (hammasi A javob bo'lmasin).
 4. Javobning o'zbek tilidagi qisqa tushuntirishi ('explanation') bo'lsin.
 5. Har bir savol uchun tegishli 'lessonId' (dars raqami) ko'rsatilsin.
 6. 'durationSeconds': 20 soniya.

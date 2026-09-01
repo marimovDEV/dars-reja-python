@@ -37,27 +37,23 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
   const [rank, setRank] = useState<number>(1);
   const [isMuted, setIsMuted] = useState<boolean>(false);
 
-  useEffect(() => {
-    const newSocket = io(window.location.origin, { transports: ['websocket', 'polling'] });
-    setSocket(newSocket);
-
-    newSocket.on('player:joined', ({ code, nickname, sessionTitle, reconnected }) => {
+  const initSocketListeners = (sock: Socket) => {
+    sock.on('player:joined', ({ code, nickname, sessionTitle, reconnected }) => {
       setGameState('waiting');
       setSessionTitle(sessionTitle);
       setError(null);
       quizAudio.playCorrect();
     });
 
-    newSocket.on('player:error', ({ message }) => {
+    sock.on('player:error', ({ message }) => {
       setError(message);
     });
 
-    newSocket.on('game:countdown-start', () => {
+    sock.on('game:countdown-start', () => {
       setGameState('waiting');
     });
 
-    // Received Kahoot payload (NO QUESTION OR OPTION TEXT!)
-    newSocket.on('player:question-started', ({ questionIndex, totalQuestions, optionsCount, durationSec }) => {
+    sock.on('player:question-started', ({ questionIndex, totalQuestions, optionsCount, durationSec }) => {
       setGameState('question');
       setQuestionIndex(questionIndex);
       setTotalQuestions(totalQuestions);
@@ -68,13 +64,11 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
       quizAudio.playQuestionStart();
     });
 
-    // Immediate acknowledgment after tapping a shape button
-    newSocket.on('player:answer-received', ({ pointsEarned, totalScore, streak }) => {
+    sock.on('player:answer-received', ({ pointsEarned, totalScore, streak }) => {
       setGameState('answered');
     });
 
-    // Round summary after host closes question
-    newSocket.on('player:round-summary', ({ isCorrect, rank, score, pointsEarned, streak }) => {
+    sock.on('player:round-summary', ({ isCorrect, rank, score, pointsEarned, streak }) => {
       setGameState('result');
       setIsCorrect(isCorrect);
       setRank(rank);
@@ -86,12 +80,18 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
       else quizAudio.playIncorrect();
     });
 
-    newSocket.on('game:finished', ({ leaderboard }) => {
+    sock.on('game:finished', ({ leaderboard }) => {
       setGameState('finished');
       const myInfo = leaderboard.find((p: any) => p.nickname === nickname);
       if (myInfo) setRank(myInfo.rank);
       quizAudio.playFanfare();
     });
+  };
+
+  useEffect(() => {
+    const newSocket = io(window.location.origin, { transports: ['websocket', 'polling'] });
+    setSocket(newSocket);
+    initSocketListeners(newSocket);
 
     return () => {
       newSocket.disconnect();
@@ -111,19 +111,30 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
 
   const handleJoin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!pinCode.trim() || !nickname.trim()) {
+    const cleanPin = pinCode.replace(/\s+/g, '').trim();
+    const cleanName = nickname.trim();
+
+    if (!cleanPin || !cleanName) {
       setError("PIN va Ismingizni kiriting");
       return;
     }
-    if (socket) {
-      socket.emit('player:join-session', { code: pinCode.trim(), nickname: nickname.trim() });
+
+    setError(null);
+    let activeSocket = socket;
+    if (!activeSocket || !activeSocket.connected) {
+      activeSocket = io(window.location.origin, { transports: ['websocket', 'polling'] });
+      setSocket(activeSocket);
+      initSocketListeners(activeSocket);
     }
+
+    activeSocket.emit('player:join-session', { code: cleanPin, nickname: cleanName });
   };
 
   const handleSubmitAnswer = (optionIdx: number) => {
     if (selectedOption !== null || !socket) return;
     setSelectedOption(optionIdx);
-    socket.emit('player:submit-answer', { code: pinCode, optionIndex: optionIdx });
+    const cleanPin = pinCode.replace(/\s+/g, '').trim();
+    socket.emit('player:submit-answer', { code: cleanPin, optionIndex: optionIdx });
   };
 
   const toggleMute = () => {
@@ -173,7 +184,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
               <label className="block text-xs font-bold text-slate-400 mb-1">PIN KOD</label>
               <input
                 type="text"
-                maxLength={6}
+                maxLength={8}
                 placeholder="849201"
                 value={pinCode}
                 onChange={e => setPinCode(e.target.value)}
@@ -194,7 +205,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
 
             <button
               type="submit"
-              className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 text-white font-extrabold text-sm rounded-2xl shadow-xl transition flex items-center justify-center gap-2"
+              className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 text-white font-extrabold text-sm rounded-2xl shadow-xl transition flex items-center justify-center gap-2 cursor-pointer"
             >
               <Send className="w-4 h-4" /> Testga Qo'shilish
             </button>
@@ -242,7 +253,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
         {/* 4. ANSWER SUBMITTED STATE */}
         {gameState === 'answered' && (
           <div className="text-center space-y-4 max-w-sm animate-scaleUp">
-            <div className="w-20 h-20 rounded-full bg-blue-600/30 border-2 border-blue-500 flex items-center justify-center text-4xl mx-auto animate-spin">
+            <div className="w-20 h-20 rounded-full bg-blue-600/30 border-2 border-blue-500 flex items-center justify-center text-4xl mx-auto">
               <Loader2 className="w-10 h-10 text-blue-400 animate-spin" />
             </div>
             <h2 className="text-2xl font-black text-white">Javob Qabul Qilindi!</h2>
