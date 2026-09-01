@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import Lesson, Group, GroupLessonProgress, Quiz, QuizSession
+from .models import Lesson, Group, GroupLessonProgress, Quiz, QuizSession, QuizTemplate
 from .scraper import scrape_single_notion_page, SETTINGS_FILE
 from .ai_quiz_generator import generate_ai_quiz
 
@@ -365,6 +365,79 @@ def get_quiz_session_info(request, code):
         return Response(session.to_dict())
     except QuizSession.DoesNotExist:
         return Response({'error': 'Sessiya topilmadi yoki PIN kod noto\'g\'ri.'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET', 'POST'])
+def quiz_templates_list(request):
+    if request.method == 'GET':
+        templates = QuizTemplate.objects.all()
+        if not templates.exists():
+            # Seed default templates if database is empty
+            defaults = [
+                {
+                    "template_id": "tpl-1",
+                    "title": "🐍 Python Sintaksisi va Boshlang'ich Tushunchalar",
+                    "description": "1-modul: O'zgaruvchilar, ma'lumot turlari, if/else va sikllar bo'yicha 10 ta oson va o'rta savollar.",
+                    "category": "Python Asoslari",
+                    "question_count": 10,
+                    "difficulty": "easy",
+                    "lesson_ids": [1, 2, 3, 4, 5, 6]
+                },
+                {
+                    "template_id": "tpl-2",
+                    "title": "⚡ Django Apps, Views, Models & ORM",
+                    "description": "4-modul: Django backend strukturasi, ORM so'rovlari va admin panel bo'yicha 15 ta texnik savol.",
+                    "category": "Django Backend",
+                    "question_count": 15,
+                    "difficulty": "medium",
+                    "lesson_ids": [37, 38, 39, 40, 41, 42, 43, 44]
+                },
+                {
+                    "template_id": "tpl-3",
+                    "title": "🚀 REST API, DRF Serializers & Authentication",
+                    "description": "5-modul: DRF, JWT tokenlar, Swagger va ruxsatnomalar bo'yicha 20 ta amaliy savol.",
+                    "category": "DRF & Security",
+                    "question_count": 20,
+                    "difficulty": "hard",
+                    "lesson_ids": [49, 50, 51, 52, 53, 54, 55, 56]
+                }
+            ]
+            for item in defaults:
+                QuizTemplate.objects.create(**item)
+            templates = QuizTemplate.objects.all()
+
+        return Response([t.to_dict() for t in templates])
+
+    elif request.method == 'POST':
+        data = request.data
+        title = data.get('title')
+        if not title:
+            return Response({'error': 'Shablon nomi kiritilishi shart.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        template_id = data.get('id') or f"custom-tpl-{int(time.time()*1000)}"
+        template = QuizTemplate.objects.create(
+            template_id=template_id,
+            title=title,
+            description=data.get('description', ''),
+            category=data.get('category', 'Python Backend'),
+            question_count=data.get('questionCount', 10),
+            difficulty=data.get('difficulty', 'medium'),
+            lesson_ids=data.get('lessonIds', []),
+            custom_questions=data.get('customQuestions', [])
+        )
+        return Response(template.to_dict(), status=status.HTTP_201_CREATED)
+
+@api_view(['GET', 'DELETE'])
+def quiz_template_detail(request, template_id):
+    try:
+        template = QuizTemplate.objects.get(template_id=template_id)
+    except QuizTemplate.DoesNotExist:
+        return Response({'error': 'Shablon topilmadi.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        return Response(template.to_dict())
+    elif request.method == 'DELETE':
+        template.delete()
+        return Response({'message': 'Shablon o\'chirildi.'})
 
 # ============================================================================
 # NOTION SYNC & OTHER ENDPOINTS

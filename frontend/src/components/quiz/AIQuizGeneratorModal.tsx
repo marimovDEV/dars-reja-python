@@ -89,6 +89,25 @@ export function AIQuizGeneratorModal({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!isOpen) return;
+    const fetchTemplates = async () => {
+      try {
+        const res = await fetch('/api/quiz-templates');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setTemplates(data);
+            setSelectedTemplateId(data[0].id);
+          }
+        }
+      } catch (e) {
+        console.error("Backend templates fetch error:", e);
+      }
+    };
+    fetchTemplates();
+  }, [isOpen]);
+
+  useEffect(() => {
     try {
       localStorage.setItem('marimov_quiz_templates', JSON.stringify(templates));
     } catch (e) {}
@@ -221,15 +240,15 @@ export function AIQuizGeneratorModal({
     }
   };
 
-  // Save new custom template
-  const handleSaveNewTemplate = (e: React.FormEvent) => {
+  // Save new custom template to backend DB
+  const handleSaveNewTemplate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTplTitle.trim()) {
       setError("Shablon nomini kiriting");
       return;
     }
 
-    const newTemplate: QuizTemplate = {
+    const tplPayload: QuizTemplate = {
       id: `custom-tpl-${Date.now()}`,
       title: newTplTitle.trim(),
       description: newTplDesc.trim() || 'O\'qituvchi tomonidan yaratilgan maxsus shablon',
@@ -239,16 +258,37 @@ export function AIQuizGeneratorModal({
       lessonIds: selectedLessonIds.length > 0 ? selectedLessonIds : [1, 2, 3]
     };
 
-    setTemplates([newTemplate, ...templates]);
-    setSelectedTemplateId(newTemplate.id);
+    try {
+      const res = await fetch('/api/quiz-templates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(tplPayload)
+      });
+      if (res.ok) {
+        const savedTpl: QuizTemplate = await res.json();
+        setTemplates(prev => [savedTpl, ...prev.filter(t => t.id !== savedTpl.id)]);
+        setSelectedTemplateId(savedTpl.id);
+      } else {
+        setTemplates(prev => [tplPayload, ...prev]);
+        setSelectedTemplateId(tplPayload.id);
+      }
+    } catch (err) {
+      setTemplates(prev => [tplPayload, ...prev]);
+      setSelectedTemplateId(tplPayload.id);
+    }
+
     setIsCreatingTemplate(false);
     setNewTplTitle('');
     setNewTplDesc('');
     setError(null);
   };
 
-  const handleDeleteTemplate = (id: string, e: React.MouseEvent) => {
+  const handleDeleteTemplate = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    try {
+      await fetch(`/api/quiz-templates/${id}`, { method: 'DELETE' });
+    } catch (e) {}
+
     const updated = templates.filter(t => t.id !== id);
     setTemplates(updated);
     if (selectedTemplateId === id && updated.length > 0) {

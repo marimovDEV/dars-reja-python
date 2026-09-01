@@ -193,3 +193,34 @@ class QuizSession(models.Model):
             "results": self.results or {},
             "createdAt": self.created_at.strftime("%Y-%m-%d %H:%M:%S")
         }
+
+
+class QuizTemplate(models.Model):
+    template_id = models.CharField(max_length=100, unique=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, default="")
+    category = models.CharField(max_length=100, default="Python Backend")
+    question_count = models.IntegerField(default=10)
+    difficulty = models.CharField(max_length=50, default="medium")
+    lesson_ids = models.JSONField(default=list, blank=True)
+    custom_questions = models.JSONField(default=list, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+
+    def to_dict(self):
+        return {
+            "id": self.template_id,
+            "title": self.title,
+            "description": self.description or "",
+            "category": self.category or "Python Backend",
+            "questionCount": self.question_count or 10,
+            "difficulty": self.difficulty or "medium",
+            "lessonIds": self.lesson_ids or [],
+            "customQuestions": self.custom_questions or [],
+            "createdAt": self.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        }
