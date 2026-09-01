@@ -8,7 +8,7 @@ interface QuizPlayerViewProps {
   onExit: () => void;
 }
 
-export const KAHOOT_PLAYER_BUTTONS = [
+export const ARENA_PLAYER_BUTTONS = [
   { shape: '▲', color: '#e21b3c', label: 'A' }, // Red Triangle
   { shape: '◆', color: '#1368ce', label: 'B' }, // Blue Diamond
   { shape: '●', color: '#d89e00', label: 'C' }, // Yellow Circle
@@ -150,8 +150,8 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
       {/* Top Header */}
       <div className="flex items-center justify-between p-2">
         <div className="flex items-center gap-2">
-          <span className="text-xl">📱</span>
-          <span className="font-extrabold text-sm text-purple-300">Kahoot Player</span>
+          <span className="text-xl">🎮</span>
+          <span className="font-extrabold text-sm text-purple-300">Marimov Game Zone</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -226,7 +226,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
           </div>
         )}
 
-        {/* 3. CLASSIC KAHOOT 4-SHAPE BUTTONS STATE (NO QUESTION TEXT!) */}
+        {/* 3. ARENA 4-SHAPE BUTTONS STATE (NO QUESTION TEXT!) */}
         {gameState === 'question' && (
           <div className="w-full max-w-md h-[75vh] flex flex-col justify-between animate-scaleUp">
             <div className="flex items-center justify-between text-xs font-bold text-slate-400 px-2 py-1 bg-slate-900 rounded-xl">
@@ -237,7 +237,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
 
             {/* 4 Large Full-Screen Touch Shape Buttons */}
             <div className="grid grid-cols-2 gap-4 flex-1 my-3">
-              {KAHOOT_PLAYER_BUTTONS.slice(0, optionsCount).map((btn, idx) => (
+              {ARENA_PLAYER_BUTTONS.slice(0, optionsCount).map((btn, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSubmitAnswer(idx)}

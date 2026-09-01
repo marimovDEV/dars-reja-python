@@ -12,7 +12,7 @@ interface QuizHostViewProps {
   onExit: () => void;
 }
 
-export const KAHOOT_STYLES = [
+export const ARENA_STYLES = [
   { shape: '▲', color: '#e21b3c', bg: 'bg-[#e21b3c]', border: 'border-red-700', label: 'A' },
   { shape: '◆', color: '#1368ce', bg: 'bg-[#1368ce]', border: 'border-blue-700', label: 'B' },
   { shape: '●', color: '#d89e00', bg: 'bg-[#d89e00]', border: 'border-amber-700', label: 'C' },
@@ -150,7 +150,7 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
           <div>
             <h1 className="font-extrabold text-base tracking-tight text-white">{quiz.title}</h1>
             <p className="text-xs text-purple-300 font-semibold flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-yellow-300" /> Kahoot Live Host Screen
+              <Sparkles className="w-3 h-3 text-yellow-300" /> Marimov Game Zone Host Screen
             </p>
           </div>
         </div>
@@ -265,10 +265,10 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
               </h2>
             </div>
 
-            {/* 4 Kahoot Options Grid (Color & Shape Paired) */}
+            {/* 4 Options Grid (Color & Shape Paired) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {currentQuestion.options.map((opt: string, idx: number) => {
-                const style = KAHOOT_STYLES[idx % KAHOOT_STYLES.length];
+                const style = ARENA_STYLES[idx % ARENA_STYLES.length];
 
                 return (
                   <div
@@ -298,7 +298,7 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
                 const isCorrect = idx === currentQuestion.correctOptionIndex;
                 const maxCount = Math.max(...optionCounts, 1);
                 const heightPercent = Math.round((count / maxCount) * 100);
-                const style = KAHOOT_STYLES[idx];
+                const style = ARENA_STYLES[idx];
 
                 return (
                   <div key={idx} className="flex flex-col items-center gap-2 h-full justify-end">
