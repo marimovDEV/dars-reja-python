@@ -8,6 +8,16 @@ interface MarkdownDocRendererProps {
   content: string;
 }
 
+const getNodeText = (node: any): string => {
+  if (typeof node === 'string') return node;
+  if (typeof node === 'number') return String(node);
+  if (Array.isArray(node)) return node.map(getNodeText).join('');
+  if (node && typeof node === 'object' && node.props && node.props.children) {
+    return getNodeText(node.props.children);
+  }
+  return '';
+};
+
 export const MarkdownDocRenderer: React.FC<MarkdownDocRendererProps> = ({ content }) => {
   let headingIndex = 0;
 
@@ -22,8 +32,9 @@ export const MarkdownDocRenderer: React.FC<MarkdownDocRendererProps> = ({ conten
             </h1>
           ),
           h2: ({ children }) => {
-            const rawText = String(children).replace(/[*_`]/g, '');
-            const id = `heading-${headingIndex++}-${rawText.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+            const rawText = getNodeText(children).replace(/[*_`]/g, '').trim();
+            const slug = rawText.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            const id = `heading-${headingIndex++}-${slug}`;
             return (
               <h2
                 id={id}
@@ -34,8 +45,9 @@ export const MarkdownDocRenderer: React.FC<MarkdownDocRendererProps> = ({ conten
             );
           },
           h3: ({ children }) => {
-            const rawText = String(children).replace(/[*_`]/g, '');
-            const id = `heading-${headingIndex++}-${rawText.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+            const rawText = getNodeText(children).replace(/[*_`]/g, '').trim();
+            const slug = rawText.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            const id = `heading-${headingIndex++}-${slug}`;
             return (
               <h3
                 id={id}

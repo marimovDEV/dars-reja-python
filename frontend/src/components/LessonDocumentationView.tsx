@@ -437,10 +437,47 @@ export const LessonDocumentationView: React.FC<LessonDocumentationViewProps> = (
 
         </div>
 
-        {/* Right Sticky Table of Contents Column */}
-        {activeTab === 'docs' && <TableOfContents content={lesson.content} />}
+        {/* Right Sticky Table of Contents Column (Desktop) */}
+        {activeTab === 'docs' && (
+          <div className="hidden lg:block">
+            <TableOfContents content={lesson.content} />
+          </div>
+        )}
 
       </div>
+
+      {/* Mobile Table of Contents Modal Drawer */}
+      {mobileTocOpen && activeTab === 'docs' && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex justify-end lg:hidden animate-fadeIn">
+          <div className="w-80 max-w-[85vw] bg-white dark:bg-slate-900 h-full p-6 shadow-2xl flex flex-col justify-between overflow-y-auto">
+            <div>
+              <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3 mb-4">
+                <div className="flex items-center gap-2 font-bold text-sm text-slate-900 dark:text-white">
+                  <List className="w-4 h-4 text-blue-500" /> Mundarija
+                </div>
+                <button
+                  onClick={() => setMobileTocOpen(false)}
+                  className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <TableOfContents 
+                content={lesson.content} 
+                onSelectHeading={() => setMobileTocOpen(false)} 
+              />
+            </div>
+
+            <button
+              onClick={() => setMobileTocOpen(false)}
+              className="mt-6 w-full py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs rounded-xl cursor-pointer"
+            >
+              Yopish
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 };
