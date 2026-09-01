@@ -311,10 +311,37 @@ io.on('connection', (socket) => {
     };
     gameSessions.set(uniqueCode, session);
     
-    // Join dedicated Host room: host:{code}
     socket.join(`host:${uniqueCode}`);
     socket.emit('host:session-created', { code: uniqueCode, quiz });
     console.log(`🎮 Session created PIN: ${uniqueCode} for Quiz: ${quiz.title}`);
+  });
+
+  // Host reconnect handler (F5 refresh recovery!)
+  socket.on('host:reconnect-session', ({ code }) => {
+    const session = gameSessions.get(code);
+    if (!session) {
+      socket.emit('host:error', { message: 'Sessiya topilmadi' });
+      return;
+    }
+    session.hostSocketId = socket.id;
+    socket.join(`host:${code}`);
+
+    const playerList = Array.from(session.players.values()).map(p => ({
+      socketId: p.socketId,
+      nickname: p.nickname,
+      score: p.score
+    }));
+
+    socket.emit('host:reconnected', {
+      code,
+      status: session.status,
+      currentQuestionIndex: session.currentQuestionIndex,
+      totalQuestions: session.quiz.questions.length,
+      question: session.quiz.questions[session.currentQuestionIndex],
+      players: playerList,
+      answersCount: session.answersReceived
+    });
+    console.log(`🔄 Host reconnected to session PIN: ${code}`);
   });
 
   // Player joins with code & nickname (Joins players:{code} room)
@@ -331,10 +358,8 @@ io.on('connection', (socket) => {
       return;
     }
 
-    // Join players room: players:{code}
     socket.join(`players:${code}`);
 
-    // Check for existing player (Reconnect handling)
     let existingPlayer: Player | undefined;
     for (const [sId, p] of session.players.entries()) {
       if (p.nickname.toLowerCase() === cleanNickname.toLowerCase()) {
@@ -375,7 +400,6 @@ io.on('connection', (socket) => {
       socket.emit('player:joined', { code, nickname: cleanNickname, sessionTitle: session.quiz.title });
     }
 
-    // Broadcast updated player list ONLY to Host room
     const playerList = Array.from(session.players.values()).map(p => ({
       socketId: p.socketId,
       nickname: p.nickname,
@@ -396,7 +420,6 @@ io.on('connection', (socket) => {
     session.status = 'countdown';
     session.currentQuestionIndex = 0;
 
-    // Send countdown signal to both Host and Players
     io.to(`host:${code}`).emit('game:countdown-start', { duration: 3 });
     io.to(`players:${code}`).emit('game:countdown-start', { duration: 3 });
 
@@ -405,7 +428,7 @@ io.on('connection', (socket) => {
     }, 3000);
   });
 
-  // Send current question (KAHOOT PAYLOAD SEPARATION)
+  // Send current question
   function sendQuestionToAll(session: GameSession) {
     session.status = 'question';
     session.answersReceived = 0;
@@ -425,7 +448,7 @@ io.on('connection', (socket) => {
 
     const durationSec = question.durationSeconds || 20;
 
-    // 1. HOST GETS FULL PAYLOAD (Question text + Options full text + Code snippet)
+    // HOST GETS FULL PAYLOAD
     io.to(`host:${session.code}`).emit('host:question-started', {
       questionIndex: session.currentQuestionIndex,
       totalQuestions: session.quiz.questions.length,
@@ -434,7 +457,7 @@ io.on('connection', (socket) => {
       totalPlayers: session.players.size
     });
 
-    // 2. PLAYERS GET MINIMAL PAYLOAD (NO QUESTION OR OPTION TEXT! ONLY OPTIONS COUNT FOR 4 BUTTONS)
+    // PLAYERS GET MINIMAL PAYLOAD
     io.to(`players:${session.code}`).emit('player:question-started', {
       questionIndex: session.currentQuestionIndex,
       totalQuestions: session.quiz.questions.length,
@@ -443,7 +466,7 @@ io.on('connection', (socket) => {
     });
   }
 
-  // Player submits answer (Server calculates answer correctness and time)
+  // Player submits answer
   socket.on('player:submit-answer', ({ code, optionIndex }) => {
     const session = gameSessions.get(code);
     if (!session || session.status !== 'question') return;
@@ -454,7 +477,6 @@ io.on('connection', (socket) => {
     const question = session.quiz.questions[session.currentQuestionIndex];
     const isCorrect = optionIndex === question.correctOptionIndex;
 
-    // Server-side response time calculation (tamper-proof!)
     const serverResponseTimeMs = Math.max(50, Date.now() - session.questionStartTimeMs);
 
     player.lastAnswerIndex = optionIndex;
@@ -481,7 +503,6 @@ io.on('connection', (socket) => {
     player.lastPointsEarned = points;
     session.answersReceived += 1;
 
-    // Emit acknowledgment to player (locks screen into "Answer Submitted" state)
     socket.emit('player:answer-received', {
       submitted: true,
       pointsEarned: points,
@@ -489,13 +510,13 @@ io.on('connection', (socket) => {
       streak: player.streak
     });
 
-    // Notify Host of progress count
     io.to(`host:${code}`).emit('host:answer-received-update', {
       answersCount: session.answersReceived,
       totalPlayers: session.players.size
     });
 
-    if (session.answersReceived >= session.players.size) {
+    // "Hammasi javob berdi" -> Avtomatik natijaga o'tish!
+    if (session.answersReceived >= session.players.size && session.players.size > 0) {
       closeQuestion(session);
     }
   });
@@ -529,7 +550,6 @@ io.on('connection', (socket) => {
         streak: p.streak
       }));
 
-    // Send bar chart stats & top 5 to Host
     io.to(`host:${session.code}`).emit('host:question-result', {
       questionIndex: session.currentQuestionIndex,
       correctOptionIndex: question.correctOptionIndex,
@@ -538,7 +558,6 @@ io.on('connection', (socket) => {
       leaderboard: leaderboard.slice(0, 5)
     });
 
-    // Send round summary & rank to each player
     leaderboard.forEach((item) => {
       const p = session.players.get(item.socketId);
       const wasCorrect = p ? p.lastAnswerIndex === question.correctOptionIndex : false;
