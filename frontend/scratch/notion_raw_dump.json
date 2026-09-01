@@ -1,0 +1,1765 @@
+{
+  "block": {
+    "369974cc-61a9-800b-bc9b-efb0502f0818": {
+      "spaceId": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "version": 217,
+          "type": "page",
+          "properties": {
+            "title": [
+              [
+                "P27 Guruh — Aiogram 3 Routerlar bilan ishlash",
+                [
+                  [
+                    "b"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "content": [
+            "369974cc-61a9-80a4-ab7d-f7323fb2b954",
+            "369974cc-61a9-808a-9fe4-c57b11af0738",
+            "369974cc-61a9-805f-9b1f-dea2c33c3cf6",
+            "369974cc-61a9-807a-b685-d2ec0ec7146b",
+            "369974cc-61a9-80b9-9764-e28efe2c294c",
+            "369974cc-61a9-80a8-9f10-c7be67e669b1",
+            "369974cc-61a9-8005-957a-d6ac3ea6a72b",
+            "369974cc-61a9-8017-b0f4-e1f6d070b408",
+            "369974cc-61a9-8068-83fd-f72fcf9fc41b",
+            "369974cc-61a9-8081-a26e-e098d1cb355d",
+            "369974cc-61a9-805a-a816-e23a27ca1b5d",
+            "369974cc-61a9-80c0-94c4-cc42ddf49d35",
+            "369974cc-61a9-80cb-9591-fb310f401456",
+            "369974cc-61a9-8015-ad7b-daf032f3351d",
+            "369974cc-61a9-80ea-8c95-d2bc3415c422",
+            "369974cc-61a9-8009-88b8-ca751aa141ac",
+            "369974cc-61a9-800d-93a5-d41f08c46805",
+            "369974cc-61a9-8098-b203-fdaf660cc080",
+            "369974cc-61a9-8041-b634-f3bf395657c7",
+            "369974cc-61a9-80ba-b436-e6c5f065a293",
+            "369974cc-61a9-80bd-a61d-c5af9a1c259f",
+            "369974cc-61a9-800a-9ade-c87e4029c667",
+            "369974cc-61a9-8009-bf16-c654029d3415",
+            "369974cc-61a9-8066-a001-ccef94d0c3b1",
+            "369974cc-61a9-8040-afa0-da997aca44ef",
+            "369974cc-61a9-807f-9955-ff43c65c04ee",
+            "369974cc-61a9-806e-99e2-e34f9e6b2fd4",
+            "369974cc-61a9-8029-bb86-f24d361e229a",
+            "369974cc-61a9-80fc-9a20-f6bb78fa3b9a",
+            "369974cc-61a9-8022-839d-e1bced07d632",
+            "369974cc-61a9-8076-af40-d8dbee2f5358",
+            "369974cc-61a9-80b1-8196-e2ff2a5f9d92",
+            "369974cc-61a9-80ad-b7a0-f54922941946",
+            "369974cc-61a9-8063-9018-fa9dad98fd56",
+            "369974cc-61a9-805e-abde-c46a85def5ca",
+            "369974cc-61a9-803c-bc26-dce524a06851",
+            "369974cc-61a9-8082-a0e8-db93fb54a5ec",
+            "369974cc-61a9-8013-8e7d-c33a8edb3dd1",
+            "369974cc-61a9-802d-b98e-c2ed1579490b",
+            "369974cc-61a9-80b5-9384-c834c2e39cd0",
+            "369974cc-61a9-8080-9de3-f37acd17e1e0",
+            "369974cc-61a9-80d4-ae49-f3a675e63082",
+            "369974cc-61a9-80da-aa2b-ed3f1511aefa",
+            "369974cc-61a9-8076-ab2f-daaa13da22a3",
+            "369974cc-61a9-8028-b0a1-c23a3bba90ff",
+            "369974cc-61a9-8020-89f2-d5a3a678ee54",
+            "369974cc-61a9-80db-b799-d6ddfea6c581",
+            "369974cc-61a9-8012-b5fe-de5458dc3cb8",
+            "369974cc-61a9-8041-b2fb-c7b6cdc9f61a",
+            "369974cc-61a9-800d-8ef6-f1cf3455a965",
+            "369974cc-61a9-806d-aa49-d9ac51344f5f",
+            "369974cc-61a9-801e-8053-c1edc46964b0",
+            "369974cc-61a9-8059-a4fd-de8599db811f",
+            "369974cc-61a9-8071-8b60-e445ea9a5439",
+            "369974cc-61a9-8001-b088-fe2915852b87",
+            "369974cc-61a9-8091-8746-d3d000781de9",
+            "369974cc-61a9-8009-98b7-c58c03cb5908",
+            "369974cc-61a9-80f9-98e1-ed20b5eed9b7",
+            "369974cc-61a9-8021-9603-ca1678bb5b95",
+            "369974cc-61a9-8012-971d-cdb8ab707910",
+            "369974cc-61a9-80c0-8b96-e6b6f7601cc1",
+            "369974cc-61a9-80f2-a6d3-d2e9f3ef44c5",
+            "369974cc-61a9-8054-adf4-ed7fb99b4bdd",
+            "369974cc-61a9-8089-ae4b-f1fe78e0cd54",
+            "369974cc-61a9-80af-8af8-e064d3fc1d3d",
+            "369974cc-61a9-806c-9aff-eb261a46c730",
+            "369974cc-61a9-80d1-956f-f8e74c49918b",
+            "369974cc-61a9-80bc-93d0-f7455789a864",
+            "369974cc-61a9-8033-aa28-e1198c0bf217",
+            "369974cc-61a9-8095-8b4f-f774cd5e345b",
+            "369974cc-61a9-8042-9e7a-f0a91bd5c97b",
+            "369974cc-61a9-8031-83d3-eeb339435894",
+            "369974cc-61a9-80ac-8efd-f746bfde434d",
+            "369974cc-61a9-80e2-bd5d-d137bc7e7ee8",
+            "369974cc-61a9-80bc-80f9-e2e7c04b461a",
+            "369974cc-61a9-8081-b7f7-cef06720bfce",
+            "369974cc-61a9-8071-896f-c67291a3c1db",
+            "369974cc-61a9-800b-aec1-f89f8c8301b5",
+            "369974cc-61a9-80f3-b4c8-f85e4951f634",
+            "369974cc-61a9-801b-b860-f283f41a27f0",
+            "369974cc-61a9-808d-a15e-c8a4723cca6b",
+            "369974cc-61a9-802d-b641-ee5df6258f78",
+            "369974cc-61a9-80cd-99d5-c2e1166a737e",
+            "369974cc-61a9-8040-9f73-c96d4baf29e9",
+            "369974cc-61a9-805c-ade4-df75403036fe",
+            "369974cc-61a9-80bc-89a3-ef05e4f85f31",
+            "369974cc-61a9-80f5-a338-eb6d5391b655",
+            "369974cc-61a9-80c0-89ee-eb24903574ff",
+            "369974cc-61a9-8006-9765-f47474302cb8",
+            "369974cc-61a9-80da-b804-eea5932be99e",
+            "369974cc-61a9-8050-a20b-cd3645f8bf35",
+            "369974cc-61a9-8078-8cdf-cb7af539a128",
+            "369974cc-61a9-809b-85c8-d6f66978f11e",
+            "369974cc-61a9-807e-b03e-c82ec9707a3d",
+            "369974cc-61a9-8047-b30d-cce46f32bb56",
+            "369974cc-61a9-808e-bedc-d80844b796c9",
+            "369974cc-61a9-80a4-996d-e34a84016159",
+            "369974cc-61a9-8093-9aa4-d73d14ee43c5",
+            "369974cc-61a9-80b3-9e62-cf85c45f25bf",
+            "369974cc-61a9-80ea-8bb4-d96c6251c1c0",
+            "369974cc-61a9-802b-8d82-c1d4db856d78",
+            "369974cc-61a9-80d9-bbaf-ec018446750b",
+            "369974cc-61a9-80b0-a387-da903ae26ce0",
+            "369974cc-61a9-80cf-b0f1-cde3cc515c93",
+            "369974cc-61a9-80f3-b52f-d74371e36dc2",
+            "369974cc-61a9-8043-92a2-db8b9dab9961",
+            "369974cc-61a9-80cb-ba20-de5767559e78",
+            "369974cc-61a9-80aa-bb65-cb8152950b94",
+            "369974cc-61a9-8052-99f1-f1ce4b7e6a0c",
+            "369974cc-61a9-80a6-bbd6-da75c9de7c50",
+            "369974cc-61a9-8028-9049-e082ed965a93",
+            "369974cc-61a9-804d-a1ae-cfdc234af7c7",
+            "369974cc-61a9-8084-9435-d23600eb7ecf",
+            "369974cc-61a9-8092-bb7f-f2b19c75c43f",
+            "369974cc-61a9-8023-9699-e153e7e112e1",
+            "369974cc-61a9-800b-b295-fbff3ac8a29b",
+            "369974cc-61a9-80f2-acc2-df6696aec534",
+            "369974cc-61a9-8006-893e-fc7868d47a28",
+            "369974cc-61a9-8060-8061-d5d9e3d29fb0",
+            "369974cc-61a9-8040-812a-d324ca50bc37",
+            "369974cc-61a9-80d3-9802-fad5f6a39b16",
+            "369974cc-61a9-805b-a73e-dbd7e83aa05a",
+            "369974cc-61a9-80dc-b7a9-d7792e8b91ec",
+            "369974cc-61a9-80f8-aeb2-c7d74adaeccd",
+            "369974cc-61a9-80cf-afbb-ce5070c57c84",
+            "369974cc-61a9-808e-ba93-e57bde286a97",
+            "369974cc-61a9-80f5-8ffd-f5284fb38277",
+            "369974cc-61a9-804b-9ee4-f8a1e128f326",
+            "369974cc-61a9-8084-acac-ea841d4bf923",
+            "369974cc-61a9-8009-bbe5-e755f843bac4",
+            "369974cc-61a9-8009-8d9a-cb09e31dda91",
+            "369974cc-61a9-80ae-96ca-daeb6ef1b790",
+            "369974cc-61a9-8053-93b7-ec5284535777",
+            "369974cc-61a9-8089-a67c-cce3ed754841",
+            "369974cc-61a9-80ef-8d85-f57d7e1d6efd",
+            "369974cc-61a9-80af-92fc-f414d85a0ad2",
+            "369974cc-61a9-8027-a586-d2974ddaa910",
+            "369974cc-61a9-80bd-86d4-e29172b2a2fa",
+            "369974cc-61a9-8060-8e49-dd227c5e6796",
+            "369974cc-61a9-8049-adc9-e683cdee741b",
+            "369974cc-61a9-806f-bab8-fc26478ef9cb",
+            "369974cc-61a9-80b1-853a-c45d1d80cec4",
+            "369974cc-61a9-8000-a975-c357984421f9",
+            "369974cc-61a9-80a1-b1d7-f550fff0f03f",
+            "369974cc-61a9-80eb-9d2d-dfcb237189ca",
+            "369974cc-61a9-805b-8e3c-f1d158cd52bc",
+            "369974cc-61a9-80ca-ab86-ee5d34a26480",
+            "369974cc-61a9-8016-b569-de98124db0b1",
+            "369974cc-61a9-80cc-a82c-d734d2737ab9",
+            "369974cc-61a9-8096-b75d-e1baeb0f90fd",
+            "369974cc-61a9-8090-9687-dc0d52cd8a4f",
+            "369974cc-61a9-8076-be21-cdd00fe42b31",
+            "369974cc-61a9-805f-8636-e1e068cd7f52",
+            "369974cc-61a9-8078-99ae-ed7049be79cd",
+            "369974cc-61a9-80ca-927e-ff09b1d907d3",
+            "369974cc-61a9-804f-97b0-c1552a922904",
+            "369974cc-61a9-8011-9d2a-c8e5b37b8d6c",
+            "369974cc-61a9-80f9-a793-e336d322d6be",
+            "369974cc-61a9-80c5-a241-c7a8d5d800fb",
+            "369974cc-61a9-803b-9d1c-eb883f690076",
+            "369974cc-61a9-805a-813f-db907c0c294e",
+            "369974cc-61a9-8072-87de-c9ec3264a15a",
+            "369974cc-61a9-80dd-92a3-da4e04607b8b",
+            "369974cc-61a9-80ff-bcb3-f652b6594e65",
+            "369974cc-61a9-80a3-a6f7-c600c86864f1",
+            "369974cc-61a9-80a8-bcdb-dfaa415ed7f2",
+            "369974cc-61a9-8047-b487-df4f0102cfce",
+            "369974cc-61a9-80bd-9200-c5deb45976ae",
+            "369974cc-61a9-80b0-a2f8-c7864bf11c90",
+            "369974cc-61a9-8034-bad6-fd5f6c97baf2",
+            "369974cc-61a9-80d4-8af5-c651fd109e70",
+            "369974cc-61a9-8022-8a19-f201bac91a8c",
+            "369974cc-61a9-8022-bddd-cbbe67f55476",
+            "369974cc-61a9-8097-971f-d0d4ae651c62",
+            "369974cc-61a9-80cb-a7a9-cffddd2c0995",
+            "369974cc-61a9-8001-9d9e-cd688b601e5e",
+            "369974cc-61a9-806d-9614-f29e0df5f3ce",
+            "369974cc-61a9-809f-9053-e966a7db73af",
+            "369974cc-61a9-80d5-868b-cf5cdde82ffd",
+            "369974cc-61a9-80f2-8114-f2b5662285f4",
+            "369974cc-61a9-8050-ac74-dfc6c1820541",
+            "369974cc-61a9-8066-98ca-cf1565727574",
+            "369974cc-61a9-8066-a2ba-e85e542acbcb",
+            "369974cc-61a9-80a6-a302-f46daf614832",
+            "369974cc-61a9-809d-9ac2-cdd549ed27cf",
+            "369974cc-61a9-80cb-b6b1-d82bbaeb1a06",
+            "369974cc-61a9-80da-be05-dd11068f6826",
+            "369974cc-61a9-8089-b34a-ffd59c59be08",
+            "369974cc-61a9-8050-8b57-d825e774d3bc",
+            "369974cc-61a9-8054-9d6b-c2b19096fd6a",
+            "369974cc-61a9-80f3-a2c7-fa4c85b5c0af",
+            "369974cc-61a9-80f0-b44a-daaa3f949b49",
+            "369974cc-61a9-8045-9b65-eba49a312260",
+            "369974cc-61a9-8011-99fa-e382b310f1bf",
+            "369974cc-61a9-80e3-a606-eee189601adb",
+            "369974cc-61a9-801f-a878-d251890f167e",
+            "369974cc-61a9-806d-a322-f6472c527b9c",
+            "369974cc-61a9-80e5-95e9-d7fc891b6a7d",
+            "369974cc-61a9-808e-ac97-c4f8eeeff47a",
+            "369974cc-61a9-807a-b169-ca12269d9693",
+            "369974cc-61a9-80b4-9892-c72ef0ad0629",
+            "369974cc-61a9-80fd-a600-d6722151a88b"
+          ],
+          "permissions": [
+            {
+              "role": "editor",
+              "type": "user_permission",
+              "user_id": "187d872b-594c-81ac-9814-000213febfa2"
+            },
+            {
+              "role": "reader",
+              "type": "public_permission",
+              "added_timestamp": 1779534833868,
+              "is_public_share_link": true
+            }
+          ],
+          "created_time": 1779533236476,
+          "last_edited_time": 1779534833068,
+          "parent_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "parent_table": "space",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "kqxshafTncrxnBl1olCmbQ,\"start\",\"end\"",
+              "n": {
+                "kqxshafTncrxnBl1olCmbQ,\"start\",\"end\"": {
+                  "s": {
+                    "x": "kqxshafTncrxnBl1olCmbQ",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "oiozFubHMrwE",
+                          11
+                        ],
+                        "o": "start",
+                        "l": 45,
+                        "c": "P27 Guruh — Aiogram 3 Routerlar bilan ishlash",
+                        "b": [
+                          {
+                            "t": "a",
+                            "x": "kqxshafTncrxnBl1olCmbQ",
+                            "l": "",
+                            "i": [
+                              "oiozFubHMrwE",
+                              56
+                            ],
+                            "s": {
+                              "i": [
+                                "oiozFubHMrwE",
+                                11
+                              ],
+                              "a": "b"
+                            },
+                            "e": {
+                              "i": [
+                                "oiozFubHMrwE",
+                                1
+                              ],
+                              "a": "b"
+                            },
+                            "a": [
+                              "b"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "oiozFubHMrwE",
+                          1
+                        ],
+                        "o": "start",
+                        "l": -9,
+                        "b": [
+                          {
+                            "t": "a",
+                            "x": "kqxshafTncrxnBl1olCmbQ",
+                            "l": "",
+                            "i": [
+                              "oiozFubHMrwE",
+                              10
+                            ],
+                            "s": {
+                              "i": [
+                                "oiozFubHMrwE",
+                                1
+                              ],
+                              "a": "b"
+                            },
+                            "e": {
+                              "i": "end",
+                              "a": "b"
+                            },
+                            "a": [
+                              "b"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "t": "e",
+                        "b": []
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-80a4-ab7d-f7323fb2b954": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-80a4-ab7d-f7323fb2b954",
+          "version": 7,
+          "type": "header",
+          "properties": {
+            "title": [
+              [
+                "Router mavzusi",
+                [
+                  [
+                    "b"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "created_time": 1779533238197,
+          "last_edited_time": 1779533257815,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "B7dHHgYdSxs_b-qnYykwaA,\"start\",\"end\"",
+              "n": {
+                "B7dHHgYdSxs_b-qnYykwaA,\"start\",\"end\"": {
+                  "s": {
+                    "x": "B7dHHgYdSxs_b-qnYykwaA",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "llik6z1HACjS",
+                          1
+                        ],
+                        "o": "start",
+                        "l": -45,
+                        "b": [
+                          {
+                            "t": "a",
+                            "x": "B7dHHgYdSxs_b-qnYykwaA",
+                            "l": "",
+                            "i": [
+                              "llik6z1HACjS",
+                              46
+                            ],
+                            "s": {
+                              "i": [
+                                "llik6z1HACjS",
+                                1
+                              ],
+                              "a": "b"
+                            },
+                            "e": {
+                              "i": "end",
+                              "a": "b"
+                            },
+                            "a": [
+                              "b"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "t": "e",
+                        "b": []
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": [
+                    "gd2MuV6rFfC7zDiulkeH_A,[\"oiozFubHMrwE\",36],\"end\""
+                  ]
+                },
+                "gd2MuV6rFfC7zDiulkeH_A,[\"oiozFubHMrwE\",36],\"end\"": {
+                  "s": {
+                    "x": "gd2MuV6rFfC7zDiulkeH_A",
+                    "i": [
+                      {
+                        "t": "p",
+                        "i": [
+                          "oiozFubHMrwE",
+                          36
+                        ],
+                        "o": "start"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "RveOjAXcb6aj",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 14,
+                        "c": "Router mavzusi",
+                        "b": [
+                          {
+                            "t": "a",
+                            "x": "gd2MuV6rFfC7zDiulkeH_A",
+                            "l": "",
+                            "i": [
+                              "RveOjAXcb6aj",
+                              15
+                            ],
+                            "s": {
+                              "i": [
+                                "RveOjAXcb6aj",
+                                1
+                              ],
+                              "a": "b"
+                            },
+                            "e": {
+                              "i": "end",
+                              "a": "b"
+                            },
+                            "a": [
+                              "b"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "t": "e",
+                        "b": []
+                      }
+                    ],
+                    "l": "l"
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-808a-9fe4-c57b11af0738": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-808a-9fe4-c57b11af0738",
+          "version": 4,
+          "type": "sub_header",
+          "properties": {
+            "title": [
+              [
+                "Router nima?",
+                [
+                  [
+                    "b"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "created_time": 1779533238198,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "EXdgVgGsXCfOlMHobl1LTg,\"start\",\"end\"",
+              "n": {
+                "EXdgVgGsXCfOlMHobl1LTg,\"start\",\"end\"": {
+                  "s": {
+                    "x": "EXdgVgGsXCfOlMHobl1LTg",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "xZwb0Y-ai26S",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 12,
+                        "c": "Router nima?",
+                        "b": [
+                          {
+                            "t": "a",
+                            "x": "EXdgVgGsXCfOlMHobl1LTg",
+                            "l": "",
+                            "i": [
+                              "xZwb0Y-ai26S",
+                              13
+                            ],
+                            "s": {
+                              "i": [
+                                "xZwb0Y-ai26S",
+                                1
+                              ],
+                              "a": "b"
+                            },
+                            "e": {
+                              "i": "end",
+                              "a": "b"
+                            },
+                            "a": [
+                              "b"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "t": "e",
+                        "b": []
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-805f-9b1f-dea2c33c3cf6": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-805f-9b1f-dea2c33c3cf6",
+          "version": 4,
+          "type": "text",
+          "properties": {
+            "title": [
+              [
+                "Aiogram 3 da "
+              ],
+              [
+                "Router",
+                [
+                  [
+                    "c"
+                  ]
+                ]
+              ],
+              [
+                " handlerlarni tartibli boshqarish uchun ishlatiladi."
+              ]
+            ]
+          },
+          "created_time": 1779533238198,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "54I6YFltTx9OI_pJ2nnVXw,\"start\",\"end\"",
+              "n": {
+                "54I6YFltTx9OI_pJ2nnVXw,\"start\",\"end\"": {
+                  "s": {
+                    "x": "54I6YFltTx9OI_pJ2nnVXw",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "Mo6RzYpgzs8B",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 13,
+                        "c": "Aiogram 3 da "
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "Mo6RzYpgzs8B",
+                          14
+                        ],
+                        "o": [
+                          "Mo6RzYpgzs8B",
+                          13
+                        ],
+                        "l": 6,
+                        "c": "Router",
+                        "b": [
+                          {
+                            "t": "a",
+                            "x": "54I6YFltTx9OI_pJ2nnVXw",
+                            "l": "",
+                            "i": [
+                              "Mo6RzYpgzs8B",
+                              72
+                            ],
+                            "s": {
+                              "i": [
+                                "Mo6RzYpgzs8B",
+                                14
+                              ],
+                              "a": "b"
+                            },
+                            "e": {
+                              "i": [
+                                "Mo6RzYpgzs8B",
+                                20
+                              ],
+                              "a": "b"
+                            },
+                            "a": [
+                              "c"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "Mo6RzYpgzs8B",
+                          20
+                        ],
+                        "o": [
+                          "Mo6RzYpgzs8B",
+                          19
+                        ],
+                        "l": 52,
+                        "c": " handlerlarni tartibli boshqarish uchun ishlatiladi.",
+                        "b": []
+                      },
+                      {
+                        "t": "e"
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-807a-b685-d2ec0ec7146b": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-807a-b685-d2ec0ec7146b",
+          "version": 3,
+          "type": "text",
+          "properties": {
+            "title": [
+              [
+                "Oldin barcha kodlar bitta faylda yozilar edi. Katta botlarda bu juda tartibsiz bo‘lib ketadi."
+              ]
+            ]
+          },
+          "created_time": 1779533238199,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "2dgv8VRrOJOhXzF7e_Hd-Q,\"start\",\"end\"",
+              "n": {
+                "2dgv8VRrOJOhXzF7e_Hd-Q,\"start\",\"end\"": {
+                  "s": {
+                    "x": "2dgv8VRrOJOhXzF7e_Hd-Q",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "SyVd8_aV5EBx",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 93,
+                        "c": "Oldin barcha kodlar bitta faylda yozilar edi. Katta botlarda bu juda tartibsiz bo‘lib ketadi."
+                      },
+                      {
+                        "t": "e"
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-80b9-9764-e28efe2c294c": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-80b9-9764-e28efe2c294c",
+          "version": 3,
+          "type": "text",
+          "properties": {
+            "title": [
+              [
+                "Router yordamida:"
+              ]
+            ]
+          },
+          "created_time": 1779533238199,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "MZ1Q2fMMrizc3JiXvaKHSA,\"start\",\"end\"",
+              "n": {
+                "MZ1Q2fMMrizc3JiXvaKHSA,\"start\",\"end\"": {
+                  "s": {
+                    "x": "MZ1Q2fMMrizc3JiXvaKHSA",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "FccxB0Jzgm0t",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 17,
+                        "c": "Router yordamida:"
+                      },
+                      {
+                        "t": "e"
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-80a8-9f10-c7be67e669b1": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-80a8-9f10-c7be67e669b1",
+          "version": 3,
+          "type": "bulleted_list",
+          "properties": {
+            "title": [
+              [
+                "start komandalar"
+              ]
+            ]
+          },
+          "created_time": 1779533238199,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "a-RsQCZ2c5CYaWeo85QoMQ,\"start\",\"end\"",
+              "n": {
+                "a-RsQCZ2c5CYaWeo85QoMQ,\"start\",\"end\"": {
+                  "s": {
+                    "x": "a-RsQCZ2c5CYaWeo85QoMQ",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "3C_7C6gWVJSl",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 16,
+                        "c": "start komandalar"
+                      },
+                      {
+                        "t": "e"
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-8005-957a-d6ac3ea6a72b": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-8005-957a-d6ac3ea6a72b",
+          "version": 3,
+          "type": "bulleted_list",
+          "properties": {
+            "title": [
+              [
+                "admin qismi"
+              ]
+            ]
+          },
+          "created_time": 1779533238199,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "bbVXSfocsADLlH8ioO7TuA,\"start\",\"end\"",
+              "n": {
+                "bbVXSfocsADLlH8ioO7TuA,\"start\",\"end\"": {
+                  "s": {
+                    "x": "bbVXSfocsADLlH8ioO7TuA",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "TJ7VtiHLFXxf",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 11,
+                        "c": "admin qismi"
+                      },
+                      {
+                        "t": "e"
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-8017-b0f4-e1f6d070b408": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-8017-b0f4-e1f6d070b408",
+          "version": 3,
+          "type": "bulleted_list",
+          "properties": {
+            "title": [
+              [
+                "user qismi"
+              ]
+            ]
+          },
+          "created_time": 1779533238199,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "voQvrYR-Vriscnr1_7Pe1A,\"start\",\"end\"",
+              "n": {
+                "voQvrYR-Vriscnr1_7Pe1A,\"start\",\"end\"": {
+                  "s": {
+                    "x": "voQvrYR-Vriscnr1_7Pe1A",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "1m_cQJf7NEyL",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 10,
+                        "c": "user qismi"
+                      },
+                      {
+                        "t": "e"
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-8068-83fd-f72fcf9fc41b": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-8068-83fd-f72fcf9fc41b",
+          "version": 3,
+          "type": "bulleted_list",
+          "properties": {
+            "title": [
+              [
+                "callbacklar"
+              ]
+            ]
+          },
+          "created_time": 1779533238200,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "yV23OfifT6gCXJyUfiIpyQ,\"start\",\"end\"",
+              "n": {
+                "yV23OfifT6gCXJyUfiIpyQ,\"start\",\"end\"": {
+                  "s": {
+                    "x": "yV23OfifT6gCXJyUfiIpyQ",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "_XjKDq8BA5Tt",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 11,
+                        "c": "callbacklar"
+                      },
+                      {
+                        "t": "e"
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-8081-a26e-e098d1cb355d": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-8081-a26e-e098d1cb355d",
+          "version": 3,
+          "type": "bulleted_list",
+          "properties": {
+            "title": [
+              [
+                "state lar"
+              ]
+            ]
+          },
+          "created_time": 1779533238200,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "3ITwIeojLQW0OBr-gAnF2A,\"start\",\"end\"",
+              "n": {
+                "3ITwIeojLQW0OBr-gAnF2A,\"start\",\"end\"": {
+                  "s": {
+                    "x": "3ITwIeojLQW0OBr-gAnF2A",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "ZDLsec2F-e07",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 9,
+                        "c": "state lar"
+                      },
+                      {
+                        "t": "e"
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-805a-a816-e23a27ca1b5d": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-805a-a816-e23a27ca1b5d",
+          "version": 3,
+          "type": "text",
+          "properties": {
+            "title": [
+              [
+                "alohida fayllarga ajratiladi."
+              ]
+            ]
+          },
+          "created_time": 1779533238200,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "vkNymHiLBQBTmARLcrK1wQ,\"start\",\"end\"",
+              "n": {
+                "vkNymHiLBQBTmARLcrK1wQ,\"start\",\"end\"": {
+                  "s": {
+                    "x": "vkNymHiLBQBTmARLcrK1wQ",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "IULttbkuvkeS",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 29,
+                        "c": "alohida fayllarga ajratiladi."
+                      },
+                      {
+                        "t": "e"
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-80c0-94c4-cc42ddf49d35": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-80c0-94c4-cc42ddf49d35",
+          "version": 2,
+          "type": "divider",
+          "created_time": 1779533238200,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "yuL66XdMGPFhBiACCFfJAQ,\"start\",\"end\"",
+              "n": {
+                "yuL66XdMGPFhBiACCFfJAQ,\"start\",\"end\"": {
+                  "s": {
+                    "x": "yuL66XdMGPFhBiACCFfJAQ",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "e"
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-80cb-9591-fb310f401456": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-80cb-9591-fb310f401456",
+          "version": 4,
+          "type": "header",
+          "properties": {
+            "title": [
+              [
+                "Router nima uchun kerak?",
+                [
+                  [
+                    "b"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "created_time": 1779533238200,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "zO1MWaV_2ofYD9DSTC-Ueg,\"start\",\"end\"",
+              "n": {
+                "zO1MWaV_2ofYD9DSTC-Ueg,\"start\",\"end\"": {
+                  "s": {
+                    "x": "zO1MWaV_2ofYD9DSTC-Ueg",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "W4QqVJGiQ4BD",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 24,
+                        "c": "Router nima uchun kerak?",
+                        "b": [
+                          {
+                            "t": "a",
+                            "x": "zO1MWaV_2ofYD9DSTC-Ueg",
+                            "l": "",
+                            "i": [
+                              "W4QqVJGiQ4BD",
+                              25
+                            ],
+                            "s": {
+                              "i": [
+                                "W4QqVJGiQ4BD",
+                                1
+                              ],
+                              "a": "b"
+                            },
+                            "e": {
+                              "i": "end",
+                              "a": "b"
+                            },
+                            "a": [
+                              "b"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "t": "e",
+                        "b": []
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-8015-ad7b-daf032f3351d": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-8015-ad7b-daf032f3351d",
+          "version": 4,
+          "type": "sub_header",
+          "properties": {
+            "title": [
+              [
+                "Afzalliklari",
+                [
+                  [
+                    "b"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "created_time": 1779533238200,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "X4wqD3S50mFYidOLXucSMQ,\"start\",\"end\"",
+              "n": {
+                "X4wqD3S50mFYidOLXucSMQ,\"start\",\"end\"": {
+                  "s": {
+                    "x": "X4wqD3S50mFYidOLXucSMQ",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "MuP9HDyICrBK",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 12,
+                        "c": "Afzalliklari",
+                        "b": [
+                          {
+                            "t": "a",
+                            "x": "X4wqD3S50mFYidOLXucSMQ",
+                            "l": "",
+                            "i": [
+                              "MuP9HDyICrBK",
+                              13
+                            ],
+                            "s": {
+                              "i": [
+                                "MuP9HDyICrBK",
+                                1
+                              ],
+                              "a": "b"
+                            },
+                            "e": {
+                              "i": "end",
+                              "a": "b"
+                            },
+                            "a": [
+                              "b"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "t": "e",
+                        "b": []
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-80ea-8c95-d2bc3415c422": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-80ea-8c95-d2bc3415c422",
+          "version": 4,
+          "type": "sub_sub_header",
+          "properties": {
+            "title": [
+              [
+                "1. Kod tartibli bo‘ladi",
+                [
+                  [
+                    "b"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "created_time": 1779533238201,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "S2pQ9WLlFw8-4NQWd_J03A,\"start\",\"end\"",
+              "n": {
+                "S2pQ9WLlFw8-4NQWd_J03A,\"start\",\"end\"": {
+                  "s": {
+                    "x": "S2pQ9WLlFw8-4NQWd_J03A",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "d_ojGuthbP6F",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 23,
+                        "c": "1. Kod tartibli bo‘ladi",
+                        "b": [
+                          {
+                            "t": "a",
+                            "x": "S2pQ9WLlFw8-4NQWd_J03A",
+                            "l": "",
+                            "i": [
+                              "d_ojGuthbP6F",
+                              24
+                            ],
+                            "s": {
+                              "i": [
+                                "d_ojGuthbP6F",
+                                1
+                              ],
+                              "a": "b"
+                            },
+                            "e": {
+                              "i": "end",
+                              "a": "b"
+                            },
+                            "a": [
+                              "b"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "t": "e",
+                        "b": []
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-8009-88b8-ca751aa141ac": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-8009-88b8-ca751aa141ac",
+          "version": 3,
+          "type": "text",
+          "properties": {
+            "title": [
+              [
+                "Har bir bo‘lim alohida faylda yoziladi."
+              ]
+            ]
+          },
+          "created_time": 1779533238201,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "QAhLXiVAnWpAUYoTlCWJXg,\"start\",\"end\"",
+              "n": {
+                "QAhLXiVAnWpAUYoTlCWJXg,\"start\",\"end\"": {
+                  "s": {
+                    "x": "QAhLXiVAnWpAUYoTlCWJXg",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "ZIc9wvXavMyY",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 39,
+                        "c": "Har bir bo‘lim alohida faylda yoziladi."
+                      },
+                      {
+                        "t": "e"
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-800d-93a5-d41f08c46805": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-800d-93a5-d41f08c46805",
+          "version": 2,
+          "type": "divider",
+          "created_time": 1779533238201,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "SGTFh5xS7GvVqoM33SXo2A,\"start\",\"end\"",
+              "n": {
+                "SGTFh5xS7GvVqoM33SXo2A,\"start\",\"end\"": {
+                  "s": {
+                    "x": "SGTFh5xS7GvVqoM33SXo2A",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "e"
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-8098-b203-fdaf660cc080": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-8098-b203-fdaf660cc080",
+          "version": 4,
+          "type": "sub_sub_header",
+          "properties": {
+            "title": [
+              [
+                "2. Katta loyihalar qilish oson",
+                [
+                  [
+                    "b"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "created_time": 1779533238201,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "GWe9q8SjIE_9pwpFF3wulQ,\"start\",\"end\"",
+              "n": {
+                "GWe9q8SjIE_9pwpFF3wulQ,\"start\",\"end\"": {
+                  "s": {
+                    "x": "GWe9q8SjIE_9pwpFF3wulQ",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "n_y5MHuOboEc",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 30,
+                        "c": "2. Katta loyihalar qilish oson",
+                        "b": [
+                          {
+                            "t": "a",
+                            "x": "GWe9q8SjIE_9pwpFF3wulQ",
+                            "l": "",
+                            "i": [
+                              "n_y5MHuOboEc",
+                              31
+                            ],
+                            "s": {
+                              "i": [
+                                "n_y5MHuOboEc",
+                                1
+                              ],
+                              "a": "b"
+                            },
+                            "e": {
+                              "i": "end",
+                              "a": "b"
+                            },
+                            "a": [
+                              "b"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "t": "e",
+                        "b": []
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    },
+    "369974cc-61a9-8041-b634-f3bf395657c7": {
+      "value": {
+        "value": {
+          "id": "369974cc-61a9-8041-b634-f3bf395657c7",
+          "version": 3,
+          "type": "text",
+          "properties": {
+            "title": [
+              [
+                "1000 qatorli bitta fayl bo‘lib ketmaydi."
+              ]
+            ]
+          },
+          "created_time": 1779533238201,
+          "last_edited_time": 1779533238512,
+          "parent_id": "369974cc-61a9-800b-bc9b-efb0502f0818",
+          "parent_table": "block",
+          "alive": true,
+          "created_by_table": "notion_user",
+          "created_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "last_edited_by_table": "notion_user",
+          "last_edited_by_id": "187d872b-594c-81ac-9814-000213febfa2",
+          "space_id": "4dccb22a-21d8-4056-88e0-9fdab4346210",
+          "crdt_format_version": 1,
+          "crdt_data": {
+            "title": {
+              "r": "rZkmNBHxhNWQipwDbqJ-3w,\"start\",\"end\"",
+              "n": {
+                "rZkmNBHxhNWQipwDbqJ-3w,\"start\",\"end\"": {
+                  "s": {
+                    "x": "rZkmNBHxhNWQipwDbqJ-3w",
+                    "i": [
+                      {
+                        "t": "s"
+                      },
+                      {
+                        "t": "t",
+                        "i": [
+                          "ILDOPNK6HuFq",
+                          1
+                        ],
+                        "o": "start",
+                        "l": 40,
+                        "c": "1000 qatorli bitta fayl bo‘lib ketmaydi."
+                      },
+                      {
+                        "t": "e"
+                      }
+                    ],
+                    "l": ""
+                  },
+                  "c": []
+                }
+              }
+            }
+          }
+        },
+        "role": "editor"
+      }
+    }
+  }
+}

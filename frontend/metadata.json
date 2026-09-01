@@ -1,0 +1,6 @@
+{
+  "name": "Dars Rejasi",
+  "description": "O'qituvchilar uchun darslar rejasi va har bir darsning to'liq texnologik xaritasi hamda dokumentatsiyasini ko'rish platformasi",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
