@@ -14,6 +14,7 @@ import { AIQuizGeneratorModal } from './components/quiz/AIQuizGeneratorModal';
 import { QuizEditorModal } from './components/quiz/QuizEditorModal';
 import { QuizHostView } from './components/quiz/QuizHostView';
 import { QuizPlayerView } from './components/quiz/QuizPlayerView';
+import { QuizStandalonePortal } from './components/quiz/QuizStandalonePortal';
 import { Menu, X, Sun, Moon, BookOpen, Loader2 } from 'lucide-react';
 import { LoginView } from './components/LoginView';
 import { ImportLessonsModal } from './components/ImportLessonsModal';
@@ -22,6 +23,12 @@ import { NotionSyncModal } from './components/NotionSyncModal';
 import { NotionSettings } from './notion/notionTypes';
 
 export default function App() {
+  const isGameSubdomain = typeof window !== 'undefined' && (
+    window.location.hostname.startsWith('game.') ||
+    window.location.pathname === '/game' ||
+    window.location.search.includes('app=game')
+  );
+
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedLessonId, setSelectedLessonId] = useState<string>('');
@@ -305,6 +312,10 @@ export default function App() {
       return next;
     });
   };
+
+  if (isGameSubdomain) {
+    return <QuizStandalonePortal lessons={lessons} />;
+  }
 
   if (!isLoggedIn) {
     return <LoginView onLogin={() => setIsLoggedIn(true)} />;
