@@ -178,9 +178,6 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
           <button onClick={toggleMute} className="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 transition">
             {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
           </button>
-          <a href="https://python.marimovdev.uz" className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold rounded-xl text-slate-300 transition hidden sm:inline-block">
-            📚 Dars Reja
-          </a>
         </div>
       </header>
 
