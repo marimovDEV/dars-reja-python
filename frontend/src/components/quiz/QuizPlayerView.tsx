@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { quizAudio } from '../../services/QuizAudioService';
-import { Flame, CheckCircle2, XCircle, Trophy, Volume2, VolumeX, Send, Loader2 } from 'lucide-react';
+import { Flame, Trophy, Volume2, VolumeX, Send, Loader2, Sparkles, Gamepad2, ShieldCheck, Zap } from 'lucide-react';
 import { getSocketUrl } from '../../config/apiConfig';
 
 interface QuizPlayerViewProps {
@@ -9,10 +9,10 @@ interface QuizPlayerViewProps {
 }
 
 export const ARENA_PLAYER_BUTTONS = [
-  { shape: '▲', color: '#e21b3c', label: 'A' }, // Red Triangle
-  { shape: '◆', color: '#1368ce', label: 'B' }, // Blue Diamond
-  { shape: '●', color: '#d89e00', label: 'C' }, // Yellow Circle
-  { shape: '■', color: '#26890c', label: 'D' }  // Green Square
+  { shape: '▲', color: '#e21b3c', hoverBg: 'hover:bg-[#c41432]', shadowColor: 'shadow-red-900/50', label: 'A' }, // Red Triangle
+  { shape: '◆', color: '#1368ce', hoverBg: 'hover:bg-[#0f54a8]', shadowColor: 'shadow-blue-900/50', label: 'B' }, // Blue Diamond
+  { shape: '●', color: '#d89e00', hoverBg: 'hover:bg-[#b58400]', shadowColor: 'shadow-amber-900/50', label: 'C' }, // Yellow Circle
+  { shape: '■', color: '#26890c', hoverBg: 'hover:bg-[#1e6d09]', shadowColor: 'shadow-emerald-900/50', label: 'D' }  // Green Square
 ];
 
 export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
@@ -145,106 +145,178 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between p-4 font-sans select-none overflow-hidden">
+    <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between font-sans select-none overflow-hidden relative">
       
-      {/* Top Header */}
-      <div className="flex items-center justify-between p-2">
-        <div className="flex items-center gap-2">
-          <span className="text-xl">🎮</span>
-          <span className="font-extrabold text-sm text-purple-300">Marimov Game Zone</span>
+      {/* 🌟 Dynamic Animated Floating Background Orbs & Shapes */}
+      <div className="absolute -top-32 -left-32 w-96 h-96 bg-purple-600/25 rounded-full blur-3xl pointer-events-none animate-pulse duration-1000" />
+      <div className="absolute top-1/3 -right-32 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none animate-pulse duration-700" />
+      <div className="absolute -bottom-32 left-1/4 w-96 h-96 bg-rose-600/15 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Floating 3D Translucent Shapes in Background */}
+      <div className="absolute top-20 left-10 text-4xl text-rose-500/20 animate-bounce duration-1000 pointer-events-none">▲</div>
+      <div className="absolute top-40 right-16 text-5xl text-blue-500/20 animate-bounce duration-700 pointer-events-none">◆</div>
+      <div className="absolute bottom-24 left-16 text-4xl text-amber-500/20 animate-bounce duration-1000 pointer-events-none">●</div>
+      <div className="absolute bottom-32 right-12 text-5xl text-emerald-500/20 animate-bounce duration-700 pointer-events-none">■</div>
+
+      {/* Top Navbar */}
+      <header className="p-4 px-6 md:px-12 flex items-center justify-between border-b border-slate-800/80 bg-slate-900/40 backdrop-blur-md relative z-20">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center font-black text-xl shadow-lg shadow-purple-900/40 animate-pulse">
+            🎮
+          </div>
+          <div>
+            <span className="font-extrabold text-base tracking-tight text-white flex items-center gap-2">
+              Marimov Game Zone
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-950 text-purple-300 border border-purple-800 hidden sm:inline-block">
+                Live Student Portal
+              </span>
+            </span>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button onClick={toggleMute} className="p-2 rounded-lg bg-slate-800 text-slate-300">
+        <div className="flex items-center gap-3">
+          <button onClick={toggleMute} className="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 transition">
             {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
           </button>
-          <button onClick={onExit} className="px-3 py-1 bg-slate-800 text-xs font-bold rounded-lg text-slate-300">
-            Chiqish
-          </button>
+          <a href="https://python.marimovdev.uz" className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold rounded-xl text-slate-300 transition hidden sm:inline-block">
+            📚 Dars Reja
+          </a>
         </div>
-      </div>
+      </header>
 
-      {/* Main Dynamic View */}
-      <div className="flex-1 flex flex-col items-center justify-center">
+      {/* Main Responsive Body */}
+      <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 relative z-10 w-full max-w-5xl mx-auto">
         
-        {/* 1. JOIN FORM STATE */}
+        {/* 1. JOIN FORM STATE (Responsive Desktop Grid & Mobile Design) */}
         {gameState === 'join' && (
-          <form onSubmit={handleJoin} className="w-full max-w-sm p-6 bg-slate-900 rounded-3xl border border-slate-800 space-y-4 shadow-2xl animate-scaleUp">
-            <div className="text-center space-y-1">
-              <h2 className="text-2xl font-black text-white">Quizga Qo'shilish</h2>
-              <p className="text-xs text-slate-400">O'qituvchi ekranidagi 6-xonali PIN kodni kiriting</p>
-            </div>
-
-            {error && (
-              <div className="p-3 bg-rose-950/60 border border-rose-800 text-rose-300 rounded-xl text-xs">
-                ⚠️ {error}
+          <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-8 items-center animate-scaleUp">
+            
+            {/* Desktop Left Welcome Hero Banner */}
+            <div className="hidden md:flex md:col-span-6 flex-col text-left space-y-4 pr-4">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-950/80 border border-purple-800 text-purple-300 text-xs font-extrabold w-fit">
+                <Sparkles className="w-4 h-4 text-yellow-400" /> Jonli Interaktiv Quiz Arena
               </div>
-            )}
 
-            <div>
-              <label className="block text-xs font-bold text-slate-400 mb-1">PIN KOD</label>
-              <input
-                type="text"
-                maxLength={8}
-                placeholder="849201"
-                value={pinCode}
-                onChange={e => setPinCode(e.target.value)}
-                className="w-full text-center py-3 text-2xl font-black tracking-widest bg-slate-800 border border-slate-700 rounded-2xl text-yellow-300 outline-none focus:ring-2 focus:ring-purple-500"
-              />
+              <h2 className="text-4xl lg:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-purple-300 leading-tight">
+                Bilimingizni Jonli O'yinda Sinang!
+              </h2>
+
+              <p className="text-slate-400 text-xs lg:text-sm leading-relaxed font-medium">
+                O'qituvchingiz ko'rsatgan 6-xonali PIN kod va o'zingizning nikneymingizni kiriting va do'stlaringiz bilan jonli musobaqalashing!
+              </p>
+
+              <div className="flex items-center gap-6 pt-2 text-xs font-bold text-slate-300">
+                <span className="flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-yellow-400" /> Tezkor Taymer
+                </span>
+                <span className="flex items-center gap-2">
+                  <Flame className="w-4 h-4 text-amber-500" /> Streak Bonusi
+                </span>
+                <span className="flex items-center gap-2">
+                  <Trophy className="w-4 h-4 text-emerald-400" /> Reyting
+                </span>
+              </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-400 mb-1">ISMINGIZ (NIKNEYM)</label>
-              <input
-                type="text"
-                placeholder="Ismingizni kiriting"
-                value={nickname}
-                onChange={e => setNickname(e.target.value)}
-                className="w-full text-center py-3 text-base font-bold bg-slate-800 border border-slate-700 rounded-2xl text-white outline-none focus:ring-2 focus:ring-purple-500"
-              />
+            {/* Right Join Form Card */}
+            <div className="md:col-span-6 w-full max-w-md mx-auto">
+              <form onSubmit={handleJoin} className="p-8 bg-slate-900/90 rounded-3xl border border-slate-800/90 shadow-2xl space-y-5 backdrop-blur-xl relative overflow-hidden">
+                
+                <div className="text-center space-y-1">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-3xl mx-auto shadow-lg mb-3">
+                    <Gamepad2 className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-black text-white">Quizga Qo'shilish</h3>
+                  <p className="text-xs text-slate-400">O'qituvchi ekranidagi PIN kodni kiriting</p>
+                </div>
+
+                {error && (
+                  <div className="p-3.5 bg-rose-950/70 border border-rose-800 text-rose-300 rounded-2xl text-xs font-semibold animate-shake">
+                    ⚠️ {error}
+                  </div>
+                )}
+
+                <div className="space-y-1.5 text-left">
+                  <label className="block text-xs font-extrabold uppercase text-slate-400 tracking-wider">PIN KOD</label>
+                  <input
+                    type="text"
+                    maxLength={8}
+                    placeholder="849201"
+                    value={pinCode}
+                    onChange={e => setPinCode(e.target.value)}
+                    className="w-full text-center py-3.5 text-2xl font-black tracking-widest bg-slate-800/80 border border-slate-700 rounded-2xl text-yellow-300 outline-none focus:ring-2 focus:ring-purple-500 shadow-inner transition"
+                  />
+                </div>
+
+                <div className="space-y-1.5 text-left">
+                  <label className="block text-xs font-extrabold uppercase text-slate-400 tracking-wider">ISMINGIZ (NIKNEYM)</label>
+                  <input
+                    type="text"
+                    placeholder="Ismingizni kiriting"
+                    value={nickname}
+                    onChange={e => setNickname(e.target.value)}
+                    className="w-full text-center py-3.5 text-base font-bold bg-slate-800/80 border border-slate-700 rounded-2xl text-white outline-none focus:ring-2 focus:ring-purple-500 shadow-inner transition"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-4 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-black text-base rounded-2xl shadow-xl shadow-purple-900/30 transition transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Send className="w-5 h-5" /> Testga Qo'shilish
+                </button>
+              </form>
             </div>
 
-            <button
-              type="submit"
-              className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 text-white font-extrabold text-sm rounded-2xl shadow-xl transition flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <Send className="w-4 h-4" /> Testga Qo'shilish
-            </button>
-          </form>
+          </div>
         )}
 
         {/* 2. WAITING ROOM STATE */}
         {gameState === 'waiting' && (
-          <div className="text-center space-y-4 max-w-sm animate-fadeIn">
-            <div className="w-20 h-20 rounded-full bg-purple-600/30 border-2 border-purple-500 flex items-center justify-center text-4xl mx-auto animate-pulse">
+          <div className="text-center space-y-6 max-w-md animate-fadeIn p-8 bg-slate-900/80 rounded-3xl border border-slate-800 backdrop-blur-xl shadow-2xl">
+            <div className="w-24 h-24 rounded-full bg-purple-600/20 border-2 border-purple-500 flex items-center justify-center text-5xl mx-auto animate-bounce shadow-xl">
               🎯
             </div>
-            <h2 className="text-2xl font-black text-white">{nickname}, Siz o'yindasiz!</h2>
-            <p className="text-xs text-purple-300">
-              O'qituvchi monitoriga qarang va mos rang/shaklni tanlang!
-            </p>
+            <div className="space-y-2">
+              <h2 className="text-3xl font-black text-white">{nickname}, Siz O'yindasiz!</h2>
+              <p className="text-xs text-purple-300 font-semibold leading-relaxed">
+                O'qituvchi ekrandan savolni ko'rsatishini kuting va mos rang/shaklni tanlang!
+              </p>
+            </div>
+            <div className="p-3.5 rounded-2xl bg-purple-950/60 border border-purple-800/60 text-purple-200 text-xs font-bold flex items-center justify-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" /> Aloqa Tizimga Muvaffaqiyatli Ulangan
+            </div>
           </div>
         )}
 
-        {/* 3. ARENA 4-SHAPE BUTTONS STATE (NO QUESTION TEXT!) */}
+        {/* 3. RESPONSIVE ARENA 4-SHAPE BUTTONS STATE */}
         {gameState === 'question' && (
-          <div className="w-full max-w-md h-[75vh] flex flex-col justify-between animate-scaleUp">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-400 px-2 py-1 bg-slate-900 rounded-xl">
-              <span>Savol {questionIndex + 1} / {totalQuestions}</span>
-              <span className="text-yellow-400 font-extrabold text-sm">⏱ {timerLeft}s</span>
-              <span>{totalScore} ball</span>
+          <div className="w-full max-w-4xl h-[78vh] flex flex-col justify-between animate-scaleUp">
+            
+            {/* Top Bar */}
+            <div className="flex items-center justify-between text-xs font-bold text-slate-300 px-4 py-3 bg-slate-900/90 border border-slate-800 rounded-2xl shadow-lg backdrop-blur-md">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                Savol {questionIndex + 1} / {totalQuestions}
+              </span>
+              
+              <span className="text-yellow-300 font-black text-base tracking-wider bg-slate-800 px-3 py-1 rounded-xl border border-slate-700">
+                ⏱ {timerLeft}s
+              </span>
+              
+              <span className="text-purple-300 font-bold">{totalScore} ball</span>
             </div>
 
-            {/* 4 Large Full-Screen Touch Shape Buttons */}
-            <div className="grid grid-cols-2 gap-4 flex-1 my-3">
+            {/* 4 Large Responsive Touch/Click Shape Buttons Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1 my-4">
               {ARENA_PLAYER_BUTTONS.slice(0, optionsCount).map((btn, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSubmitAnswer(idx)}
                   style={{ backgroundColor: btn.color }}
-                  className="rounded-3xl text-7xl text-white shadow-2xl flex items-center justify-center active:scale-95 transition-transform duration-150 border-b-8 border-black/20 cursor-pointer"
+                  className={`rounded-3xl text-7xl md:text-8xl text-white shadow-2xl flex items-center justify-center transform active:scale-95 transition-all duration-150 border-b-8 border-black/30 cursor-pointer ${btn.hoverBg} ${btn.shadowColor}`}
                 >
-                  <span className="drop-shadow-lg">{btn.shape}</span>
+                  <span className="drop-shadow-2xl">{btn.shape}</span>
                 </button>
               ))}
             </div>
@@ -253,42 +325,42 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
 
         {/* 4. ANSWER SUBMITTED STATE */}
         {gameState === 'answered' && (
-          <div className="text-center space-y-4 max-w-sm animate-scaleUp">
-            <div className="w-20 h-20 rounded-full bg-blue-600/30 border-2 border-blue-500 flex items-center justify-center text-4xl mx-auto">
-              <Loader2 className="w-10 h-10 text-blue-400 animate-spin" />
+          <div className="text-center space-y-5 max-w-sm animate-scaleUp p-8 bg-slate-900/90 rounded-3xl border border-slate-800 backdrop-blur-xl shadow-2xl">
+            <div className="w-24 h-24 rounded-full bg-blue-600/20 border-2 border-blue-500 flex items-center justify-center text-4xl mx-auto">
+              <Loader2 className="w-12 h-12 text-blue-400 animate-spin" />
             </div>
-            <h2 className="text-2xl font-black text-white">Javob Qabul Qilindi!</h2>
-            <p className="text-xs text-slate-400">
-              O'qituvchi ekranida vaqt tugashini kuting...
+            <h2 className="text-3xl font-black text-white">Javob Qabul Qilindi!</h2>
+            <p className="text-xs text-slate-400 font-medium">
+              Barcha o'quvchilar javob berishini kuting...
             </p>
           </div>
         )}
 
         {/* 5. ROUND RESULT STATE */}
         {gameState === 'result' && (
-          <div className="w-full max-w-xs p-6 bg-slate-900 rounded-3xl border border-slate-800 text-center space-y-4 animate-scaleUp shadow-2xl">
-            <div className={`w-20 h-20 rounded-full flex items-center justify-center text-4xl mx-auto ${
+          <div className="w-full max-w-md p-8 bg-slate-900/90 rounded-3xl border border-slate-800/90 text-center space-y-5 animate-scaleUp shadow-2xl backdrop-blur-xl">
+            <div className={`w-24 h-24 rounded-full flex items-center justify-center text-5xl mx-auto shadow-xl ${
               isCorrect ? 'bg-emerald-500/20 text-emerald-400 border-2 border-emerald-500' : 'bg-rose-500/20 text-rose-400 border-2 border-rose-500'
             }`}>
               {isCorrect ? '✓' : '✕'}
             </div>
 
-            <h2 className="text-2xl font-black">
+            <h2 className="text-3xl font-black">
               {isCorrect ? "To'g'ri Javob! ✨" : "Noto'g'ri Javob ❌"}
             </h2>
 
-            <div className="text-3xl font-black text-yellow-300">
-              +{pointsEarned} <span className="text-xs font-semibold text-slate-400">ball</span>
+            <div className="text-4xl font-black text-yellow-300 tracking-tight">
+              +{pointsEarned} <span className="text-xs font-bold text-slate-400">ball</span>
             </div>
 
-            <div className="p-3 rounded-2xl bg-slate-800 flex items-center justify-between text-xs font-bold">
+            <div className="p-4 rounded-2xl bg-slate-800/80 border border-slate-700 flex items-center justify-between text-xs font-bold">
               <span className="text-slate-400">Joriy O'rningiz:</span>
-              <span className="text-purple-300 text-sm">#{rank} - o'rin</span>
+              <span className="text-purple-300 text-base font-black">#{rank} - o'rin</span>
             </div>
 
             {streak >= 2 && (
-              <div className="p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/50 text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5 animate-bounce">
-                <Flame className="w-4 h-4 text-amber-400 fill-amber-400" />
+              <div className="p-3 rounded-2xl bg-amber-500/20 border border-amber-500/50 text-amber-300 text-xs font-extrabold flex items-center justify-center gap-2 animate-bounce">
+                <Flame className="w-5 h-5 text-amber-400 fill-amber-400" />
                 {streak} ta ketma-ket to'g'ri! (Streak 🔥)
               </div>
             )}
@@ -297,18 +369,24 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
 
         {/* 6. FINISHED STATE */}
         {gameState === 'finished' && (
-          <div className="text-center space-y-4 max-w-xs animate-scaleUp">
-            <Trophy className="w-20 h-20 text-yellow-400 mx-auto" />
-            <h2 className="text-3xl font-black text-white">O'yin Tugadi!</h2>
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
-              <div className="text-xs text-slate-400">Yakuniy Natijangiz:</div>
-              <div className="text-3xl font-black text-yellow-300">{totalScore} ball</div>
-              <div className="text-sm font-bold text-purple-300">#{rank} - o'rin</div>
+          <div className="text-center space-y-6 max-w-md animate-scaleUp p-8 bg-slate-900/90 rounded-3xl border border-slate-800 backdrop-blur-xl shadow-2xl">
+            <Trophy className="w-24 h-24 text-yellow-400 mx-auto drop-shadow-2xl animate-bounce" />
+            <h2 className="text-4xl font-black text-white">O'yin Tugadi!</h2>
+            <div className="p-6 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-3">
+              <div className="text-xs font-bold text-slate-400">Yakuniy Natijangiz:</div>
+              <div className="text-4xl font-black text-yellow-300">{totalScore} ball</div>
+              <div className="text-base font-extrabold text-purple-300">#{rank} - o'rin</div>
             </div>
           </div>
         )}
 
-      </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="p-4 text-center border-t border-slate-800/60 text-xs text-slate-500 font-medium relative z-20">
+        © 2026 Marimov Game Zone — <strong className="text-slate-400">game.marimovdev.uz</strong>
+      </footer>
+
     </div>
   );
 }
