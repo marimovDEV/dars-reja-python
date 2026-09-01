@@ -88,7 +88,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
     });
   };
 
-  const getSocketUrl = () => (window.location.port === '3005') ? `http://${window.location.hostname}:5005` : window.location.origin;
+  const getSocketUrl = () => (window.location.port === '3005') ? `http://${window.location.hostname}:5006` : window.location.origin;
 
   useEffect(() => {
     const newSocket = io(getSocketUrl(), { transports: ['websocket', 'polling'] });

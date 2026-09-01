@@ -38,7 +38,7 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
     const pin = Math.floor(100000 + Math.random() * 900000).toString();
     setSessionCode(pin);
 
-    const socketUrl = (window.location.port === '3005') ? `http://${window.location.hostname}:5005` : window.location.origin;
+    const socketUrl = (window.location.port === '3005') ? `http://${window.location.hostname}:5006` : window.location.origin;
     const newSocket = io(socketUrl, { transports: ['websocket', 'polling'] });
     setSocket(newSocket);
 

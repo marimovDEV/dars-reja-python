@@ -17,7 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 5005;
+const PORT = process.env.SOCKET_PORT || 5006;
 const DATA_FILE = path.join(__dirname, 'src', 'data', 'lessons.json');
 
 app.use(express.json());
