@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import confetti from 'canvas-confetti';
 import { quizAudio } from '../../services/QuizAudioService';
-import { Users, Play, ArrowRight, Trophy, Volume2, VolumeX, Sparkles } from 'lucide-react';
+import { Users, Play, ArrowRight, Trophy, Volume2, VolumeX, Sparkles, Crown, Image as ImageIcon } from 'lucide-react';
 import { Quiz } from '../../types/quiz';
-
 import { getSocketUrl } from '../../config/apiConfig';
 
 interface QuizHostViewProps {
@@ -23,7 +22,7 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [sessionCode, setSessionCode] = useState<string>('');
   const [gameState, setGameState] = useState<'lobby' | 'countdown' | 'question' | 'stats' | 'finished'>('lobby');
-  const [players, setPlayers] = useState<{ socketId: string; nickname: string; score: number }[]>([]);
+  const [players, setPlayers] = useState<{ socketId: string; nickname: string; avatar?: { emoji: string; name: string }; score: number }[]>([]);
   
   const [countdown, setCountdown] = useState<number>(3);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -35,6 +34,27 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [finalPodium, setFinalPodium] = useState<any[]>([]);
   const [isMuted, setIsMuted] = useState<boolean>(false);
+
+  const fireMultipleConfetti = () => {
+    try {
+      const count = 200;
+      const defaults = { origin: { y: 0.7 } };
+
+      const fire = (particleRatio: number, opts: confetti.Options) => {
+        confetti({
+          ...defaults,
+          ...opts,
+          particleCount: Math.floor(count * particleRatio)
+        });
+      };
+
+      fire(0.25, { spread: 26, startVelocity: 55 });
+      fire(0.2, { spread: 60 });
+      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+      fire(0.1, { spread: 120, startVelocity: 45 });
+    } catch (e) {}
+  };
 
   useEffect(() => {
     const pin = Math.floor(100000 + Math.random() * 900000).toString();
@@ -83,14 +103,7 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
       setFinalPodium(podium);
       setLeaderboard(leaderboard);
       quizAudio.playFanfare();
-
-      try {
-        confetti({
-          particleCount: 150,
-          spread: 80,
-          origin: { y: 0.6 }
-        });
-      } catch (e) {}
+      fireMultipleConfetti();
     });
 
     return () => {
@@ -141,6 +154,10 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between font-sans select-none overflow-hidden relative">
       
+      {/* Dynamic Background Glow Orbs */}
+      <div className="absolute -top-32 -left-32 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
+
       {/* Top Navbar */}
       <div className="p-4 px-8 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between z-20 backdrop-blur-md">
         <div className="flex items-center gap-3">
@@ -158,14 +175,14 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
         <div className="flex items-center gap-4">
           <button
             onClick={toggleMute}
-            className="p-2.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition"
+            className="p-2.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition cursor-pointer"
           >
             {isMuted ? <VolumeX className="w-5 h-5 text-rose-400" /> : <Volume2 className="w-5 h-5 text-emerald-400" />}
           </button>
           
           <button
             onClick={onExit}
-            className="px-4 py-2 bg-slate-800 hover:bg-rose-600 text-white text-xs font-bold rounded-xl transition"
+            className="px-4 py-2 bg-slate-800 hover:bg-rose-600 text-white text-xs font-bold rounded-xl transition cursor-pointer"
           >
             Chiqish
           </button>
@@ -206,12 +223,10 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
                 {players.map((p, idx) => (
                   <div
                     key={p.socketId}
-                    className="p-3 rounded-xl bg-purple-950/60 border border-purple-800/60 text-purple-200 text-xs font-bold flex items-center gap-2 animate-scaleUp"
+                    className="p-3 rounded-xl bg-purple-950/60 border border-purple-800/60 text-purple-200 text-xs font-bold flex items-center gap-2 animate-scaleUp shadow-md"
                   >
-                    <span className="w-6 h-6 rounded-full bg-purple-600 text-white text-[10px] flex items-center justify-center">
-                      {idx + 1}
-                    </span>
-                    <span className="truncate">{p.nickname}</span>
+                    <span className="text-xl shrink-0">{p.avatar?.emoji || '👤'}</span>
+                    <span className="truncate flex-1 text-left">{p.nickname}</span>
                   </div>
                 ))}
               </div>
@@ -220,7 +235,7 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
             <button
               onClick={handleStartGame}
               disabled={players.length === 0}
-              className="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold text-lg rounded-2xl shadow-xl transition disabled:opacity-50 flex items-center justify-center gap-3"
+              className="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold text-lg rounded-2xl shadow-xl transition disabled:opacity-50 flex items-center justify-center gap-3 cursor-pointer"
             >
               <Play className="w-6 h-6 fill-white" /> O'yinni Boshlash ({players.length} o'quvchi)
             </button>
@@ -239,9 +254,9 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
 
         {/* QUESTION STATE */}
         {gameState === 'question' && currentQuestion && (
-          <div className="w-full max-w-4xl space-y-8 animate-fadeIn">
+          <div className="w-full max-w-4xl space-y-6 animate-fadeIn">
             <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-              <span className="px-3 py-1 bg-purple-950 text-purple-300 rounded-full border border-purple-800">
+              <span className="px-3.5 py-1.5 bg-purple-950 text-purple-300 rounded-full border border-purple-800">
                 Savol {currentQuestionIndex + 1} / {quiz.questions.length}
               </span>
 
@@ -253,19 +268,25 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
                 {timerLeft}s
               </div>
 
-              <span className="px-3 py-1 bg-blue-950 text-blue-300 rounded-full border border-blue-800">
+              <span className="px-3.5 py-1.5 bg-blue-950 text-blue-300 rounded-full border border-blue-800">
                 {answersCount} / {players.length} javob keldi
               </span>
             </div>
 
-            {/* Question Title & Code Block */}
+            {/* Question Title & Optional Image */}
             <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl text-center space-y-4">
               <h2 className="text-2xl md:text-3xl font-extrabold text-white leading-snug">
                 {currentQuestion.question}
               </h2>
+
+              {currentQuestion.imageUrl && (
+                <div className="w-full max-h-64 overflow-hidden rounded-2xl border border-slate-700 mx-auto">
+                  <img src={currentQuestion.imageUrl} alt="Savol rasmi" className="w-full h-full object-contain" />
+                </div>
+              )}
             </div>
 
-            {/* 4 Options Grid (Color & Shape Paired) */}
+            {/* 4 Options Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {currentQuestion.options.map((opt: string, idx: number) => {
                 const style = ARENA_STYLES[idx % ARENA_STYLES.length];
@@ -323,7 +344,7 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
             </div>
 
             {currentQuestion.explanation && (
-              <div className="p-4 rounded-2xl bg-blue-950/60 border border-blue-800 text-blue-200 text-xs">
+              <div className="p-4 rounded-2xl bg-blue-950/60 border border-blue-800 text-blue-200 text-xs font-semibold">
                 💡 <strong>Tushuntirish:</strong> {currentQuestion.explanation}
               </div>
             )}
@@ -336,15 +357,16 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
                 {leaderboard.map((item, idx) => (
                   <div
                     key={item.socketId}
-                    className="p-2.5 rounded-xl bg-slate-800/70 border border-slate-700 flex items-center justify-between text-xs font-bold"
+                    className="p-3 rounded-xl bg-slate-800/70 border border-slate-700 flex items-center justify-between text-xs font-bold"
                   >
-                    <span className="flex items-center gap-2">
-                      <span className="w-5 h-5 rounded bg-purple-600 text-white flex items-center justify-center text-[10px]">
+                    <span className="flex items-center gap-2.5">
+                      <span className="w-6 h-6 rounded-lg bg-purple-600 text-white flex items-center justify-center text-[10px] font-black">
                         #{idx + 1}
                       </span>
-                      <span>{item.nickname}</span>
+                      <span className="text-lg">{item.avatar?.emoji || '👤'}</span>
+                      <span className="text-white font-extrabold">{item.nickname}</span>
                     </span>
-                    <span className="text-yellow-400">{item.score} ball</span>
+                    <span className="text-yellow-400 font-black">{item.score} ball</span>
                   </div>
                 ))}
               </div>
@@ -352,57 +374,68 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
 
             <button
               onClick={handleNextQuestion}
-              className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-base rounded-2xl shadow-xl transition flex items-center justify-center gap-2"
+              className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-base rounded-2xl shadow-xl transition flex items-center justify-center gap-2 cursor-pointer"
             >
               Keyingi Savol <ArrowRight className="w-5 h-5" />
             </button>
           </div>
         )}
 
-        {/* FINISHED / PODIUM STATE */}
+        {/* FINISHED / 3D CREATIVE PODIUM STATE */}
         {gameState === 'finished' && (
-          <div className="w-full max-w-2xl text-center space-y-8 animate-scaleUp">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-900/60 border border-purple-700 text-yellow-300 font-extrabold text-sm">
-              <Trophy className="w-5 h-5 text-yellow-400" /> O'YIN YAKUNLANDI!
+          <div className="w-full max-w-3xl text-center space-y-8 animate-scaleUp">
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-purple-900 via-indigo-900 to-blue-900 border border-purple-500 text-yellow-300 font-black text-base shadow-2xl animate-pulse">
+              <Trophy className="w-6 h-6 text-yellow-400" /> 🏆 O'YIN YAKUNLANDI — G'OLIBLAR PODIUMI!
             </div>
 
-            <div className="flex items-end justify-center gap-4 h-64">
+            <div className="flex items-end justify-center gap-4 md:gap-6 h-72 pt-4">
+              
+              {/* 🥈 2nd Place Silver Podium Block */}
               {finalPodium[1] && (
                 <div className="flex flex-col items-center flex-1 animate-fadeIn">
-                  <div className="font-bold text-xs text-slate-300 mb-1">{finalPodium[1].nickname}</div>
-                  <div className="text-xs text-yellow-400 font-semibold mb-2">{finalPodium[1].score} ball</div>
-                  <div className="w-full h-40 bg-gradient-to-t from-slate-700 to-slate-500 rounded-t-2xl flex flex-col items-center justify-center font-black text-2xl shadow-xl">
-                    🥈 2
+                  <div className="text-3xl mb-1">{finalPodium[1].avatar?.emoji || '🦊'}</div>
+                  <div className="font-extrabold text-xs md:text-sm text-slate-200 truncate max-w-full">{finalPodium[1].nickname}</div>
+                  <div className="text-xs text-yellow-400 font-black mb-2">{finalPodium[1].score} ball</div>
+                  <div className="w-full h-44 bg-gradient-to-t from-slate-700 via-slate-500 to-slate-300 rounded-t-3xl border-t-4 border-slate-200 flex flex-col items-center justify-center font-black text-3xl shadow-2xl text-slate-900">
+                    🥈 2-o'rin
                   </div>
                 </div>
               )}
 
+              {/* 🥇 1st Place Gold 3D Podium Block */}
               {finalPodium[0] && (
-                <div className="flex flex-col items-center flex-1 animate-fadeIn">
-                  <div className="font-bold text-sm text-yellow-300 mb-1">{finalPodium[0].nickname}</div>
-                  <div className="text-xs text-yellow-400 font-bold mb-2">{finalPodium[0].score} ball</div>
-                  <div className="w-full h-52 bg-gradient-to-t from-yellow-500 to-amber-400 rounded-t-2xl flex flex-col items-center justify-center font-black text-3xl shadow-2xl text-amber-950">
-                    👑 1
+                <div className="flex flex-col items-center flex-1 animate-fadeIn transform -translate-y-2">
+                  <div className="relative">
+                    <Crown className="w-8 h-8 text-yellow-300 absolute -top-8 left-1/2 -translate-x-1/2 animate-bounce" />
+                    <div className="text-5xl mb-1">{finalPodium[0].avatar?.emoji || '🦁'}</div>
+                  </div>
+                  <div className="font-black text-sm md:text-base text-yellow-300 truncate max-w-full">{finalPodium[0].nickname}</div>
+                  <div className="text-sm text-yellow-400 font-black mb-2">{finalPodium[0].score} ball</div>
+                  <div className="w-full h-56 bg-gradient-to-t from-amber-600 via-amber-400 to-yellow-300 rounded-t-3xl border-t-4 border-yellow-100 flex flex-col items-center justify-center font-black text-4xl shadow-2xl text-amber-950 ring-4 ring-yellow-400/40">
+                    🥇 1-o'rin
                   </div>
                 </div>
               )}
 
+              {/* 🥉 3rd Place Bronze Podium Block */}
               {finalPodium[2] && (
                 <div className="flex flex-col items-center flex-1 animate-fadeIn">
-                  <div className="font-bold text-xs text-slate-300 mb-1">{finalPodium[2].nickname}</div>
-                  <div className="text-xs text-yellow-400 font-semibold mb-2">{finalPodium[2].score} ball</div>
-                  <div className="w-full h-32 bg-gradient-to-t from-amber-700 to-amber-600 rounded-t-2xl flex flex-col items-center justify-center font-black text-2xl shadow-lg">
-                    🥉 3
+                  <div className="text-3xl mb-1">{finalPodium[2].avatar?.emoji || '🐼'}</div>
+                  <div className="font-extrabold text-xs md:text-sm text-slate-200 truncate max-w-full">{finalPodium[2].nickname}</div>
+                  <div className="text-xs text-yellow-400 font-black mb-2">{finalPodium[2].score} ball</div>
+                  <div className="w-full h-36 bg-gradient-to-t from-amber-900 via-amber-700 to-amber-500 rounded-t-3xl border-t-4 border-amber-400 flex flex-col items-center justify-center font-black text-2xl shadow-xl text-amber-950">
+                    🥉 3-o'rin
                   </div>
                 </div>
               )}
+
             </div>
 
             <button
               onClick={onExit}
-              className="px-8 py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 text-white font-extrabold text-sm rounded-2xl shadow-xl transition"
+              className="px-10 py-4 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-black text-base rounded-2xl shadow-2xl transition cursor-pointer"
             >
-              Chiqish va Dars Rejasiga Qaytish
+              Chiqish va Bosh Sahifaga Qaytish
             </button>
           </div>
         )}

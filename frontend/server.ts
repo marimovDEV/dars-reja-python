@@ -42,10 +42,24 @@ const io = new Server(httpServer, {
   }
 });
 
+const AVATAR_CHARACTERS = [
+  { emoji: '🦁', name: 'Arslon' },
+  { emoji: '🐯', name: 'Yo\'lbars' },
+  { emoji: '🦊', name: 'Tulkicha' },
+  { emoji: '🐼', name: 'Panda' },
+  { emoji: '🦅', name: 'Burgut' },
+  { emoji: '🐺', name: 'Bo\'ri' },
+  { emoji: '🚀', name: 'Kosmonavt' },
+  { emoji: '🐉', name: 'Ajdarho' },
+  { emoji: '🦄', name: 'Yakka Shox' },
+  { emoji: '🐘', name: 'Filcha' }
+];
+
 // In-Memory Live Quiz Arena Game State
 interface Player {
   socketId: string;
   nickname: string;
+  avatar: { emoji: string; name: string };
   score: number;
   streak: number;
   lastAnswerIndex: number | null;
@@ -376,6 +390,7 @@ io.on('connection', (socket) => {
       socket.emit('player:joined', {
         code,
         nickname: existingPlayer.nickname,
+        avatar: existingPlayer.avatar,
         sessionTitle: session.quiz.title,
         reconnected: true
       });
@@ -386,9 +401,11 @@ io.on('connection', (socket) => {
         return;
       }
 
+      const randomAvatar = AVATAR_CHARACTERS[Math.floor(Math.random() * AVATAR_CHARACTERS.length)];
       const player: Player = {
         socketId: socket.id,
         nickname: cleanNickname,
+        avatar: randomAvatar,
         score: 0,
         streak: 0,
         lastAnswerIndex: null,
@@ -397,12 +414,13 @@ io.on('connection', (socket) => {
       };
 
       session.players.set(socket.id, player);
-      socket.emit('player:joined', { code, nickname: cleanNickname, sessionTitle: session.quiz.title });
+      socket.emit('player:joined', { code, nickname: cleanNickname, avatar: randomAvatar, sessionTitle: session.quiz.title });
     }
 
     const playerList = Array.from(session.players.values()).map(p => ({
       socketId: p.socketId,
       nickname: p.nickname,
+      avatar: p.avatar,
       score: p.score
     }));
 
@@ -545,6 +563,7 @@ io.on('connection', (socket) => {
         rank: idx + 1,
         socketId: p.socketId,
         nickname: p.nickname,
+        avatar: p.avatar,
         score: p.score,
         lastPoints: p.lastPointsEarned,
         streak: p.streak
@@ -593,6 +612,7 @@ io.on('connection', (socket) => {
       .map((p, idx) => ({
         rank: idx + 1,
         nickname: p.nickname,
+        avatar: p.avatar,
         score: p.score
       }));
 

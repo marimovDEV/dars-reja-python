@@ -45,32 +45,119 @@ def validate_and_clean_questions(questions):
             continue
         if not isinstance(correct_idx, int) or correct_idx < 0 or correct_idx > 3:
             correct_idx = 0
+
+        # Clean any "X-dars:" prefix from question text
+        clean_text = str(question_text)
+        clean_text = re.sub(r'^\d+[\s\-_]*dars[:\s\-_]*', '', clean_text, flags=re.IGNORECASE)
+        clean_text = re.sub(r'^\d+[\s\-_]*darsniki[:\s\-_]*', '', clean_text, flags=re.IGNORECASE)
             
         shuffled_q = shuffle_question_options({
-            "question": str(question_text),
+            "question": clean_text.strip(),
             "type": "single_choice",
             "options": [str(opt) for opt in options],
             "correctOptionIndex": int(correct_idx),
             "explanation": str(q.get('explanation', '')),
             "lessonId": int(q.get('lessonId', 1)),
-            "durationSeconds": int(q.get('durationSeconds', 20))
+            "durationSeconds": int(q.get('durationSeconds', 20)),
+            "codeSnippet": q.get('codeSnippet') or q.get('code') or None,
+            "imageUrl": q.get('imageUrl') or None
         })
         valid.append(shuffled_q)
     return valid
 
 def generate_local_fallback_questions(lessons_in_db, docs_dir, target_count):
     """
-    Generates rich local questions using lesson topics, goals, content & quizQuestions
-    to guarantee target_count (e.g., 10, 15, 20) questions.
+    Generates authentic, high-challenge Python & Django technical questions with plausible distractors.
     """
-    pool = []
-    
-    for l in lessons_in_db:
-        num = l.lesson_number
-        title = l.title
-        goal = l.goal or f"{title} bo'yicha amaliy va nazariy ko'nikmalar"
+    pool = [
+        {
+            "question": "Python'da ro'yxatning (list) oxiriga yangi element qo'shish uchun qaysi metod ishlatiladi?",
+            "options": ["append()", "extend()", "insert()", "add()"],
+            "correctOptionIndex": 0,
+            "explanation": "append() metodi ro'yxat oxiriga bitta element qo'shadi. extend() esa boshqa ketma-ketlikni ulash uchun ishlatiladi.",
+            "durationSeconds": 20
+        },
+        {
+            "question": "Python'da matnli (string) ma'lumot turini e'lon qilishda qaysi tur belgilanadi?",
+            "options": ["str", "string", "text", "varchar"],
+            "correctOptionIndex": 0,
+            "explanation": "Python'da matnlar uchun o'rnatilgan tur 'str' hisoblanadi.",
+            "durationSeconds": 20
+        },
+        {
+            "question": "Dictionary (lug'at) ning barcha kalitlarini ro'yxat ko'rinishida olish uchun qaysi metod ishlatiladi?",
+            "options": ["keys()", "values()", "items()", "all_keys()"],
+            "correctOptionIndex": 0,
+            "explanation": "keys() metodi lug'atdagi barcha kalitlarni (keys) qaytaradi. values() qiymatlarni, items() esa kalit-qiymat juftliklarini beradi.",
+            "durationSeconds": 20
+        },
+        {
+            "question": "Python'da o'zgartirib bo'lmaydigan (immutable) ketma-ketlik ma'lumot turi qaysi?",
+            "options": ["tuple", "list", "dict", "set"],
+            "correctOptionIndex": 0,
+            "explanation": "tuple (kortej) yaratilgach, uning elementlarini o'zgartirib yoki o'chirib bo'lmaydi.",
+            "durationSeconds": 20
+        },
+        {
+            "question": "Ro'yxat (list) elementini berilgan indeks bo'yicha sug'urib olish va o'chirish uchun qaysi metod ishlatiladi?",
+            "options": ["pop()", "remove()", "del", "clear()"],
+            "correctOptionIndex": 0,
+            "explanation": "pop(index) ko'rsatilgan indeksdagi elementni qaytaradi va ro'yxatdan o'chiradi.",
+            "durationSeconds": 20
+        },
+        {
+            "question": "Django proyektida yangi ilova (app) yaratish uchun qaysi buyruq ishlatiladi?",
+            "options": ["python manage.py startapp app_name", "django-admin createapp app_name", "python manage.py newapp app_name", "django init app_name"],
+            "correctOptionIndex": 0,
+            "explanation": "startapp buyrug'i Django proyektida yangi ilova papkasi va strukturani tuzadi.",
+            "durationSeconds": 20
+        },
+        {
+            "question": "Python'da funksiya (function) ta'riflash uchun qaysi kalit so'z ishlatiladi?",
+            "options": ["def", "func", "function", "define"],
+            "correctOptionIndex": 0,
+            "explanation": "Python'da funksiyalar 'def' (define) kalit so'zi orqali e'lon qilinadi.",
+            "durationSeconds": 20
+        },
+        {
+            "question": "Django ORM yordamida ma'lumotlar bazasidagi barcha obyektlarni olish uchun qanday so'rov yoziladi?",
+            "options": ["Model.objects.all()", "Model.objects.get_all()", "Model.select_all()", "Model.fetch_all()"],
+            "correctOptionIndex": 0,
+            "explanation": "Django ORM'da barcha qatorlarni olish uchun Model.objects.all() QuerySet ishlatiladi.",
+            "durationSeconds": 20
+        },
+        {
+            "question": "Python'da shartli tarmoqlanishda aks holda (aks shart) bloki qaysi kalit so'z bilan beriladi?",
+            "options": ["else", "elseif", "then", "otherwise"],
+            "correctOptionIndex": 0,
+            "explanation": "if / elif shartlari bajarilmaganda aks holda bloki 'else:' deb yoziladi.",
+            "durationSeconds": 20
+        },
+        {
+            "question": "REST API so'rovida mavjud resursni to'liq yangilash uchun qaysi HTTP metodi qo'llaniladi?",
+            "options": ["PUT", "POST", "GET", "DELETE"],
+            "correctOptionIndex": 0,
+            "explanation": "PUT metodi resursni to'liq almashtirish/yangilash uchun, PATCH esa qisman yangilash uchun ishlatiladi.",
+            "durationSeconds": 20
+        },
+        {
+            "question": "Python'da kod xatolarini ushlash va qayta ishlash uchun qaysi blok ishlatiladi?",
+            "options": ["try ... except", "try ... catch", "do ... catch", "begin ... rescue"],
+            "correctOptionIndex": 0,
+            "explanation": "Python'da istisnolarni ushlash try va except kalit so'zlari orqali bajariladi.",
+            "durationSeconds": 20
+        },
+        {
+            "question": "Python'da ikkita to'plamning (set) umumiy kesishgan elementlarini topish uchun qaysi operator yoki metod ishlatiladi?",
+            "options": ["intersection() yoki &", "union() yoki |", "difference() yoki -", "symmetric_difference()"],
+            "correctOptionIndex": 0,
+            "explanation": "intersection() metodi yoki & binar operatori ikkita to'plamning faqat umumiy elementlarini qaytaradi.",
+            "durationSeconds": 20
+        }
+    ]
 
-        # 1. Standard quizQuestions from DB if present
+    # Include any custom quizQuestions stored in DB lessons
+    for l in lessons_in_db:
         if l.quiz_questions:
             for q in l.quiz_questions:
                 if isinstance(q, dict) and "question" in q and "options" in q:
@@ -79,85 +166,19 @@ def generate_local_fallback_questions(lessons_in_db, docs_dir, target_count):
                         "type": "single_choice",
                         "options": q["options"],
                         "correctOptionIndex": q.get("correctOptionIndex", 0),
-                        "explanation": q.get("explanation", f"{title} mavzusi bo'yicha nazariy javob."),
-                        "lessonId": num,
+                        "explanation": q.get("explanation", "Texnik savol javobi."),
+                        "lessonId": l.lesson_number,
                         "durationSeconds": 20
                     })
 
-        # 2. Main Goal Question
-        pool.append({
-            "question": f"{num}-dars ('{title}') o'rganilishining asosiy maqsadi nima?",
-            "type": "single_choice",
-            "options": [
-                goal,
-                "Ma'lumotlar bazasini tozalash va o'chirish",
-                "Operatsion tizimni qayta o'rnatish",
-                "Frontend dizayn ranglarini o'zgartirish"
-            ],
-            "correctOptionIndex": 0,
-            "explanation": f"{title} darsining asosiy maqsadi — {goal}.",
-            "lessonId": num,
-            "durationSeconds": 20
-        })
-
-        # 3. Best Practice / Convention Question
-        pool.append({
-            "question": f"'{title}' mavzusida kod yozishda qaysi tamoyilga amal qilish tavsiya etiladi?",
-            "type": "single_choice",
-            "options": [
-                f"PEP 8 standartlariga va clean code qoidalariga rioya qilish",
-                "Barcha o'zgaruvchilarni bitta harf bilan nomlash",
-                "Izohlardan umuman foydalanmaslik",
-                "Koddagi barcha xatoliklarni pass bilan yashirish"
-            ],
-            "correctOptionIndex": 0,
-            "explanation": "Python va backend dasturlashda clean code va PEP 8 tamoyillariga amal qilish shart.",
-            "lessonId": num,
-            "durationSeconds": 20
-        })
-
-        # 4. Debugging & Error Handling Question
-        pool.append({
-            "question": f"'{title}' bo'yicha kodingizda xatolik yuz bersa, birinchi navbatda nima qilish kerak?",
-            "type": "single_choice",
-            "options": [
-                "Terminaldagi xatolik xabarini (Traceback) diqqat bilan o'qish",
-                "Kodni butunlay o'chirib tashlash",
-                "Kompyuterni o'chirib yoqish",
-                "Barcha fayllarni qayta nomlash"
-            ],
-            "correctOptionIndex": 0,
-            "explanation": "Dasturlashda Traceback xabari xatolik yuz bergan fayl va qatorni ko'rsatadi.",
-            "lessonId": num,
-            "durationSeconds": 20
-        })
-
-        # 5. Concept Verification Question
-        pool.append({
-            "question": f"'{title}' moduli loyihaga qanday integratsiya qilinadi?",
-            "type": "single_choice",
-            "options": [
-                f"{title} uchun to'g'ri mantiqiy struktura va sintaksisdan foydalanib",
-                "Faqat CSS fayllarini o'zgartirish orqali",
-                "Notion sahifasini o'chirish orqali",
-                "Internet tarmoqni uzib qo'yish orqali"
-            ],
-            "correctOptionIndex": 0,
-            "explanation": f"{title} moduli backend mantiqining uzviy qismi hisoblanadi.",
-            "lessonId": num,
-            "durationSeconds": 20
-        })
-
-    # Shuffle initial pool
     random.shuffle(pool)
 
-    # If pool is smaller than target_count, duplicate and vary questions to reach exact count
+    # Duplicate and vary questions if needed to reach exact target_count
     result = list(pool)
     index = 0
     while len(result) < target_count and len(pool) > 0:
         base_q = pool[index % len(pool)]
         cloned = dict(base_q)
-        cloned["question"] = f"[Amaliyot] {cloned['question']}"
         result.append(cloned)
         index += 1
 
@@ -165,8 +186,8 @@ def generate_local_fallback_questions(lessons_in_db, docs_dir, target_count):
 
 def generate_ai_quiz(lesson_numbers, question_count=10, difficulty="mixed", include_code=True, language="uz"):
     """
-    Generates quiz questions based on selected lesson_numbers using Gemini AI API or robust fallback.
-    Guarantees returning EXACTLY question_count (e.g., 5, 10, 15, 20) questions.
+    Generates professional Python/Django quiz questions with Gemini AI API or robust fallback.
+    Guarantees returning EXACTLY question_count questions with direct, clear phrasing & realistic distractors.
     """
     lesson_texts = []
     lessons_in_db = Lesson.objects.filter(lesson_number__in=lesson_numbers).order_by('lesson_number')
@@ -187,7 +208,7 @@ def generate_ai_quiz(lesson_numbers, question_count=10, difficulty="mixed", incl
             content = f"{l.title}\n{l.description}\n{l.content}"
         
         content_snippet = content[:3000] if len(content) > 3000 else content
-        lesson_texts.append(f"--- DARS {num}: {l.title} ---\n{content_snippet}")
+        lesson_texts.append(f"--- MAVZU: {l.title} ---\n{content_snippet}")
 
     combined_text = "\n\n".join(lesson_texts)
     
@@ -200,33 +221,33 @@ def generate_ai_quiz(lesson_numbers, question_count=10, difficulty="mixed", incl
             from google.genai import types
             
             client = genai.Client(api_key=api_key)
-            prompt = f"""Siz Python Backend o'quv kursi bo'yicha jonli test (quiz) yaratuvchi AI ekspertisiz.
+            prompt = f"""Siz Python va Django Backend dasturlash bo'yicha professional test tuzuvchi mutaxassissiz.
 
-Quyidagi darslar materialidan foydalanib, ANIQ {question_count} TA TEST SAVOLI YARATING (kam ham, ko'p ham bo'lmasin):
+Quyidagi dars materiallaridan foydalanib, ANIQ {question_count} TA PROFESSIONAL TEST SAVOLI YARATING:
 Darslar ro'yxati: {lesson_numbers}
-Qiyinlik darajasi: {difficulty}
+Qiyinlik darajasi: {difficulty} (oson bo'lsa mantiqiy va tushunarli, murakkab bo'lsa real kod xatolar va sintaksisni sinaydigan bo'lsin)
 Kodli savollar bo'lsinmi: {code_text}
 Til: {language}
 
 Darslar materiallari:
 {combined_text[:12000]}
 
-TALABLAR:
-1. Aniq {question_count} ta bir-birini takrorlamaydigan savol yarating.
-2. Har bir savolda aniq 4 ta variant bo'lsin.
-3. 'correctOptionIndex' (0, 1, 2, 3) to'g'ri ko'rsatilsin va variantlar orasida tasodifiy aralashtirilsin (hammasi A javob bo'lmasin).
-4. Javobning o'zbek tilidagi qisqa tushuntirishi ('explanation') bo'lsin.
-5. Har bir savol uchun tegishli 'lessonId' (dars raqami) ko'rsatilsin.
+QAT'IY QOIDALAR (MUST FOLLOW):
+1. SAVOL MATNIDA HECH QACHON "5-darsniki", "1-dars:", "Dars maqsadi nima" kabi so'zlarni ishlatmang! Savol to'g'ridan-to'g mezon aniq va professional texnik savol bo'lsin. (Masalan: "Python'da lug'atning barcha qiymatlarini olish uchun qaysi metod ishlatiladi?")
+2. HAR BIR SAVOLDA ANIQ 4 TA VARIANT BO'LSIN.
+3. NOTO'G'RI 3 TA VARIANT HAM O'QUVCHINI O'YLANISHGA MAJBUR QILADIGAN REAL PYTHON SINTAKSIS / METODLARI BO'LSIN. (Chalg'ituvchi bo'lsin, kulgili/aloqasiz javob yozmang!).
+4. 'correctOptionIndex' (0, 1, 2, 3) to'g'ri ko'rsatilsin va variantlar tasodifiy aralashtirilsin.
+5. Javobning o'zbek tilidagi qisqa va tushunarli texnik tushuntirishi ('explanation') bo'lsin.
 6. 'durationSeconds': 20 soniya.
 
-JAVOBNI FAQAT QUYIDAGI SOF JSON ARRAY FORMATIDA QAYTARING (boshqa hech qanday izoh va markdown yozmang):
+JAVOBNI FAQAT QUYIDAGI SOF JSON ARRAY FORMATIDA QAYTARING (boshqa hech qanday izoh yozmang):
 [
   {{
-    "question": "Savol matni",
+    "question": "Python'da ro'yxat oxiriga element qo'shish uchun qaysi metod ishlatiladi?",
     "type": "single_choice",
-    "options": ["A variant", "B variant", "C variant", "D variant"],
+    "options": ["append()", "extend()", "insert()", "add()"],
     "correctOptionIndex": 0,
-    "explanation": "Nima uchun to'g'ri ekanligi tushuntirish",
+    "explanation": "append() metodi ro'yxat oxiriga bitta element qo'shadi.",
     "lessonId": 1,
     "durationSeconds": 20
   }}
@@ -251,12 +272,11 @@ JAVOBNI FAQAT QUYIDAGI SOF JSON ARRAY FORMATIDA QAYTARING (boshqa hech qanday iz
                 if len(validated) >= question_count:
                     return validated[:question_count]
                 elif len(validated) > 0:
-                    # Supplement with local fallback if Gemini generated fewer than question_count
                     extra = generate_local_fallback_questions(lessons_in_db, docs_dir, question_count - len(validated))
                     combined = validated + extra
                     return combined[:question_count]
         except Exception as e:
             print("Gemini API generation error, falling back to local extractor:", e)
 
-    # Fallback extractor: Guarantee returning EXACTLY question_count questions
+    # Fallback extractor
     return generate_local_fallback_questions(lessons_in_db, docs_dir, question_count)

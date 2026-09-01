@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { quizAudio } from '../../services/QuizAudioService';
-import { Flame, Trophy, Volume2, VolumeX, Send, Loader2, Sparkles, Gamepad2, ShieldCheck, Zap } from 'lucide-react';
+import { Flame, Trophy, Volume2, VolumeX, Send, Loader2, Sparkles, Gamepad2, ShieldCheck, Zap, CheckCircle2 } from 'lucide-react';
 import { getSocketUrl } from '../../config/apiConfig';
 
 interface QuizPlayerViewProps {
@@ -19,6 +19,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [pinCode, setPinCode] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
+  const [avatar, setAvatar] = useState<{ emoji: string; name: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const [gameState, setGameState] = useState<'join' | 'waiting' | 'question' | 'answered' | 'result' | 'finished'>('join');
@@ -39,9 +40,10 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
   const [isMuted, setIsMuted] = useState<boolean>(false);
 
   const initSocketListeners = (sock: Socket) => {
-    sock.on('player:joined', ({ code, nickname, sessionTitle, reconnected }) => {
+    sock.on('player:joined', ({ code, nickname, avatar, sessionTitle, reconnected }) => {
       setGameState('waiting');
       setSessionTitle(sessionTitle);
+      if (avatar) setAvatar(avatar);
       setError(null);
       quizAudio.playCorrect();
     });
@@ -134,6 +136,8 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
   const handleSubmitAnswer = (optionIdx: number) => {
     if (selectedOption !== null || !socket) return;
     setSelectedOption(optionIdx);
+    quizAudio.playTick();
+
     const cleanPin = pinCode.replace(/\s+/g, '').trim();
     socket.emit('player:submit-answer', { code: cleanPin, optionIndex: optionIdx });
   };
@@ -152,7 +156,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
       <div className="absolute top-1/3 -right-32 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none animate-pulse duration-700" />
       <div className="absolute -bottom-32 left-1/4 w-96 h-96 bg-rose-600/15 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Floating 3D Translucent Shapes in Background */}
+      {/* Floating 3D Translucent Shapes */}
       <div className="absolute top-20 left-10 text-4xl text-rose-500/20 animate-bounce duration-1000 pointer-events-none">▲</div>
       <div className="absolute top-40 right-16 text-5xl text-blue-500/20 animate-bounce duration-700 pointer-events-none">◆</div>
       <div className="absolute bottom-24 left-16 text-4xl text-amber-500/20 animate-bounce duration-1000 pointer-events-none">●</div>
@@ -167,15 +171,17 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
           <div>
             <span className="font-extrabold text-base tracking-tight text-white flex items-center gap-2">
               Marimov Game Zone
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-950 text-purple-300 border border-purple-800 hidden sm:inline-block">
-                Live Student Portal
-              </span>
+              {avatar && (
+                <span className="px-2 py-0.5 rounded-full text-xs font-black bg-purple-950 text-yellow-300 border border-purple-800 flex items-center gap-1">
+                  {avatar.emoji} {avatar.name}
+                </span>
+              )}
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <button onClick={toggleMute} className="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 transition">
+          <button onClick={toggleMute} className="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 transition cursor-pointer">
             {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
           </button>
         </div>
@@ -184,7 +190,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
       {/* Main Responsive Body */}
       <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 relative z-10 w-full max-w-5xl mx-auto">
         
-        {/* 1. JOIN FORM STATE (Responsive Desktop Grid & Mobile Design) */}
+        {/* 1. JOIN FORM STATE */}
         {gameState === 'join' && (
           <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-8 items-center animate-scaleUp">
             
@@ -199,7 +205,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
               </h2>
 
               <p className="text-slate-400 text-xs lg:text-sm leading-relaxed font-medium">
-                O'qituvchingiz ko'rsatgan 6-xonali PIN kod va o'zingizning nikneymingizni kiriting va do'stlaringiz bilan jonli musobaqalashing!
+                O'qituvchingiz ko'rsatgan PIN kod va o'zingizning nikneymingizni kiriting va do'stlaringiz bilan jonli musobaqalashing!
               </p>
 
               <div className="flex items-center gap-6 pt-2 text-xs font-bold text-slate-300">
@@ -268,33 +274,38 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
           </div>
         )}
 
-        {/* 2. WAITING ROOM STATE */}
+        {/* 2. WAITING ROOM STATE WITH ANIMAL AVATAR */}
         {gameState === 'waiting' && (
           <div className="text-center space-y-6 max-w-md animate-fadeIn p-8 bg-slate-900/80 rounded-3xl border border-slate-800 backdrop-blur-xl shadow-2xl">
-            <div className="w-24 h-24 rounded-full bg-purple-600/20 border-2 border-purple-500 flex items-center justify-center text-5xl mx-auto animate-bounce shadow-xl">
-              🎯
+            <div className="w-28 h-28 rounded-full bg-gradient-to-tr from-purple-600/30 to-indigo-600/30 border-2 border-purple-500 flex flex-col items-center justify-center mx-auto shadow-2xl animate-pulse">
+              <span className="text-6xl drop-shadow-md">{avatar?.emoji || '🦁'}</span>
             </div>
+
             <div className="space-y-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-950 border border-purple-800 text-yellow-300 text-xs font-black">
+                {avatar?.emoji} Personajingiz: {avatar?.name || 'Qahramon'}
+              </div>
               <h2 className="text-3xl font-black text-white">{nickname}, Siz O'yindasiz!</h2>
               <p className="text-xs text-purple-300 font-semibold leading-relaxed">
                 O'qituvchi ekrandan savolni ko'rsatishini kuting va mos rang/shaklni tanlang!
               </p>
             </div>
+
             <div className="p-3.5 rounded-2xl bg-purple-950/60 border border-purple-800/60 text-purple-200 text-xs font-bold flex items-center justify-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-400" /> Aloqa Tizimga Muvaffaqiyatli Ulangan
             </div>
           </div>
         )}
 
-        {/* 3. RESPONSIVE ARENA 4-SHAPE BUTTONS STATE */}
+        {/* 3. RESPONSIVE ARENA 4-SHAPE BUTTONS WITH HIGH-FEEDBACK TOUCH MICRO-ANIMATIONS */}
         {gameState === 'question' && (
           <div className="w-full max-w-4xl h-[78vh] flex flex-col justify-between animate-scaleUp">
             
             {/* Top Bar */}
             <div className="flex items-center justify-between text-xs font-bold text-slate-300 px-4 py-3 bg-slate-900/90 border border-slate-800 rounded-2xl shadow-lg backdrop-blur-md">
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                Savol {questionIndex + 1} / {totalQuestions}
+              <span className="flex items-center gap-2">
+                <span className="text-xl">{avatar?.emoji || '👤'}</span>
+                <span className="font-extrabold text-white">{nickname}</span>
               </span>
               
               <span className="text-yellow-300 font-black text-base tracking-wider bg-slate-800 px-3 py-1 rounded-xl border border-slate-700">
@@ -304,18 +315,37 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
               <span className="text-purple-300 font-bold">{totalScore} ball</span>
             </div>
 
-            {/* 4 Large Responsive Touch/Click Shape Buttons Grid */}
+            {/* 4 Large Responsive Shape Buttons */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1 my-4">
-              {ARENA_PLAYER_BUTTONS.slice(0, optionsCount).map((btn, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleSubmitAnswer(idx)}
-                  style={{ backgroundColor: btn.color }}
-                  className={`rounded-3xl text-7xl md:text-8xl text-white shadow-2xl flex items-center justify-center transform active:scale-95 transition-all duration-150 border-b-8 border-black/30 cursor-pointer ${btn.hoverBg} ${btn.shadowColor}`}
-                >
-                  <span className="drop-shadow-2xl">{btn.shape}</span>
-                </button>
-              ))}
+              {ARENA_PLAYER_BUTTONS.slice(0, optionsCount).map((btn, idx) => {
+                const isSelected = selectedOption === idx;
+
+                return (
+                  <button
+                    key={idx}
+                    disabled={selectedOption !== null}
+                    onClick={() => handleSubmitAnswer(idx)}
+                    style={{ backgroundColor: btn.color }}
+                    className={`rounded-3xl text-7xl md:text-8xl text-white shadow-2xl flex items-center justify-center transform transition-all duration-150 border-b-8 border-black/30 cursor-pointer relative overflow-hidden ${btn.hoverBg} ${btn.shadowColor} ${
+                      isSelected
+                        ? 'ring-8 ring-yellow-400 scale-95 border-b-0 brightness-110 animate-pulse'
+                        : selectedOption !== null
+                        ? 'opacity-40 grayscale'
+                        : 'active:scale-95'
+                    }`}
+                  >
+                    <span className="drop-shadow-2xl">{btn.shape}</span>
+
+                    {isSelected && (
+                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                        <span className="px-4 py-2 bg-yellow-400 text-slate-900 font-black text-sm rounded-full shadow-2xl flex items-center gap-1 animate-bounce">
+                          <CheckCircle2 className="w-5 h-5 text-slate-900" /> Javobingiz Saqlandi!
+                        </span>
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
@@ -333,9 +363,14 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
           </div>
         )}
 
-        {/* 5. ROUND RESULT STATE */}
+        {/* 5. ROUND RESULT STATE WITH ANIMAL AVATAR */}
         {gameState === 'result' && (
           <div className="w-full max-w-md p-8 bg-slate-900/90 rounded-3xl border border-slate-800/90 text-center space-y-5 animate-scaleUp shadow-2xl backdrop-blur-xl">
+            <div className="flex items-center justify-center gap-2 text-2xl">
+              <span>{avatar?.emoji}</span>
+              <span className="font-black text-white text-lg">{nickname}</span>
+            </div>
+
             <div className={`w-24 h-24 rounded-full flex items-center justify-center text-5xl mx-auto shadow-xl ${
               isCorrect ? 'bg-emerald-500/20 text-emerald-400 border-2 border-emerald-500' : 'bg-rose-500/20 text-rose-400 border-2 border-rose-500'
             }`}>
@@ -364,10 +399,11 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
           </div>
         )}
 
-        {/* 6. FINISHED STATE */}
+        {/* 6. FINISHED STATE WITH ANIMAL AVATAR */}
         {gameState === 'finished' && (
           <div className="text-center space-y-6 max-w-md animate-scaleUp p-8 bg-slate-900/90 rounded-3xl border border-slate-800 backdrop-blur-xl shadow-2xl">
-            <Trophy className="w-24 h-24 text-yellow-400 mx-auto drop-shadow-2xl animate-bounce" />
+            <div className="text-6xl mb-2">{avatar?.emoji || '🏆'}</div>
+            <Trophy className="w-20 h-20 text-yellow-400 mx-auto drop-shadow-2xl animate-bounce" />
             <h2 className="text-4xl font-black text-white">O'yin Tugadi!</h2>
             <div className="p-6 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-3">
               <div className="text-xs font-bold text-slate-400">Yakuniy Natijangiz:</div>
