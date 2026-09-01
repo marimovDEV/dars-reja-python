@@ -4,11 +4,40 @@ import json
 import random
 from .models import Lesson
 
+def validate_and_clean_questions(questions):
+    """
+    Strictly validates and sanitizes AI generated JSON questions.
+    """
+    valid = []
+    if not isinstance(questions, list):
+        return []
+    for q in questions:
+        if not isinstance(q, dict):
+            continue
+        question_text = q.get('question')
+        options = q.get('options')
+        correct_idx = q.get('correctOptionIndex')
+        
+        if not question_text or not isinstance(options, list) or len(options) != 4:
+            continue
+        if not isinstance(correct_idx, int) or correct_idx < 0 or correct_idx > 3:
+            continue
+            
+        valid.append({
+            "question": str(question_text),
+            "type": "single_choice",
+            "options": [str(opt) for opt in options],
+            "correctOptionIndex": int(correct_idx),
+            "explanation": str(q.get('explanation', '')),
+            "lessonId": int(q.get('lessonId', 1)),
+            "durationSeconds": int(q.get('durationSeconds', 20))
+        })
+    return valid
+
 def generate_ai_quiz(lesson_numbers, question_count=10, difficulty="mixed", include_code=True, language="uz"):
     """
     Generates quiz questions based on selected lesson_numbers using Gemini AI API or robust fallback.
     """
-    # Gather lesson contents
     lesson_texts = []
     lessons_in_db = Lesson.objects.filter(lesson_number__in=lesson_numbers).order_by('lesson_number')
     
@@ -32,7 +61,6 @@ def generate_ai_quiz(lesson_numbers, question_count=10, difficulty="mixed", incl
 
     combined_text = "\n\n".join(lesson_texts)
     
-    # Try calling Gemini API via google.genai if GEMINI_API_KEY or GOOGLE_API_KEY exists
     api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
     code_text = "Ha" if include_code else "Yo'q"
     
@@ -88,9 +116,10 @@ JAVOBNI FAQAT QUYIDAGI SOF JSON ARRAY FORMATIDA QAYTARING (boshqa hech qanday iz
                 clean_json_str = response.text.strip()
                 clean_json_str = re.sub(r'^```json\s*', '', clean_json_str)
                 clean_json_str = re.sub(r'\s*```$', '', clean_json_str)
-                questions = json.loads(clean_json_str)
-                if isinstance(questions, list) and len(questions) > 0:
-                    return questions
+                raw_questions = json.loads(clean_json_str)
+                validated = validate_and_clean_questions(raw_questions)
+                if len(validated) > 0:
+                    return validated[:question_count]
         except Exception as e:
             print("Gemini API generation error, falling back to local extractor:", e)
 
@@ -126,4 +155,4 @@ JAVOBNI FAQAT QUYIDAGI SOF JSON ARRAY FORMATIDA QAYTARING (boshqa hech qanday iz
         })
 
     random.shuffle(fallback_questions)
-    return fallback_questions[:question_count]
+    return validate_and_clean_questions(fallback_questions[:question_count])
