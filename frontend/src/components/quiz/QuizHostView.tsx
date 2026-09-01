@@ -5,6 +5,8 @@ import { quizAudio } from '../../services/QuizAudioService';
 import { Users, Play, ArrowRight, Trophy, Volume2, VolumeX, Sparkles } from 'lucide-react';
 import { Quiz } from '../../types/quiz';
 
+import { getSocketUrl } from '../../config/apiConfig';
+
 interface QuizHostViewProps {
   quiz: Quiz;
   onExit: () => void;
@@ -38,7 +40,7 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
     const pin = Math.floor(100000 + Math.random() * 900000).toString();
     setSessionCode(pin);
 
-    const socketUrl = (window.location.port === '3005') ? `http://${window.location.hostname}:5006` : window.location.origin;
+    const socketUrl = getSocketUrl();
     const newSocket = io(socketUrl, { transports: ['websocket', 'polling'] });
     setSocket(newSocket);
 

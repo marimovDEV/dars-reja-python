@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { quizAudio } from '../../services/QuizAudioService';
 import { Flame, CheckCircle2, XCircle, Trophy, Volume2, VolumeX, Send, Loader2 } from 'lucide-react';
+import { getSocketUrl } from '../../config/apiConfig';
 
 interface QuizPlayerViewProps {
   onExit: () => void;
@@ -87,8 +88,6 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
       quizAudio.playFanfare();
     });
   };
-
-  const getSocketUrl = () => (window.location.port === '3005') ? `http://${window.location.hostname}:5006` : window.location.origin;
 
   useEffect(() => {
     const newSocket = io(getSocketUrl(), { transports: ['websocket', 'polling'] });
