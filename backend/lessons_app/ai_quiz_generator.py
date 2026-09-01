@@ -58,9 +58,115 @@ def validate_and_clean_questions(questions):
         valid.append(shuffled_q)
     return valid
 
+def generate_local_fallback_questions(lessons_in_db, docs_dir, target_count):
+    """
+    Generates rich local questions using lesson topics, goals, content & quizQuestions
+    to guarantee target_count (e.g., 10, 15, 20) questions.
+    """
+    pool = []
+    
+    for l in lessons_in_db:
+        num = l.lesson_number
+        title = l.title
+        goal = l.goal or f"{title} bo'yicha amaliy va nazariy ko'nikmalar"
+
+        # 1. Standard quizQuestions from DB if present
+        if l.quiz_questions:
+            for q in l.quiz_questions:
+                if isinstance(q, dict) and "question" in q and "options" in q:
+                    pool.append({
+                        "question": q["question"],
+                        "type": "single_choice",
+                        "options": q["options"],
+                        "correctOptionIndex": q.get("correctOptionIndex", 0),
+                        "explanation": q.get("explanation", f"{title} mavzusi bo'yicha nazariy javob."),
+                        "lessonId": num,
+                        "durationSeconds": 20
+                    })
+
+        # 2. Main Goal Question
+        pool.append({
+            "question": f"{num}-dars ('{title}') o'rganilishining asosiy maqsadi nima?",
+            "type": "single_choice",
+            "options": [
+                goal,
+                "Ma'lumotlar bazasini tozalash va o'chirish",
+                "Operatsion tizimni qayta o'rnatish",
+                "Frontend dizayn ranglarini o'zgartirish"
+            ],
+            "correctOptionIndex": 0,
+            "explanation": f"{title} darsining asosiy maqsadi — {goal}.",
+            "lessonId": num,
+            "durationSeconds": 20
+        })
+
+        # 3. Best Practice / Convention Question
+        pool.append({
+            "question": f"'{title}' mavzusida kod yozishda qaysi tamoyilga amal qilish tavsiya etiladi?",
+            "type": "single_choice",
+            "options": [
+                f"PEP 8 standartlariga va clean code qoidalariga rioya qilish",
+                "Barcha o'zgaruvchilarni bitta harf bilan nomlash",
+                "Izohlardan umuman foydalanmaslik",
+                "Koddagi barcha xatoliklarni pass bilan yashirish"
+            ],
+            "correctOptionIndex": 0,
+            "explanation": "Python va backend dasturlashda clean code va PEP 8 tamoyillariga amal qilish shart.",
+            "lessonId": num,
+            "durationSeconds": 20
+        })
+
+        # 4. Debugging & Error Handling Question
+        pool.append({
+            "question": f"'{title}' bo'yicha kodingizda xatolik yuz bersa, birinchi navbatda nima qilish kerak?",
+            "type": "single_choice",
+            "options": [
+                "Terminaldagi xatolik xabarini (Traceback) diqqat bilan o'qish",
+                "Kodni butunlay o'chirib tashlash",
+                "Kompyuterni o'chirib yoqish",
+                "Barcha fayllarni qayta nomlash"
+            ],
+            "correctOptionIndex": 0,
+            "explanation": "Dasturlashda Traceback xabari xatolik yuz bergan fayl va qatorni ko'rsatadi.",
+            "lessonId": num,
+            "durationSeconds": 20
+        })
+
+        # 5. Concept Verification Question
+        pool.append({
+            "question": f"'{title}' moduli loyihaga qanday integratsiya qilinadi?",
+            "type": "single_choice",
+            "options": [
+                f"{title} uchun to'g'ri mantiqiy struktura va sintaksisdan foydalanib",
+                "Faqat CSS fayllarini o'zgartirish orqali",
+                "Notion sahifasini o'chirish orqali",
+                "Internet tarmoqni uzib qo'yish orqali"
+            ],
+            "correctOptionIndex": 0,
+            "explanation": f"{title} moduli backend mantiqining uzviy qismi hisoblanadi.",
+            "lessonId": num,
+            "durationSeconds": 20
+        })
+
+    # Shuffle initial pool
+    random.shuffle(pool)
+
+    # If pool is smaller than target_count, duplicate and vary questions to reach exact count
+    result = list(pool)
+    index = 0
+    while len(result) < target_count and len(pool) > 0:
+        base_q = pool[index % len(pool)]
+        cloned = dict(base_q)
+        cloned["question"] = f"[Amaliyot] {cloned['question']}"
+        result.append(cloned)
+        index += 1
+
+    return validate_and_clean_questions(result[:target_count])
+
 def generate_ai_quiz(lesson_numbers, question_count=10, difficulty="mixed", include_code=True, language="uz"):
     """
     Generates quiz questions based on selected lesson_numbers using Gemini AI API or robust fallback.
+    Guarantees returning EXACTLY question_count (e.g., 5, 10, 15, 20) questions.
     """
     lesson_texts = []
     lessons_in_db = Lesson.objects.filter(lesson_number__in=lesson_numbers).order_by('lesson_number')
@@ -96,7 +202,7 @@ def generate_ai_quiz(lesson_numbers, question_count=10, difficulty="mixed", incl
             client = genai.Client(api_key=api_key)
             prompt = f"""Siz Python Backend o'quv kursi bo'yicha jonli test (quiz) yaratuvchi AI ekspertisiz.
 
-Quyidagi darslar materialidan foydalanib, JAMI {question_count} TA TEST SAVOLI YARATING:
+Quyidagi darslar materialidan foydalanib, ANIQ {question_count} TA TEST SAVOLI YARATING (kam ham, ko'p ham bo'lmasin):
 Darslar ro'yxati: {lesson_numbers}
 Qiyinlik darajasi: {difficulty}
 Kodli savollar bo'lsinmi: {code_text}
@@ -106,7 +212,7 @@ Darslar materiallari:
 {combined_text[:12000]}
 
 TALABLAR:
-1. Har bir savol tanlangan darslar materiallaridan kelib chiqishi shart.
+1. Aniq {question_count} ta bir-birini takrorlamaydigan savol yarating.
 2. Har bir savolda aniq 4 ta variant bo'lsin.
 3. 'correctOptionIndex' (0, 1, 2, 3) to'g'ri ko'rsatilsin va variantlar orasida tasodifiy aralashtirilsin (hammasi A javob bo'lmasin).
 4. Javobning o'zbek tilidagi qisqa tushuntirishi ('explanation') bo'lsin.
@@ -142,41 +248,15 @@ JAVOBNI FAQAT QUYIDAGI SOF JSON ARRAY FORMATIDA QAYTARING (boshqa hech qanday iz
                 clean_json_str = re.sub(r'\s*```$', '', clean_json_str)
                 raw_questions = json.loads(clean_json_str)
                 validated = validate_and_clean_questions(raw_questions)
-                if len(validated) > 0:
+                if len(validated) >= question_count:
                     return validated[:question_count]
+                elif len(validated) > 0:
+                    # Supplement with local fallback if Gemini generated fewer than question_count
+                    extra = generate_local_fallback_questions(lessons_in_db, docs_dir, question_count - len(validated))
+                    combined = validated + extra
+                    return combined[:question_count]
         except Exception as e:
             print("Gemini API generation error, falling back to local extractor:", e)
 
-    # Fallback extractor: Generate high-quality questions from lesson content & quizQuestions in DB
-    fallback_questions = []
-    for l in lessons_in_db:
-        num = l.lesson_number
-        if l.quiz_questions:
-            for q in l.quiz_questions:
-                if isinstance(q, dict) and "question" in q:
-                    fallback_questions.append({
-                        "question": q["question"],
-                        "type": "single_choice",
-                        "options": q.get("options", ["Variant 1", "Variant 2", "Variant 3", "Variant 4"]),
-                        "correctOptionIndex": q.get("correctOptionIndex", 0),
-                        "explanation": q.get("explanation", f"{l.title} bo'yicha nazariy tushuncha."),
-                        "lessonId": num,
-                        "durationSeconds": 20
-                    })
-        fallback_questions.append({
-            "question": f"{num}-dars: '{l.title}' mavzusining asosiy maqsadi nima?",
-            "type": "single_choice",
-            "options": [
-                l.goal or f"{l.title} mavzusini mukammal o'zlashtirish",
-                "Python tilini o'rnatmasdan ishga tushirish",
-                "Ma'lumotlar bazasini o'chirib tashlash",
-                "HTML fayllarni saqlash"
-            ],
-            "correctOptionIndex": 0,
-            "explanation": f"{l.title} darsi aynan shu mavzuni o'rgatadi.",
-            "lessonId": num,
-            "durationSeconds": 20
-        })
-
-    random.shuffle(fallback_questions)
-    return validate_and_clean_questions(fallback_questions[:question_count])
+    # Fallback extractor: Guarantee returning EXACTLY question_count questions
+    return generate_local_fallback_questions(lessons_in_db, docs_dir, question_count)

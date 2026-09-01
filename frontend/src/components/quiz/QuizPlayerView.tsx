@@ -88,8 +88,10 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
     });
   };
 
+  const getSocketUrl = () => (window.location.port === '3005') ? `http://${window.location.hostname}:5005` : window.location.origin;
+
   useEffect(() => {
-    const newSocket = io(window.location.origin, { transports: ['websocket', 'polling'] });
+    const newSocket = io(getSocketUrl(), { transports: ['websocket', 'polling'] });
     setSocket(newSocket);
     initSocketListeners(newSocket);
 
@@ -122,7 +124,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
     setError(null);
     let activeSocket = socket;
     if (!activeSocket || !activeSocket.connected) {
-      activeSocket = io(window.location.origin, { transports: ['websocket', 'polling'] });
+      activeSocket = io(getSocketUrl(), { transports: ['websocket', 'polling'] });
       setSocket(activeSocket);
       initSocketListeners(activeSocket);
     }
