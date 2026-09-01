@@ -31,6 +31,10 @@ export default function App() {
     window.location.search.includes('mode=create')
   );
 
+  useEffect(() => {
+    document.title = 'marimovdev';
+  }, []);
+
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedLessonId, setSelectedLessonId] = useState<string>('');

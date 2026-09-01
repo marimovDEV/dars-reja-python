@@ -40,6 +40,10 @@ export function QuizStandalonePortal({ lessons = [] }: QuizStandalonePortalProps
     date: new Date().toISOString()
   }));
 
+  useEffect(() => {
+    document.title = 'marimovdev';
+  }, []);
+
   // Automatic trigger generator if on /create route and logged in
   useEffect(() => {
     if (isCreateRoute && teacherLoggedIn) {
