@@ -16,6 +16,13 @@ urlpatterns = [
     path('api/groups/<str:group_id>/lessons', views.group_lessons),
     path('api/groups/<str:group_id>/lessons/<str:lesson_id>', views.update_group_lesson_progress),
     
+    # AI Quiz Arena endpoints
+    path('api/ai/quizzes/generate', views.generate_quiz_ai),
+    path('api/quizzes', views.quizzes_list),
+    path('api/quizzes/<str:quiz_id>', views.quiz_detail),
+    path('api/quiz-sessions', views.create_quiz_session),
+    path('api/quiz-sessions/<str:code>', views.get_quiz_session_info),
+
     path('api/notion/status', views.notion_status),
     path('api/scrape', views.scrape_notion),
     path('api/notion/disconnect', views.notion_disconnect),

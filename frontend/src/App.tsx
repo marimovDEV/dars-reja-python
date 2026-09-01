@@ -9,6 +9,11 @@ import { Lesson, LessonStatus, LessonMaterial } from './types';
 import { Group, GroupFormData } from './types/group';
 import { GroupSelectModal } from './components/GroupSelectModal';
 import { GroupDashboardView } from './components/GroupDashboardView';
+import { Quiz } from './types/quiz';
+import { AIQuizGeneratorModal } from './components/quiz/AIQuizGeneratorModal';
+import { QuizEditorModal } from './components/quiz/QuizEditorModal';
+import { QuizHostView } from './components/quiz/QuizHostView';
+import { QuizPlayerView } from './components/quiz/QuizPlayerView';
 import { Menu, X, Sun, Moon, BookOpen, Loader2 } from 'lucide-react';
 import { LoginView } from './components/LoginView';
 import { ImportLessonsModal } from './components/ImportLessonsModal';
@@ -30,13 +35,18 @@ export default function App() {
   const [activeGroupId, setActiveGroupId] = useState<string | null>(() => localStorage.getItem('dars_rejasi_active_group_id'));
   const [isGroupSelectModalOpen, setIsGroupSelectModalOpen] = useState<boolean>(false);
 
+  // Quiz state
+  const [activeQuiz, setActiveQuiz] = useState<Quiz | null>(null);
+  const [isAIQuizModalOpen, setIsAIQuizModalOpen] = useState<boolean>(false);
+  const [isQuizEditorModalOpen, setIsQuizEditorModalOpen] = useState<boolean>(false);
+
   // Modals & Navigation state
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [editingLesson, setEditingLesson] = useState<Lesson | null>(null);
   const [isAddLessonModalOpen, setIsAddLessonModalOpen] = useState<boolean>(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState<boolean>(false);
   const [isSyncModalOpen, setIsSyncModalOpen] = useState<boolean>(false);
-  const [currentView, setCurrentView] = useState<'lessons' | 'settings' | 'groups_dashboard'>('lessons');
+  const [currentView, setCurrentView] = useState<'lessons' | 'settings' | 'groups_dashboard' | 'quiz_host' | 'quiz_player'>('lessons');
   const [notionSettings, setNotionSettings] = useState<NotionSettings | null>(null);
   const [previewMaterial, setPreviewMaterial] = useState<LessonMaterial | null>(null);
   const [addMaterialLessonId, setAddMaterialLessonId] = useState<string | null>(null);
@@ -56,7 +66,6 @@ export default function App() {
       setGroups(data);
 
       if (data.length > 0) {
-        // If activeGroupId is invalid or not set, default to first group or prompt select
         const savedId = localStorage.getItem('dars_rejasi_active_group_id');
         const found = data.find(g => g.id === savedId);
         if (found) {
@@ -66,7 +75,6 @@ export default function App() {
           localStorage.setItem('dars_rejasi_active_group_id', data[0].id);
         }
       } else {
-        // If no groups exist, open group creation modal post-login
         if (isLoggedIn) {
           setIsGroupSelectModalOpen(true);
         }
@@ -86,7 +94,6 @@ export default function App() {
         setLessons(data);
         localStorage.setItem('dars_rejasi_lessons', JSON.stringify(data));
         
-        // Find current or first lesson
         const currentLessonObj = data.find(l => l.status === 'current') || data[0];
         setSelectedLessonId(currentLessonObj.id);
       }
@@ -97,7 +104,6 @@ export default function App() {
     }
   };
 
-  // Initial load
   useEffect(() => {
     fetchNotionStatus();
     if (isLoggedIn) {
@@ -105,12 +111,10 @@ export default function App() {
     }
   }, [isLoggedIn]);
 
-  // Load group lessons whenever activeGroupId changes
   useEffect(() => {
     if (activeGroupId) {
       fetchGroupLessons(activeGroupId);
     } else {
-      // Fallback: load general lessons list
       fetch('/api/lessons?t=' + Date.now())
         .then(res => res.json())
         .then((data: Lesson[]) => {
@@ -177,13 +181,12 @@ export default function App() {
     saveLessonsLocally(next);
 
     if (activeGroupId) {
-      // Sync group-specific status
       fetch(`/api/groups/${activeGroupId}/lessons/${lessonId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
       })
-      .then(() => fetchGroups()) // Refresh group progress summary stats
+      .then(() => fetchGroups())
       .catch(err => console.warn("Group status sync failed:", err));
     } else {
       fetch(`/api/lessons/${lessonId}/status`, {
@@ -307,6 +310,16 @@ export default function App() {
     return <LoginView onLogin={() => setIsLoggedIn(true)} />;
   }
 
+  // Full Screen Quiz Host View
+  if (currentView === 'quiz_host' && activeQuiz) {
+    return <QuizHostView quiz={activeQuiz} onExit={() => setCurrentView('lessons')} />;
+  }
+
+  // Full Screen Quiz Player View
+  if (currentView === 'quiz_player') {
+    return <QuizPlayerView onExit={() => setCurrentView('lessons')} />;
+  }
+
   if (loading && lessons.length === 0) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 text-slate-500">
@@ -365,6 +378,8 @@ export default function App() {
           activeGroup={activeGroup}
           onOpenGroupSelectModal={() => setIsGroupSelectModalOpen(true)}
           onOpenGroupDashboard={() => setCurrentView('groups_dashboard')}
+          onOpenAIQuizGenerator={() => setIsAIQuizModalOpen(true)}
+          onOpenPlayerView={() => setCurrentView('quiz_player')}
         />
       </div>
 
@@ -411,6 +426,30 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {/* AI Quiz Generator Modal */}
+      <AIQuizGeneratorModal
+        isOpen={isAIQuizModalOpen}
+        onClose={() => setIsAIQuizModalOpen(false)}
+        lessons={lessons}
+        onQuizGenerated={(generatedQuiz) => {
+          setActiveQuiz(generatedQuiz);
+          setIsQuizEditorModalOpen(true);
+        }}
+      />
+
+      {/* Quiz Editor Modal */}
+      {activeQuiz && (
+        <QuizEditorModal
+          isOpen={isQuizEditorModalOpen}
+          onClose={() => setIsQuizEditorModalOpen(false)}
+          quiz={activeQuiz}
+          onStartLiveSession={(finalQuiz) => {
+            setActiveQuiz(finalQuiz);
+            setCurrentView('quiz_host');
+          }}
+        />
+      )}
 
       {/* Group Selection / Creation Modal */}
       <GroupSelectModal

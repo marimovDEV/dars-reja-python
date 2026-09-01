@@ -68,7 +68,6 @@ class Group(models.Model):
         return self.name
 
     def to_dict(self):
-        # Calculate current lesson number and stats based on lesson progress
         progress_qs = self.lesson_progress.all().select_related('lesson')
         completed_count = progress_qs.filter(status='completed').count()
         current_progress = progress_qs.filter(status='current').first()
@@ -147,3 +146,50 @@ class GroupLessonProgress(models.Model):
         lesson_data["completedAt"] = self.completed_at.strftime("%Y-%m-%d %H:%M") if self.completed_at else ""
         lesson_data["teacherNotes"] = self.notes or ""
         return lesson_data
+
+
+class Quiz(models.Model):
+    quiz_id = models.CharField(max_length=100, unique=True)
+    title = models.CharField(max_length=255)
+    lesson_ids = models.JSONField(default=list, blank=True)
+    questions = models.JSONField(default=list, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+
+    def to_dict(self):
+        return {
+            "id": self.quiz_id,
+            "title": self.title,
+            "lessonIds": self.lesson_ids or [],
+            "questions": self.questions or [],
+            "questionsCount": len(self.questions or []),
+            "createdAt": self.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        }
+
+
+class QuizSession(models.Model):
+    code = models.CharField(max_length=10, unique=True)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='sessions')
+    status = models.CharField(max_length=20, default='lobby') # lobby, active, finished
+    results = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Session {self.code} - {self.quiz.title}"
+
+    def to_dict(self):
+        return {
+            "code": self.code,
+            "quiz": self.quiz.to_dict(),
+            "status": self.status,
+            "results": self.results or {},
+            "createdAt": self.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        }

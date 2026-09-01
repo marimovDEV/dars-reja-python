@@ -11,6 +11,7 @@ import {
   Settings,
   Users,
   Grid,
+  Gamepad2,
   Sparkles
 } from 'lucide-react';
 import { Lesson } from '../types';
@@ -29,6 +30,9 @@ interface LessonSidebarProps {
   activeGroup: Group | null;
   onOpenGroupSelectModal: () => void;
   onOpenGroupDashboard: () => void;
+  // Quiz props
+  onOpenAIQuizGenerator: () => void;
+  onOpenPlayerView: () => void;
 }
 
 export const LessonSidebar: React.FC<LessonSidebarProps> = ({
@@ -43,6 +47,8 @@ export const LessonSidebar: React.FC<LessonSidebarProps> = ({
   activeGroup,
   onOpenGroupSelectModal,
   onOpenGroupDashboard,
+  onOpenAIQuizGenerator,
+  onOpenPlayerView
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
@@ -98,6 +104,25 @@ export const LessonSidebar: React.FC<LessonSidebarProps> = ({
             <Grid className="w-4 h-4" />
           </button>
         </div>
+      </div>
+
+      {/* AI Quiz Arena Banner Trigger */}
+      <div className="p-2.5 bg-gradient-to-r from-purple-900/90 via-indigo-900/90 to-slate-900 text-white border-b border-purple-800/50 flex items-center justify-between gap-2">
+        <button
+          onClick={onOpenAIQuizGenerator}
+          className="flex-1 py-1.5 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-yellow-300 animate-pulse" />
+          🎮 AI Quiz Arena
+        </button>
+
+        <button
+          onClick={onOpenPlayerView}
+          title="O'quvchi sifatida PIN kirgizish"
+          className="py-1.5 px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-purple-300 font-bold text-xs transition shrink-0"
+        >
+          📱 PIN
+        </button>
       </div>
 
       {/* Top Header Controls */}

@@ -1,14 +1,17 @@
 import os
+import re
 import json
 import time
+import random
 from datetime import datetime, timedelta, date
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import Lesson, Group, GroupLessonProgress
+from .models import Lesson, Group, GroupLessonProgress, Quiz, QuizSession
 from .scraper import scrape_single_notion_page, SETTINGS_FILE
+from .ai_quiz_generator import generate_ai_quiz
 
 def get_settings():
     if os.path.exists(SETTINGS_FILE):
@@ -178,14 +181,12 @@ def groups_list(request):
             notes=data.get('notes', '')
         )
 
-        # Auto-create GroupLessonProgress for all 72 lessons
         all_lessons = list(Lesson.objects.all().order_by('lesson_number'))
         lesson_dates = calculate_lesson_dates(start_date_obj, schedule_days, total_lessons=len(all_lessons) or 72)
 
         progress_objs = []
         for idx, lesson in enumerate(all_lessons):
             sch_at = lesson_dates[idx] if idx < len(lesson_dates) else None
-            # 1-dars "current" qilib o'rnatiladi, qolganlari "planned"
             init_status = "current" if idx == 0 else "planned"
             progress_objs.append(
                 GroupLessonProgress(
@@ -223,7 +224,6 @@ def group_lessons(request, group_id):
 
     progress_qs = GroupLessonProgress.objects.filter(group=group).select_related('lesson').order_by('lesson__lesson_number')
     
-    # If group has no progress records yet (e.g. lessons added later), generate them
     if not progress_qs.exists():
         all_lessons = list(Lesson.objects.all().order_by('lesson_number'))
         lesson_dates = calculate_lesson_dates(group.start_date, group.schedule_days, total_lessons=len(all_lessons))
@@ -251,7 +251,6 @@ def update_group_lesson_progress(request, group_id, lesson_id):
     try:
         progress = GroupLessonProgress.objects.get(group=group, lesson__lesson_id=lesson_id)
     except GroupLessonProgress.DoesNotExist:
-        # Fallback by lesson_number
         try:
             progress = GroupLessonProgress.objects.get(group=group, lesson__lesson_number=int(lesson_id))
         except (GroupLessonProgress.DoesNotExist, ValueError):
@@ -272,6 +271,100 @@ def update_group_lesson_progress(request, group_id, lesson_id):
 
     progress.save()
     return Response(progress.to_dict())
+
+# ============================================================================
+# AI QUIZ ARENA API ENDPOINTS
+# ============================================================================
+
+@api_view(['POST'])
+def generate_quiz_ai(request):
+    data = request.data
+    lesson_ids = data.get('lessonIds', [])
+    if not lesson_ids:
+        return Response({'error': 'Kamida 1 ta dars tanlanishi kerak.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    question_count = int(data.get('questionCount', 10))
+    difficulty = data.get('difficulty', 'mixed')
+    include_code = data.get('includeCodeQuestions', True)
+    language = data.get('language', 'uz')
+
+    try:
+        questions = generate_ai_quiz(
+            lesson_numbers=lesson_ids,
+            question_count=question_count,
+            difficulty=difficulty,
+            include_code=include_code,
+            language=language
+        )
+        return Response({
+            'success': True,
+            'lessonIds': lesson_ids,
+            'questions': questions
+        })
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET', 'POST'])
+def quizzes_list(request):
+    if request.method == 'GET':
+        quizzes = Quiz.objects.all()
+        return Response([q.to_dict() for q in quizzes])
+
+    elif request.method == 'POST':
+        data = request.data
+        title = data.get('title') or f"Quiz ({time.strftime('%Y-%m-%d %H:%M')})"
+        questions = data.get('questions', [])
+        lesson_ids = data.get('lessonIds', [])
+
+        quiz_id = data.get('id') or f"quiz-{int(time.time()*1000)}"
+        quiz = Quiz.objects.create(
+            quiz_id=quiz_id,
+            title=title,
+            lesson_ids=lesson_ids,
+            questions=questions
+        )
+        return Response(quiz.to_dict(), status=status.HTTP_201_CREATED)
+
+@api_view(['GET', 'DELETE'])
+def quiz_detail(request, quiz_id):
+    try:
+        quiz = Quiz.objects.get(quiz_id=quiz_id)
+    except Quiz.DoesNotExist:
+        return Response({'error': 'Quiz topilmadi.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        return Response(quiz.to_dict())
+    elif request.method == 'DELETE':
+        quiz.delete()
+        return Response({'message': 'Quiz o\'chirildi.'})
+
+@api_view(['POST'])
+def create_quiz_session(request):
+    data = request.data
+    quiz_id = data.get('quizId')
+    if not quiz_id:
+        return Response({'error': 'quizId talab etiladi.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        quiz = Quiz.objects.get(quiz_id=quiz_id)
+    except Quiz.DoesNotExist:
+        return Response({'error': 'Quiz topilmadi.'}, status=status.HTTP_404_NOT_FOUND)
+
+    code = f"{random.randint(100000, 999999)}"
+    session = QuizSession.objects.create(
+        code=code,
+        quiz=quiz,
+        status='lobby'
+    )
+    return Response(session.to_dict(), status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def get_quiz_session_info(request, code):
+    try:
+        session = QuizSession.objects.get(code=code)
+        return Response(session.to_dict())
+    except QuizSession.DoesNotExist:
+        return Response({'error': 'Sessiya topilmadi yoki PIN kod noto\'g\'ri.'}, status=status.HTTP_404_NOT_FOUND)
 
 # ============================================================================
 # NOTION SYNC & OTHER ENDPOINTS
