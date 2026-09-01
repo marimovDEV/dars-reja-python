@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { quizAudio } from '../../services/QuizAudioService';
-import { Flame, CheckCircle2, XCircle, Trophy, Volume2, VolumeX, Sparkles, Send } from 'lucide-react';
+import { Flame, CheckCircle2, XCircle, Trophy, Volume2, VolumeX, Send, Loader2 } from 'lucide-react';
 
 interface QuizPlayerViewProps {
   onExit: () => void;
 }
+
+export const KAHOOT_PLAYER_BUTTONS = [
+  { shape: '▲', color: '#e21b3c', label: 'A' }, // Red Triangle
+  { shape: '◆', color: '#1368ce', label: 'B' }, // Blue Diamond
+  { shape: '●', color: '#d89e00', label: 'C' }, // Yellow Circle
+  { shape: '■', color: '#26890c', label: 'D' }  // Green Square
+];
 
 export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -16,14 +23,12 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
   const [gameState, setGameState] = useState<'join' | 'waiting' | 'question' | 'answered' | 'result' | 'finished'>('join');
   const [sessionTitle, setSessionTitle] = useState<string>('');
   
-  const [questionText, setQuestionText] = useState<string>('');
-  const [options, setOptions] = useState<string[]>([]);
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [totalQuestions, setTotalQuestions] = useState<number>(0);
+  const [optionsCount, setOptionsCount] = useState<number>(4);
   const [timerLeft, setTimerLeft] = useState<number>(20);
-  const [startTime, setStartTime] = useState<number>(0);
 
-  // Player stats
+  // Player round stats
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [pointsEarned, setPointsEarned] = useState<number>(0);
@@ -36,7 +41,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
     const newSocket = io(window.location.origin, { transports: ['websocket', 'polling'] });
     setSocket(newSocket);
 
-    newSocket.on('player:joined', ({ code, nickname, sessionTitle }) => {
+    newSocket.on('player:joined', ({ code, nickname, sessionTitle, reconnected }) => {
       setGameState('waiting');
       setSessionTitle(sessionTitle);
       setError(null);
@@ -51,36 +56,34 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
       setGameState('waiting');
     });
 
-    newSocket.on('player:question-started', ({ questionIndex, totalQuestions, questionText, options, durationSec }) => {
+    // Received Kahoot payload (NO QUESTION OR OPTION TEXT!)
+    newSocket.on('player:question-started', ({ questionIndex, totalQuestions, optionsCount, durationSec }) => {
       setGameState('question');
       setQuestionIndex(questionIndex);
       setTotalQuestions(totalQuestions);
-      setQuestionText(questionText);
-      setOptions(options);
+      setOptionsCount(optionsCount || 4);
       setTimerLeft(durationSec);
       setSelectedOption(null);
       setIsCorrect(null);
-      setStartTime(Date.now());
       quizAudio.playQuestionStart();
     });
 
-    newSocket.on('player:answer-received', ({ isCorrect, pointsEarned, totalScore, streak }) => {
+    // Immediate acknowledgment after tapping a shape button
+    newSocket.on('player:answer-received', ({ pointsEarned, totalScore, streak }) => {
       setGameState('answered');
-      setIsCorrect(isCorrect);
-      setPointsEarned(pointsEarned);
-      setTotalScore(totalScore);
-      setStreak(streak);
-
-      if (isCorrect) quizAudio.playCorrect();
-      else quizAudio.playIncorrect();
     });
 
-    newSocket.on('player:round-summary', ({ rank, score, pointsEarned, streak }) => {
+    // Round summary after host closes question
+    newSocket.on('player:round-summary', ({ isCorrect, rank, score, pointsEarned, streak }) => {
       setGameState('result');
+      setIsCorrect(isCorrect);
       setRank(rank);
       setTotalScore(score);
       setPointsEarned(pointsEarned);
       setStreak(streak);
+
+      if (isCorrect) quizAudio.playCorrect();
+      else quizAudio.playIncorrect();
     });
 
     newSocket.on('game:finished', ({ leaderboard }) => {
@@ -95,7 +98,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
     };
   }, [nickname]);
 
-  // Question timer
+  // Question countdown
   useEffect(() => {
     if (gameState === 'question' && timerLeft > 0) {
       const timer = setTimeout(() => {
@@ -120,8 +123,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
   const handleSubmitAnswer = (optionIdx: number) => {
     if (selectedOption !== null || !socket) return;
     setSelectedOption(optionIdx);
-    const responseTimeMs = Date.now() - startTime;
-    socket.emit('player:submit-answer', { code: pinCode, optionIndex: optionIdx, responseTimeMs });
+    socket.emit('player:submit-answer', { code: pinCode, optionIndex: optionIdx });
   };
 
   const toggleMute = () => {
@@ -130,14 +132,6 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
     quizAudio.setMuted(next);
   };
 
-  const shapes = ['🔺', '🟦', '🟡', '🟢'];
-  const colors = [
-    'bg-rose-500 hover:bg-rose-600 border-rose-700',
-    'bg-blue-600 hover:bg-blue-700 border-blue-800',
-    'bg-amber-500 hover:bg-amber-600 border-amber-700',
-    'bg-emerald-600 hover:bg-emerald-700 border-emerald-800'
-  ];
-
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between p-4 font-sans select-none overflow-hidden">
       
@@ -145,7 +139,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
       <div className="flex items-center justify-between p-2">
         <div className="flex items-center gap-2">
           <span className="text-xl">📱</span>
-          <span className="font-extrabold text-sm text-purple-300">Quiz Arena</span>
+          <span className="font-extrabold text-sm text-purple-300">Kahoot Player</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -180,7 +174,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
               <input
                 type="text"
                 maxLength={6}
-                placeholder="Masalan: 849201"
+                placeholder="849201"
                 value={pinCode}
                 onChange={e => setPinCode(e.target.value)}
                 className="w-full text-center py-3 text-2xl font-black tracking-widest bg-slate-800 border border-slate-700 rounded-2xl text-yellow-300 outline-none focus:ring-2 focus:ring-purple-500"
@@ -215,52 +209,45 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
             </div>
             <h2 className="text-2xl font-black text-white">{nickname}, Siz o'yindasiz!</h2>
             <p className="text-xs text-purple-300">
-              O'qituvchi o'yinni boshlashini kuting. Ekrandan savollarni kuzatib boring!
+              O'qituvchi monitoriga qarang va mos rang/shaklni tanlang!
             </p>
           </div>
         )}
 
-        {/* 3. QUESTION STATE (4 Large Colored Buttons) */}
+        {/* 3. CLASSIC KAHOOT 4-SHAPE BUTTONS STATE (NO QUESTION TEXT!) */}
         {gameState === 'question' && (
-          <div className="w-full max-w-md space-y-4 animate-scaleUp">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-400 px-1">
-              <span>{nickname}</span>
-              <span className="text-yellow-400 font-extrabold">⏱ {timerLeft}s</span>
+          <div className="w-full max-w-md h-[75vh] flex flex-col justify-between animate-scaleUp">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-400 px-2 py-1 bg-slate-900 rounded-xl">
+              <span>Savol {questionIndex + 1} / {totalQuestions}</span>
+              <span className="text-yellow-400 font-extrabold text-sm">⏱ {timerLeft}s</span>
               <span>{totalScore} ball</span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center font-bold text-sm text-white min-h-16 flex items-center justify-center">
-              {questionText}
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 h-64">
-              {options.map((opt, idx) => (
+            {/* 4 Large Full-Screen Touch Shape Buttons */}
+            <div className="grid grid-cols-2 gap-4 flex-1 my-3">
+              {KAHOOT_PLAYER_BUTTONS.slice(0, optionsCount).map((btn, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSubmitAnswer(idx)}
-                  className={`rounded-2xl ${colors[idx]} border-b-4 text-white font-black text-xl flex flex-col items-center justify-center p-4 active:scale-95 transition shadow-lg`}
+                  style={{ backgroundColor: btn.color }}
+                  className="rounded-3xl text-7xl text-white shadow-2xl flex items-center justify-center active:scale-95 transition-transform duration-150 border-b-8 border-black/20 cursor-pointer"
                 >
-                  <span className="text-3xl mb-1">{shapes[idx]}</span>
-                  <span className="text-xs font-extrabold line-clamp-2">{opt}</span>
+                  <span className="drop-shadow-lg">{btn.shape}</span>
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* 4. ANSWERED STATE */}
+        {/* 4. ANSWER SUBMITTED STATE */}
         {gameState === 'answered' && (
-          <div className="text-center space-y-4 animate-scaleUp">
-            <div className={`w-24 h-24 rounded-full flex items-center justify-center text-5xl mx-auto ${
-              isCorrect ? 'bg-emerald-500/20 text-emerald-400 border-2 border-emerald-500' : 'bg-rose-500/20 text-rose-400 border-2 border-rose-500'
-            }`}>
-              {isCorrect ? '✓' : '✕'}
+          <div className="text-center space-y-4 max-w-sm animate-scaleUp">
+            <div className="w-20 h-20 rounded-full bg-blue-600/30 border-2 border-blue-500 flex items-center justify-center text-4xl mx-auto animate-spin">
+              <Loader2 className="w-10 h-10 text-blue-400 animate-spin" />
             </div>
-            <h2 className="text-2xl font-black">
-              {isCorrect ? "To'g'ri Javob! ✨" : "Noto'g'ri Javob ❌"}
-            </h2>
+            <h2 className="text-2xl font-black text-white">Javob Qabul Qilindi!</h2>
             <p className="text-xs text-slate-400">
-              O'qituvchidan savol yakunlanishini kuting...
+              O'qituvchi ekranida vaqt tugashini kuting...
             </p>
           </div>
         )}
@@ -268,23 +255,29 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
         {/* 5. ROUND RESULT STATE */}
         {gameState === 'result' && (
           <div className="w-full max-w-xs p-6 bg-slate-900 rounded-3xl border border-slate-800 text-center space-y-4 animate-scaleUp shadow-2xl">
-            <div className="text-xs font-bold text-purple-400 uppercase tracking-wider">
-              Natijangiz
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center text-4xl mx-auto ${
+              isCorrect ? 'bg-emerald-500/20 text-emerald-400 border-2 border-emerald-500' : 'bg-rose-500/20 text-rose-400 border-2 border-rose-500'
+            }`}>
+              {isCorrect ? '✓' : '✕'}
             </div>
 
-            <div className="text-4xl font-black text-yellow-300">
+            <h2 className="text-2xl font-black">
+              {isCorrect ? "To'g'ri Javob! ✨" : "Noto'g'ri Javob ❌"}
+            </h2>
+
+            <div className="text-3xl font-black text-yellow-300">
               +{pointsEarned} <span className="text-xs font-semibold text-slate-400">ball</span>
             </div>
 
             <div className="p-3 rounded-2xl bg-slate-800 flex items-center justify-between text-xs font-bold">
-              <span className="text-slate-400">O'rningiz:</span>
+              <span className="text-slate-400">Joriy O'rningiz:</span>
               <span className="text-purple-300 text-sm">#{rank} - o'rin</span>
             </div>
 
             {streak >= 2 && (
               <div className="p-2.5 rounded-xl bg-amber-500/20 border border-amber-500/50 text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5 animate-bounce">
                 <Flame className="w-4 h-4 text-amber-400 fill-amber-400" />
-                {streak} ta ketma-ket to'g'ri! (Streak bonus 🔥)
+                {streak} ta ketma-ket to'g'ri! (Streak 🔥)
               </div>
             )}
           </div>
@@ -296,7 +289,7 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
             <Trophy className="w-20 h-20 text-yellow-400 mx-auto" />
             <h2 className="text-3xl font-black text-white">O'yin Tugadi!</h2>
             <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
-              <div className="text-xs text-slate-400">Sizning Yakuniy Natijangiz:</div>
+              <div className="text-xs text-slate-400">Yakuniy Natijangiz:</div>
               <div className="text-3xl font-black text-yellow-300">{totalScore} ball</div>
               <div className="text-sm font-bold text-purple-300">#{rank} - o'rin</div>
             </div>

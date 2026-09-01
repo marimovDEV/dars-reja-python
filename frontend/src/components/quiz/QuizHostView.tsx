@@ -2,13 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import confetti from 'canvas-confetti';
 import { quizAudio } from '../../services/QuizAudioService';
-import { Users, Play, ArrowRight, Trophy, Volume2, VolumeX, CheckCircle2, Clock, Sparkles } from 'lucide-react';
+import { Users, Play, ArrowRight, Trophy, Volume2, VolumeX, Sparkles } from 'lucide-react';
 import { Quiz } from '../../types/quiz';
 
 interface QuizHostViewProps {
   quiz: Quiz;
   onExit: () => void;
 }
+
+export const KAHOOT_STYLES = [
+  { shape: '▲', color: '#e21b3c', bg: 'bg-[#e21b3c]', border: 'border-red-700', label: 'A' },
+  { shape: '◆', color: '#1368ce', bg: 'bg-[#1368ce]', border: 'border-blue-700', label: 'B' },
+  { shape: '●', color: '#d89e00', bg: 'bg-[#d89e00]', border: 'border-amber-700', label: 'C' },
+  { shape: '■', color: '#26890c', bg: 'bg-[#26890c]', border: 'border-emerald-700', label: 'D' }
+];
 
 export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -22,19 +29,15 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
   const [timerLeft, setTimerLeft] = useState<number>(20);
   const [answersCount, setAnswersCount] = useState<number>(0);
 
-  // Result stats
   const [optionCounts, setOptionCounts] = useState<number[]>([0, 0, 0, 0]);
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [finalPodium, setFinalPodium] = useState<any[]>([]);
-  
   const [isMuted, setIsMuted] = useState<boolean>(false);
 
   useEffect(() => {
-    // Generate 6 digit PIN
     const pin = Math.floor(100000 + Math.random() * 900000).toString();
     setSessionCode(pin);
 
-    // Initialize Socket.IO connection
     const newSocket = io(window.location.origin, { transports: ['websocket', 'polling'] });
     setSocket(newSocket);
 
@@ -44,7 +47,7 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
 
     newSocket.on('host:player-list-update', ({ players }) => {
       setPlayers(players);
-      quizAudio.playCorrect(); // Small chime when player joins
+      quizAudio.playCorrect();
     });
 
     newSocket.on('game:countdown-start', ({ duration }) => {
@@ -78,7 +81,6 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
       setLeaderboard(leaderboard);
       quizAudio.playFanfare();
 
-      // Trigger Confetti!
       try {
         confetti({
           particleCount: 150,
@@ -93,7 +95,6 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
     };
   }, []);
 
-  // 3-2-1 Countdown timer tick
   useEffect(() => {
     if (gameState === 'countdown' && countdown > 0) {
       const timer = setTimeout(() => {
@@ -104,7 +105,6 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
     }
   }, [gameState, countdown]);
 
-  // Question countdown timer tick
   useEffect(() => {
     if (gameState === 'question' && timerLeft > 0) {
       const timer = setTimeout(() => {
@@ -135,13 +135,6 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
     }
   };
 
-  const colors = [
-    { bg: 'bg-rose-500 hover:bg-rose-600', border: 'border-rose-600', text: 'text-white', shape: '🔺' },
-    { bg: 'bg-blue-600 hover:bg-blue-700', border: 'border-blue-700', text: 'text-white', shape: '🟦' },
-    { bg: 'bg-amber-500 hover:bg-amber-600', border: 'border-amber-600', text: 'text-white', shape: '🟡' },
-    { bg: 'bg-emerald-600 hover:bg-emerald-700', border: 'border-emerald-700', text: 'text-white', shape: '🟢' }
-  ];
-
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between font-sans select-none overflow-hidden relative">
       
@@ -154,7 +147,7 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
           <div>
             <h1 className="font-extrabold text-base tracking-tight text-white">{quiz.title}</h1>
             <p className="text-xs text-purple-300 font-semibold flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-yellow-300" /> AI Quiz Arena Live
+              <Sparkles className="w-3 h-3 text-yellow-300" /> Kahoot Live Host Screen
             </p>
           </div>
         </div>
@@ -182,7 +175,6 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
         {/* LOBBY STATE */}
         {gameState === 'lobby' && (
           <div className="text-center space-y-8 max-w-3xl w-full animate-fadeIn">
-            {/* PIN Code Banner */}
             <div className="p-8 rounded-3xl bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 shadow-2xl border border-white/20 text-center relative overflow-hidden">
               <div className="text-xs font-extrabold uppercase tracking-widest text-purple-200 mb-1">
                 Telefon orqali qo'shilish uchun PIN kod
@@ -195,7 +187,6 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
               </div>
             </div>
 
-            {/* Players Count & Grid */}
             <div className="space-y-4">
               <div className="flex items-center justify-between text-sm font-bold text-slate-300 px-2">
                 <span className="flex items-center gap-2">
@@ -223,7 +214,6 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
               </div>
             </div>
 
-            {/* Start Button */}
             <button
               onClick={handleStartGame}
               disabled={players.length === 0}
@@ -237,8 +227,8 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
         {/* COUNTDOWN STATE */}
         {gameState === 'countdown' && (
           <div className="flex flex-col items-center justify-center text-center animate-scaleUp">
-            <div className="text-91xl text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-rose-500 drop-shadow-2xl animate-bounce">
-              {countdown > 0 ? countdown : 'GET READY!'}
+            <div className="text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-rose-500 drop-shadow-2xl animate-bounce">
+              {countdown > 0 ? countdown : 'TAYYORLANG!'}
             </div>
             <p className="text-xl font-bold text-purple-300 mt-4">O'yin boshlanmoqda...</p>
           </div>
@@ -247,13 +237,11 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
         {/* QUESTION STATE */}
         {gameState === 'question' && currentQuestion && (
           <div className="w-full max-w-4xl space-y-8 animate-fadeIn">
-            {/* Question Top Bar */}
             <div className="flex items-center justify-between text-xs font-bold text-slate-400">
               <span className="px-3 py-1 bg-purple-950 text-purple-300 rounded-full border border-purple-800">
                 Savol {currentQuestionIndex + 1} / {quiz.questions.length}
               </span>
 
-              {/* Timer ring */}
               <div className={`w-16 h-16 rounded-full border-4 flex items-center justify-center font-black text-xl shadow-lg ${
                 timerLeft <= 5
                   ? 'border-rose-500 text-rose-500 animate-ping'
@@ -267,24 +255,25 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
               </span>
             </div>
 
-            {/* Question Title */}
-            <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl text-center">
+            {/* Question Title & Code Block */}
+            <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl text-center space-y-4">
               <h2 className="text-2xl md:text-3xl font-extrabold text-white leading-snug">
                 {currentQuestion.question}
               </h2>
             </div>
 
-            {/* 4 Choices Grid */}
+            {/* 4 Kahoot Options Grid (Color & Shape Paired) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {currentQuestion.options.map((opt: string, idx: number) => {
-                const col = colors[idx % colors.length];
+                const style = KAHOOT_STYLES[idx % KAHOOT_STYLES.length];
 
                 return (
                   <div
                     key={idx}
-                    className={`p-5 rounded-2xl ${col.bg} border-b-4 ${col.border} text-white font-extrabold text-base flex items-center gap-4 shadow-lg transition transform hover:scale-[1.02]`}
+                    style={{ backgroundColor: style.color }}
+                    className="p-5 rounded-2xl border-b-4 border-black/20 text-white font-extrabold text-lg flex items-center gap-4 shadow-lg transition transform hover:scale-[1.01]"
                   >
-                    <span className="text-2xl">{col.shape}</span>
+                    <span className="text-3xl drop-shadow-md">{style.shape}</span>
                     <span className="flex-1">{opt}</span>
                   </div>
                 );
@@ -300,41 +289,42 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
               {currentQuestion.question}
             </h2>
 
-            {/* Bar Chart of Answers */}
             <div className="grid grid-cols-4 gap-4 items-end h-48 p-4 bg-slate-900 rounded-2xl border border-slate-800">
               {currentQuestion.options.map((opt: string, idx: number) => {
                 const count = optionCounts[idx] || 0;
                 const isCorrect = idx === currentQuestion.correctOptionIndex;
                 const maxCount = Math.max(...optionCounts, 1);
                 const heightPercent = Math.round((count / maxCount) * 100);
+                const style = KAHOOT_STYLES[idx];
 
                 return (
                   <div key={idx} className="flex flex-col items-center gap-2 h-full justify-end">
                     <span className="font-bold text-xs text-slate-300">{count} ta</span>
                     <div
+                      style={{
+                        backgroundColor: isCorrect ? '#10b981' : style.color,
+                        height: `${Math.max(15, heightPercent)}%`
+                      }}
                       className={`w-full rounded-t-xl transition-all duration-700 flex items-center justify-center font-bold text-xs ${
-                        isCorrect ? 'bg-emerald-500 text-white' : 'bg-slate-700 text-slate-400'
+                        isCorrect ? 'ring-4 ring-emerald-400 text-white' : 'opacity-60 text-white'
                       }`}
-                      style={{ height: `${Math.max(15, heightPercent)}%` }}
                     >
                       {isCorrect && '✓'}
                     </div>
-                    <span className="text-[11px] font-semibold text-slate-400 truncate max-w-full">
-                      {colors[idx].shape}
+                    <span className="text-xs font-extrabold text-slate-300 truncate max-w-full">
+                      {style.shape} {style.label}
                     </span>
                   </div>
                 );
               })}
             </div>
 
-            {/* Explanation box */}
             {currentQuestion.explanation && (
               <div className="p-4 rounded-2xl bg-blue-950/60 border border-blue-800 text-blue-200 text-xs">
                 💡 <strong>Tushuntirish:</strong> {currentQuestion.explanation}
               </div>
             )}
 
-            {/* Top 5 Leaderboard Preview */}
             <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
               <h3 className="text-xs font-extrabold uppercase text-purple-400 tracking-wider">
                 🏆 Top-5 Reyting
@@ -373,9 +363,7 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
               <Trophy className="w-5 h-5 text-yellow-400" /> O'YIN YAKUNLANDI!
             </div>
 
-            {/* 3D Podium */}
             <div className="flex items-end justify-center gap-4 h-64">
-              {/* 2nd Place */}
               {finalPodium[1] && (
                 <div className="flex flex-col items-center flex-1 animate-fadeIn">
                   <div className="font-bold text-xs text-slate-300 mb-1">{finalPodium[1].nickname}</div>
@@ -386,7 +374,6 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
                 </div>
               )}
 
-              {/* 1st Place */}
               {finalPodium[0] && (
                 <div className="flex flex-col items-center flex-1 animate-fadeIn">
                   <div className="font-bold text-sm text-yellow-300 mb-1">{finalPodium[0].nickname}</div>
@@ -397,7 +384,6 @@ export function QuizHostView({ quiz, onExit }: QuizHostViewProps) {
                 </div>
               )}
 
-              {/* 3rd Place */}
               {finalPodium[2] && (
                 <div className="flex flex-col items-center flex-1 animate-fadeIn">
                   <div className="font-bold text-xs text-slate-300 mb-1">{finalPodium[2].nickname}</div>
