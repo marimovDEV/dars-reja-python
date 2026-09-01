@@ -49,13 +49,13 @@ export function QuizStandalonePortal({ lessons = [] }: QuizStandalonePortalProps
 
   const handleTeacherLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (loginUsername.trim() === 'admin' && loginPassword === 'admin123') {
+    if (loginUsername.trim() === 'ogabek' && loginPassword === 'marimov') {
       localStorage.setItem('game_teacher_logged_in', 'true');
       setTeacherLoggedIn(true);
       setLoginError(null);
       setIsGeneratorOpen(true);
     } else {
-      setLoginError("Login yoki parol noto'g'ri (Standart: admin / admin123)");
+      setLoginError("Login yoki parol noto'g'ri (Login: ogabek / Parol: marimov)");
     }
   };
 
@@ -131,7 +131,7 @@ export function QuizStandalonePortal({ lessons = [] }: QuizStandalonePortalProps
               <label className="block text-xs font-bold text-slate-400">LOGIN (USERNAME)</label>
               <input
                 type="text"
-                placeholder="admin"
+                placeholder="ogabek"
                 value={loginUsername}
                 onChange={e => setLoginUsername(e.target.value)}
                 className="w-full py-3 px-4 bg-slate-800 border border-slate-700 rounded-2xl text-white font-bold text-sm outline-none focus:ring-2 focus:ring-purple-500"
@@ -142,7 +142,7 @@ export function QuizStandalonePortal({ lessons = [] }: QuizStandalonePortalProps
               <label className="block text-xs font-bold text-slate-400">PAROL</label>
               <input
                 type="password"
-                placeholder="••••••••"
+                placeholder="marimov"
                 value={loginPassword}
                 onChange={e => setLoginPassword(e.target.value)}
                 className="w-full py-3 px-4 bg-slate-800 border border-slate-700 rounded-2xl text-white font-bold text-sm outline-none focus:ring-2 focus:ring-purple-500"

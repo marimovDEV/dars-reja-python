@@ -22,9 +22,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
 
     setLoading(true);
 
-    // Mock verification delay
+    // Verification delay
     setTimeout(() => {
-      if (username === 'admin' && password === '123456') {
+      if (username.trim() === 'ogabek' && password === 'marimov') {
         localStorage.setItem('dars_rejasi_logged_in', 'true');
         onLogin();
       } else {
@@ -65,7 +65,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               <User className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
-                placeholder="Loginni kiriting (admin)"
+                placeholder="Loginni kiriting (ogabek)"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-slate-400"
@@ -82,7 +82,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               <Lock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="password"
-                placeholder="Parolni kiriting (123456)"
+                placeholder="Parolni kiriting (marimov)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder-slate-400"
@@ -108,7 +108,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
         </form>
 
         <div className="mt-8 text-center text-[10px] text-slate-400 dark:text-slate-500">
-          Login: <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">admin</code> • Parol: <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">123456</code>
+          Login: <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">ogabek</code> • Parol: <code className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded">marimov</code>
         </div>
 
       </div>
