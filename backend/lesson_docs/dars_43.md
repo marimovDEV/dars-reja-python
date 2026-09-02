@@ -1,45 +1,31 @@
-# 🗄️ 43. Django Models va Migrations — Dars dokumentatsiyasi
+# 🛡 43. Aiogram Middleware va Majburiy Obuna Tekshiruvi — Dars dokumentatsiyasi
 
-**Models (`models.py`)** — bu Django ORM ning eng muhim va markaziy qismidir. Model — bu ma'lumotlar bazasidagi jadvalning Python klassi ko'rinishidagi shaklidir. Model klassining har bir atributi jadvalning bir ustuniga (column) mos keladi.
-
-**Migrations (Migratsiyalar)** — bu siz Python modelida qilgan o'zgarishlaringizni (yangi model qo'shish, ustun o'chirish yoki o'zgartirish) ma'lumotlar bazasidagi haqiqiy SQL so'rovlariga o'girib uzatuvchi mexanizmdir.
+**Middleware** — kelayotgan xabarlar handlerlarga yetib bormasdan oldin ularni ushlab, tekshiruvdan o'tkazuvchi oraliq qatlamdir. U yordamida kanalga obunani tekshirish, foydalanuvchini bloklash yoki log yozish mumkin.
 
 ---
 
-## Bu mavzu orqali nimalar qilish mumkin
-
-- Python klassi yordamida ma'lumotlar bazasi jadvallarini yaratish;
-- Har xil turdagi model maydonlarini (`CharField`, `IntegerField`, `DateTimeField`, `BooleanField`) qo'llash;
-- `makemigrations` va `migrate` buyruqlari bilan bazani sinxronlash.
-
----
-
-# Kod misoli — Models va Migrations
+## Misol — Majburiy Kanal Obunasini Tekshirish Middleware
 
 ```python
-# main/models.py
-from django.db import models
+from aiogram import BaseMiddleware
+from aiogram.types import Message
+from typing import Callable, Dict, Any
 
-class Product(models.Model):
-    title = models.CharField(max_length=200)
-    price = models.DecimalField(max_max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
+CHANNEL_ID = "@my_telegram_channel"
 
-    def __str__(self):
-        return self.title
+class CheckSubMiddleware(BaseMiddleware):
+    async def __call__(
+        self,
+        handler: Callable[[Message, Dict[str, Any]], Any],
+        event: Message,
+        data: Dict[str, Any]
+    ) -> Any:
+        bot = data["bot"]
+        member = await bot.get_chat_member(chat_id=CHANNEL_ID, user_id=event.from_user.id)
+        if member.status in ["left", "kicked"]:
+            await event.answer(f"Botdan foydalanish uchun {CHANNEL_ID} kanaliga obuna bo'ling!")
+            return
+        return await handler(event, data)
 ```
 
-**Migratsiya Buyruqlari:**
-```bash
-# 1. Migratsiya faylini yaratish
-python manage.py makemigrations
-
-# 2. Bazaga tadbiq etish (SQL ni runs qilish)
-python manage.py migrate
-```
-
----
-
-# 10. Qisqa xulosa
-
-Bu darsda Django Models va Migratsiyalar mexanizmi o'rganildi.
+Keyingi **44-dars: Bot Admin Paneli va Xabarlar Tarqatish (Broadcasting)** da admin funksiyalarini yaratishni o'rganamiz.

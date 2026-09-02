@@ -1,31 +1,32 @@
-# 🖼️ 42. Django Views va Templates — Dars dokumentatsiyasi
+# 🗄 42. Botni Ma'lumotlar Bazasiga Ulash — Dars dokumentatsiyasi
 
-**Views (`views.py`)** — bu foydalanuvchining so'rovini (`HttpRequest`) qabul qilib, kerakli mantiqiy amallarni bajaruvchi hamda javob (`HttpResponse` yoki HTML Template) qaytaruvchi funksiya yoki klassdir.
-
-**Templates** — bu ma'lumotlarni foydalanuvchiga HTML shaklida ko'rsatish uchun mo'ljallangan va Django Template Language (DTL) bilan boyitilgan shablonlar papkasidir.
+Telegram bot foydalanuvchilari va ularning ma'lumotlarini qayta yuklanganda ham saqlab qolish uchun **aiosqlite** kabi asinxron ma'lumotlar bazasi kutubxonasi ishlatiladi.
 
 ---
 
-# Kod misoli — Views va Template
+## Misol — aiosqlite bilan ishlash
 
 ```python
-# main/views.py
-from django.shortcuts import render
-from django.http import HttpResponse
+import aiosqlite
 
-def home_page(request):
-    context = {"title": "Bosh Sahifa", "user_name": "Ali"}
-    return render(request, "main/home.html", context)
+async def init_db():
+    async with aiosqlite.connect("bot_database.db") as db:
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                user_id INTEGER PRIMARY KEY,
+                full_name TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        await db.commit()
+
+async def add_user(user_id: int, full_name: str):
+    async with aiosqlite.connect("bot_database.db") as db:
+        await db.execute(
+            "INSERT OR IGNORE INTO users (user_id, full_name) VALUES (?, ?)",
+            (user_id, full_name)
+        )
+        await db.commit()
 ```
 
-**DTL (Django Template Language) HTML ichida:**
-```html
-<!-- main/templates/main/home.html -->
-<h1>Xush kelibsiz, {{ user_name }}!</h1>
-```
-
----
-
-# 10. Qisqa xulosa
-
-Bu darsda Django Views va HTML Templates (DTL) mexanizmi o'rganildi.
+Keyingi **43-dars: Aiogram Middleware va Majburiy Obuna Tekshiruvi** da barcha xabarlar oldidan tekshiruvlarni joylashtirishni o'rganamiz.

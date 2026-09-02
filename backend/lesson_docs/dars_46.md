@@ -1,33 +1,22 @@
-# 📝 46. Django Forms va ModelForms — Dars dokumentatsiyasi
+# 🌐 46. Telegram Web App (Mini Apps) Integratsiyasi — Dars dokumentatsiyasi
 
-Foydalanuvchilar tomonidan kiritilgan ma'lumotlarni HTML formalari orqali qabul qilish, ularni xavfsizlik (XSS, CSRF) bo'yicha tekshirish va bazaga saqlash uchun Django **Forms va ModelForms** mexanizmlaridan foydalanadi.
-
----
-
-# ModelForm Misoli
-
-```python
-# main/forms.py
-from django import forms
-from .models import Product
-
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = ['title', 'price']
-```
-
-**View ichida ishlatilishi:**
-```python
-def add_product(request):
-    if request.method == "POST":
-        form = ProductForm(request.POST)
-        if form.is_valid():
-            form.save() # Bazaga saqlaydi
-```
+**Telegram Web App (Mini Apps)** — bu Telegram ilovasi ichidan chiqmasdan to'liq veb-sayt va do'kon interfeysini ochish imkonini beruvchi eng zamonaviy texnologiyadir.
 
 ---
 
-# 10. Qisqa xulosa
+## Misol — Web App Tugmasini Ulash
 
-Bu darsda Django Forms, ModelForms va ma'lumotlar validatsiyasi o'rganildi.
+```python
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+
+webapp_keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(
+            text="🛒 Onlayn Do'konni Ochish",
+            web_app=WebAppInfo(url="https://python.marimovdev.uz")
+        )]
+    ]
+)
+```
+
+Keyingi **47-dars: Webhook Integratsiyasi va Serverga Deploy Qilish** da botni 24/7 rejimida Linux serverga joylashni o'rganamiz.

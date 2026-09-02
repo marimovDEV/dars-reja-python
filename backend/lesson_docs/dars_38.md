@@ -1,74 +1,52 @@
-# 🐙 38. Git va GitHub — Dars dokumentatsiyasi
+# 🔍 38. Aiogram Handlerlar va Message Filterlari — Dars dokumentatsiyasi
 
-**Git** — bu dastur kodingizning barcha o'zgarishlar tarixini kuzatib boruvchi va saqlovchi dunyodagi eng mashhur **Versiyalarni Boshqarish Tizimi (VCS - Version Control System)** dir. U dasturchiga istalgan vaqtda kodning avvalgi holatiga qaytish yoki bir vaqtning o'zida bir nechta versiya (branches) ustida ishlash imkoniyatini beradi.
-
-**GitHub** — bu Git repozitoriylarini bulutda saqlash, boshqa dasturchilar bilan birgalikda (teamwork) loyiha ustida ishlash va kodlarni ulashish uchun mo'ljallangan veb-platformadir.
+Telegram botlarda kelayotgan xabarlar juda xilma-xil bo'ladi: matnlar, rasmlar, audio, fayllar va stikerlar. Ushbu xabarlarni to'g'ri filtrlash va har biriga mos javob berish uchun **Aiogram 3 Filterlari** va **Routerlar** ishlatiladi.
 
 ---
 
 ## Bu mavzu orqali nimalar qilish mumkin
 
-- Kompyuterda yangi Git repozitoriysi yaratish (`git init`);
-- Kod o'zgarishlarini kuzatish (`git status`, `git add`, `git commit`);
-- Tarmoqlar (`branches`) yaratish va ularni birlashtirish (`git merge`);
-- Loyihani GitHub bulutli omboriga yuklash (`git push`) va u yerdan yuklab olish (`git clone`, `git pull`).
+- `Router` yordamida bot kodini bir nechta fayllarga modulli bo'lish;
+- Magic Filter (`F`) orqali xabarlarni shartli ushlash;
+- Rasm (`F.photo`), fayl (`F.document`) va stikerlarni ajratish;
+- Regex va sarlavha bo'yicha filtrlash.
 
 ---
 
-## Dars maqsadi
+## Asosiy tushunchalar va atamalar
 
-Bu dars oxirida o'quvchi:
+## Router nima?
 
-- Git va GitHub o'rtasidagi farqni bilish;
-- Asosiy Git buyruqlarini terminalda ishlatish;
-- `.gitignore` fayli orqali keraksiz fayllarni (masalan `venv`, `.env`) berkitish;
-- Loyihani GitHub platformasiga joylay olish
+> **Router** — bu katta bot loyihalarida handlerlarni mantiqiy papka va fayllarga bo'lib boshqarish imkonini beruvchi Aiogram 3 moduli.
 
-ni mustaqil bajara oladi.
+## Magic Filter (F) nima?
 
----
-
-## Kerakli oldingi bilimlar
-
-- 1-dars: Terminal va dasturlash muhiti.
+> **Magic Filter (F)** — bu Aiogram 3'dagi qisqa va qulay obyekt bo'lib, xabar xossalarini (masalan `F.text == 'Salom'`) oson filtrlashni ta'minlaydi.
 
 ---
 
-# 1. Asosiy Git Buyruqlari Jadvali
+## Misol — Router va Filterlar bilan ishlash
 
-| Buyruq | Vazifasi |
-|---|---|
-| `git init` | Joriy papkada yangi local Git repozitoriy yaratadi |
-| `git status` | O'zgartirilgan va kuzatuvdagi fayllar holatini ko'rsatadi |
-| `git add .` | Barcha o'zgarishlarni keshga (staging area) qo'shadi |
-| `git commit -m "msg"` | O'zgarishlarni izoh bilan xotiraga muhrlaydi |
-| `git branch` | Mavjud tarmoqlarni ko'rsatadi |
-| `git checkout -b name`| Yangi tarmoq yaratib unga o'tadi |
-| `git push origin main` | Kodni GitHub omboriga yuklaydi |
-| `git pull origin main` | GitHub dan so'nggi o'zgarishlarni yuklab oladi |
+```python
+from aiogram import Router, F, types
+from aiogram.filters import Command
 
----
+router = Router()
 
-# 2. Amaliy Ish Ketma-ketligi (Workflow)
+# Matn tengligini tekshirish
+@router.message(F.text == "Salom")
+async def text_salom(message: types.Message):
+    await message.answer("Vaalaykum assalom!")
 
-```bash
-# 1. Repozitoriy yaratish
-git init
+# Rasm kelganda ushlash
+@router.message(F.photo)
+async def photo_handler(message: types.Message):
+    await message.answer("Siz rasm yubordingiz! Rasm qabul qilindi.")
 
-# 2. Fayllarni belgilash va commit qilish
-git add .
-git commit -m "Initial commit: Project setup"
-
-# 3. GitHub repozitoriyasiga ulash
-git remote add origin https://github.com/username/project.git
-
-# 4. Kodni GitHub ga push qilish
-git branch -M main
-git push -u origin main
+# Fayl kelganda ushlash
+@router.message(F.document)
+async def doc_handler(message: types.Message):
+    await message.answer(f"Fayl nomi: {message.document.file_name}")
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda Git versiyalar boshqaruvi tizimi, asosiy buyruqlar va GitHub bilan ishlash o'rganildi.
+Keyingi **39-dars: Reply va Inline Klaviaturalar bilan Ishlash** da Telegram tugmalarini yaratish va loyihaga ulashni o'rganamiz.

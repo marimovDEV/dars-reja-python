@@ -1,31 +1,25 @@
-# 🔗 47. Django ORM Munosabatlar (FK, M2M) — Dars dokumentatsiyasi
+# 🚀 47. Webhook Integratsiyasi va Serverga Deploy Qilish — Dars dokumentatsiyasi
 
-Django ORM jadvallar o'rtasidagi munosabatlarni klass atributlari orqali oson bog'lash imkonini beradi:
-- **`ForeignKey`**: One-to-Many (Masalan: Kategoriya -> Mahsulotlar).
-- **`ManyToManyField`**: Many-to-Many (Masalan: Maqola -> Teglar).
-- **`OneToOneField`**: One-to-One (Masalan: User -> Profile).
+Botni sinovdan o'tkazgach, uni kompyuter o'chiq bo'lsa ham 24/7 ishlashi uchun **VPS Serverga (Linux)** joylashtirish va **Systemd Service** sifatida sozlash kerak.
 
 ---
 
-# Model Munosabatlari Misoli
+## Linux Systemd Service Fayli Misoli (/etc/systemd/system/mybot.service)
 
-```python
-from django.db import models
+```ini
+[Unit]
+Description=Aiogram 3 Telegram Bot Service
+After=network.target
 
-class Category(models.Model):
-    name = models.CharField(max_length=100)
+[Service]
+User=root
+WorkingDirectory=/root/mybot
+ExecStart=/root/mybot/venv/bin/python main.py
+Restart=always
+RestartSec=5
 
-class Product(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-
-class Tag(models.Model):
-    name = models.CharField(max_length=50)
-    products = models.ManyToManyField(Product)
+[Install]
+WantedBy=multi-user.target
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda Django ORM dagi bog mezonlar (ForeignKey, ManyToManyField) o'rganildi.
+Keyingi **48-dars: 4-Modul Imtihoni va To'liq Aiogram Bot Loyihasi** da 12 ta darsda o'rganilgan bilimlar bo'yicha yakuniy loyihani bajaramiz.

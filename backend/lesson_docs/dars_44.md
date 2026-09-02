@@ -1,32 +1,32 @@
-# 👑 44. Django Admin Panel — Dars dokumentatsiyasi
+# ⚙️ 44. Bot Admin Paneli va Xabarlar Tarqatish — Dars dokumentatsiyasi
 
-Django ning eng kuchli afzalliklaridan biri — bu tayyor, avtomatik yaratiluvchi va xavfsiz **Admin Panel**ining mavjudligidir. Admin panel ma'lumotlar bazasidagi ma'lumotlarni grafik interfeys (GUI) orqali boshqarish imkonini beradi.
-
-Admin panelga kirish uchun **Superuser (Super-foydalanuvchi)** yaratiladi va modellarni `admin.py` faylida ro'yxatdan o'tkaziladi.
+Bot egasi va adminlari uchun foydalanuvchilar soni statistikasini ko'rish hamda bazadagi barcha foydalanuvchilarga bildirishnoma tarqatish funksiyasi zarur.
 
 ---
 
-# Admin Paneldan Foydalanish
+## Misol — Xabar Tarqatish (Broadcasting)
 
-```bash
-# Superuser yaratish
-python manage.py createsuperuser
-```
-
-**Modellarni `admin.py` da ro'yxatdan o'tkazish:**
 ```python
-# main/admin.py
-from django.contrib import admin
-from .models import Product
+from aiogram import Router, F, types, Bot
+from aiogram.filters import Command
 
-@admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'price', 'created_at')
-    search_fields = ('title',)
+router = Router()
+ADMIN_IDS = [123456789]
+
+@router.message(Command("broadcast"), F.from_user.id.in_(ADMIN_IDS))
+async def start_broadcast(message: types.Message, bot: Bot):
+    # Nazariy barcha user_id larni bazadan olish
+    user_ids = [123456789, 987654321]
+    success = 0
+
+    for u_id in user_ids:
+        try:
+            await bot.send_message(chat_id=u_id, text="📢 Admin e'loni: Yangi darslar joylandi!")
+            success += 1
+        except Exception:
+            pass
+
+    await message.answer(f"Xabar {success} ta foydalanuvchiga muvaffaqiyatli yetkazildi.")
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda Django Admin Paneli va modellarni boshqarish o'rganildi.
+Keyingi **45-dars: Media, Fayllar, Lokatsiya va Kontakt Yuborish** da turli fayllar va geografik joylashuvlar bilan ishlashni o'rganamiz.

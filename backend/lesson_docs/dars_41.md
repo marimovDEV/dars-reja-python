@@ -1,40 +1,40 @@
-# 🧩 41. Django Apps va URLs — Dars dokumentatsiyasi
+# 📝 41. FSM (Finite State Machine) va Form-Bosqichlar — Dars dokumentatsiyasi
 
-Django loyihalari kichik va mustaqil modullardan — **Apps (Ilovalar)** dan tashkil topadi. Masalan, e-commerce loyihasida `users`, `products`, `orders`, `blog` kabi alohida app'lar bo'ladi. Bu modulizm kodingizni toza va tartibli saqlashga xizmat qiladi.
-
-**URLs (`urls.py`)** esa foydalanuvchi brauzerga kiritgan manzilni (URL) mos keluvchi mantig'iy funksiyaga (View) yo'naltirish (routing) vazifasini bajaradi.
+Foydalanuvchidan ro'yxatdan o'tish yoki buyurtma berishda bosqichma-bosqich ma'lumot yig'ish uchun **FSM (Chekli Avtomatlar Tizimi)** ishlatiladi.
 
 ---
 
-# App Yaratish va Ulash
+## Misol — FSM So'rovnomasi
 
-```bash
-# Yangi App yaratish
-python manage.py startapp main
-```
-
-**`settings.py` ichiga ulaymiz:**
 ```python
-INSTALLED_APPS = [
-    # ...
-    'main',
-]
+from aiogram.fsm.state import StatesGroup, State
+from aiogram.fsm.context import FSMContext
+from aiogram import types, Router, F
+
+class RegisterForm(StatesGroup):
+    name = State()
+    age = State()
+    phone = State()
+
+router = Router()
+
+@router.message(F.text == "/register")
+async def start_reg(message: types.Message, state: FSMContext):
+    await state.set_state(RegisterForm.name)
+    await message.answer("Ismingizni kiriting:")
+
+@router.message(RegisterForm.name)
+async def process_name(message: types.Message, state: FSMContext):
+    await state.update_data(name=message.text)
+    await state.set_state(RegisterForm.age)
+    await message.answer("Yoshingizni kiriting:")
+
+@router.message(RegisterForm.age)
+async def process_age(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    name = data.get("name")
+    await message.answer(f"Rahmat! Ism: {name}, Yosh: {message.text}")
+    await state.clear()
 ```
 
-**App ichida `urls.py` yaratib asosiy URLs ga ulaymiz (`include`):**
-```python
-# myproject/urls.py
-from django.contrib import admin
-from django.urls import path, include
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('main.urls')),
-]
-```
-
----
-
-# 10. Qisqa xulosa
-
-Bu darsda Django ilovalari (`apps`) va URL marshrutlash (`routing`) tushunchalari o'rganildi.
+Keyingi **42-dars: Botni Ma'lumotlar Bazasiga Ulash (aiosqlite & SQLAlchemy)** da yig'ilgan ma'lumotlarni bazada saqlashni o'rganamiz.

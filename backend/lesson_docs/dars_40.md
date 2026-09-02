@@ -1,37 +1,23 @@
-# 🟢 40. Django Kirish va Loyiha Strukturasi — Dars dokumentatsiyasi
+# 🖱 40. Callback Query va CallbackData Factory — Dars dokumentatsiyasi
 
-**Django** — bu Python tilida yozilgan, "tayyor batareyalarga ega" (batteries-included), yuqori darajali eng mashhur Web Freymvorkdir. U tezkor, xavfsiz va kengayuvchan (scalable) backend tizimlar va veb-saytlar yaratish uchun ishlatiladi.
-
-Django **MVT (Model-View-Template)** me'moriy namunasiga asoslangan.
-
-Ushbu darsda siz Django freymvorkini o'rnatish, yangi loyiha yaratish (`django-admin startproject`) va loyihaning standart fayllar strukturasi bilan tanishasiz.
+Inline tugmalar bosilganda Telegram serverga xabar emas, balki **CallbackQuery** hodisasi yuboriladi. U bilan to'g'ri ishlash bot interfeysini dinamik va tezkor qiladi.
 
 ---
 
-## Django Loyiha Fayllar Strukturasi
+## Misol — Callback Query va CallbackData
 
-- **`manage.py`**: Loyihani boshqarish (serverni runs qilish, migratsiyalar) buyruqlari skripti.
-- **`settings.py`**: Loyihaning barcha asosiy sozlamalari (baza, o'rnatilgan ilovalar, vaqt zonasi).
-- **`urls.py`**: Saytning URL manzil (routing) xaritasi.
-- **`wsgi.py` / `asgi.py`**: Web-serverlar bilan ishlash uchun interfeys fayllari.
+```python
+from aiogram import F, types
+from aiogram.filters.callback_data import CallbackData
 
----
+class CourseCallback(CallbackData, prefix="course"):
+    course_id: int
+    action: str
 
-# Birinchi Loyihani Yaratish
-
-```bash
-# 1. Django o'rnatish
-pip install django
-
-# 2. Loyiha yaratish
-django-admin startproject myproject .
-
-# 3. Development Serverni ishga tushirish
-python manage.py runserver
+@dp.callback_query(CourseCallback.filter(F.action == "buy"))
+async def buy_course(callback: types.CallbackQuery, callback_data: CourseCallback):
+    await callback.answer("Buyurtma qabul qilindi!", show_alert=True)
+    await callback.message.edit_text(f"Siz {callback_data.course_id}-IDli kursni tanladingiz.")
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda Django freymvorki, MVT arxitekturasi va loyihani ishga tushirish o'rganildi.
+Keyingi **41-dars: FSM (Finite State Machine) va Form-Bosqichlar** da foydalanuvchilar bilan bosqichma-bosqich so'rovnoma o'tkazishni o'rganamiz.

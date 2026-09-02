@@ -1,32 +1,21 @@
-# ⚡ 45. Django ORM CRUD — Dars dokumentatsiyasi
+# 📁 45. Media, Fayllar, Lokatsiya va Kontakt Yuborish — Dars dokumentatsiyasi
 
-**Django ORM (Object-Relational Mapper)** — bu SQL so'rovlarini noldan yozmasdan, Python kodlari (obyektlar) orqali ma'lumotlar bazasi bilan CRUD (Create, Read, Update, Delete) amallarini bajarish imkonini beruvchi vositadir.
+Telegram botlarda foydalanuvchining telefon raqamini olish (`request_contact=True`) hamda yetkazib berish manzili uchun geografik lokatsiyasini (`request_location=True`) olish juda qulay.
 
 ---
 
-# Django ORM CRUD Misollari
+## Misol — Kontakt va Lokatsiya so'rash
 
 ```python
-from main.models import Product
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-# 1. Create (Qo'shish)
-p = Product.objects.create(title="Noutbuk", price=8000000)
-
-# 2. Read (O'qish va Filtrlash)
-all_products = Product.objects.all()
-cheap_products = Product.objects.filter(price__lt=5000000)
-single_product = Product.objects.get(id=1)
-
-# 3. Update (Yangilash)
-p.price = 7500000
-p.save()
-
-# 4. Delete (O'chirish)
-p.delete()
+contact_geo_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="📱 Telefon raqamni yuborish", request_contact=True)],
+        [KeyboardButton(text="📍 Geolokatsiyani yuborish", request_location=True)]
+    ],
+    resize_keyboard=True
+)
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda Django ORM orqali bazadagi ma'lumotlar ustida CRUD amallari bajarish o'rganildi.
+Keyingi **46-dars: Telegram Web App (Mini Apps) Integratsiyasi** da bot ichida zamonaviy veb ilovalarni ochishni o'rganamiz.
