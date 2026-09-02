@@ -395,6 +395,7 @@ export default function App() {
     return (
       <PublicSharedLessonView
         lessonId={sharedLessonId}
+        initialLessons={lessons}
         onBackToApp={() => {
           setSharedLessonId(null);
           window.history.pushState({}, '', '/');

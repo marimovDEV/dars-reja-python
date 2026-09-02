@@ -96,14 +96,20 @@ def lessons_list(request):
         )
         return Response(lesson.to_dict(), status=status.HTTP_201_CREATED)
 
-@api_view(['PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def lesson_detail(request, lesson_id):
     try:
         lesson = Lesson.objects.get(lesson_id=lesson_id)
     except Lesson.DoesNotExist:
-        return Response({'error': 'Dars topilmadi.'}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            lesson = Lesson.objects.get(lesson_number=int(lesson_id))
+        except (Lesson.DoesNotExist, ValueError):
+            return Response({'error': 'Dars topilmadi.'}, status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'PUT':
+    if request.method == 'GET':
+        return Response(lesson.to_dict())
+
+    elif request.method == 'PUT':
         data = request.data
         lesson.title = data.get('title', lesson.title)
         lesson.lesson_number = data.get('lessonNumber', lesson.lesson_number)

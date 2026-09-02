@@ -23,15 +23,23 @@ import { DocCallout } from './DocCallout';
 
 interface PublicSharedLessonViewProps {
   lessonId: string;
+  initialLessons?: Lesson[];
   onBackToApp?: () => void;
 }
 
 export const PublicSharedLessonView: React.FC<PublicSharedLessonViewProps> = ({
   lessonId,
+  initialLessons = [],
   onBackToApp
 }) => {
-  const [lesson, setLesson] = useState<Lesson | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [lesson, setLesson] = useState<Lesson | null>(() => {
+    if (initialLessons && initialLessons.length > 0) {
+      const found = initialLessons.find(l => l.id === lessonId || l.lessonNumber.toString() === lessonId);
+      if (found) return found;
+    }
+    return null;
+  });
+  const [loading, setLoading] = useState<boolean>(!lesson);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'docs' | 'code' | 'practice' | 'homework' | 'quiz' | 'resources'>('docs');
   const [copied, setCopied] = useState(false);
@@ -40,13 +48,21 @@ export const PublicSharedLessonView: React.FC<PublicSharedLessonViewProps> = ({
   const [selectedQuizAnswers, setSelectedQuizAnswers] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    // Fetch target shared lesson from API
+    if (lesson) return;
     setLoading(true);
     setError(null);
     
     fetch(`/api/lessons/${lessonId}?t=` + Date.now())
-      .then(res => {
-        if (!res.ok) throw new Error("Dars topilmadi yoki o'chirilgan");
+      .then(async (res) => {
+        if (!res.ok) {
+          const listRes = await fetch('/api/lessons?t=' + Date.now());
+          if (listRes.ok) {
+            const all: Lesson[] = await listRes.json();
+            const match = all.find(l => l.id === lessonId || l.lessonNumber.toString() === lessonId);
+            if (match) return match;
+          }
+          throw new Error("Dars topilmadi yoki o'chirilgan");
+        }
         return res.json();
       })
       .then((data: Lesson) => {
@@ -57,7 +73,7 @@ export const PublicSharedLessonView: React.FC<PublicSharedLessonViewProps> = ({
         setError(err.message || "Darsni yuklashda xatolik");
         setLoading(false);
       });
-  }, [lessonId]);
+  }, [lessonId, lesson]);
 
   if (loading) {
     return (
