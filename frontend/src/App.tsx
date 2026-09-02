@@ -21,6 +21,7 @@ import { ImportLessonsModal } from './components/ImportLessonsModal';
 import { NotionSettingsView } from './components/NotionSettingsView';
 import { NotionSyncModal } from './components/NotionSyncModal';
 import { NotionSettings } from './notion/notionTypes';
+import { PublicSharedLessonView } from './components/PublicSharedLessonView';
 
 export default function App() {
   const isGameSubdomain = typeof window !== 'undefined' && (
@@ -42,6 +43,19 @@ export default function App() {
 
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
+
+  // Standalone Public Share state
+  const [sharedLessonId, setSharedLessonId] = useState<string | null>(() => {
+    const params = new URLSearchParams(window.location.search);
+    const shareParam = params.get('share');
+    if (shareParam) return shareParam;
+
+    const path = window.location.pathname;
+    if (path.startsWith('/share/')) {
+      return path.replace('/share/', '');
+    }
+    return null;
+  });
 
   // Group state
   const [groups, setGroups] = useState<Group[]>([]);
@@ -376,6 +390,18 @@ export default function App() {
       return next;
     });
   };
+
+  if (sharedLessonId) {
+    return (
+      <PublicSharedLessonView
+        lessonId={sharedLessonId}
+        onBackToApp={() => {
+          setSharedLessonId(null);
+          window.history.pushState({}, '', '/');
+        }}
+      />
+    );
+  }
 
   if (isGameSubdomain) {
     return <QuizStandalonePortal lessons={lessons} />;

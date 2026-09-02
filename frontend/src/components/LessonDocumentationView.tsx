@@ -59,7 +59,7 @@ export const LessonDocumentationView: React.FC<LessonDocumentationViewProps> = (
   const [mobileTocOpen, setMobileTocOpen] = useState(false);
 
   const handleShareLink = () => {
-    const shareUrl = `${window.location.origin}/?lesson=${lesson.id}`;
+    const shareUrl = `${window.location.origin}/?share=${lesson.id}`;
     navigator.clipboard.writeText(shareUrl);
     setLinkCopied(true);
     setTimeout(() => setLinkCopied(false), 2500);
