@@ -23,6 +23,15 @@ export interface QuizTemplate {
 
 const DEFAULT_TEMPLATES: QuizTemplate[] = [
   {
+    id: 'master-tpl-1-to-23',
+    title: '🏆 Marimov Game Zone: 1-darsdan 23-darsgacha Kompleks 30 ta Test',
+    description: "1-darsdan 23-darsgacha bo'lgan barcha Python mavzulari (Sintaksis, List/Dict/Set, Funktsiyalar, OOP, Exceptions, File I/O, Decorators) bo'yicha mukammal 30 ta qiyin va amaliy savollar.",
+    category: 'Marimov Game Master',
+    questionCount: 30,
+    difficulty: 'hard',
+    lessonIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+  },
+  {
     id: 'tpl-1',
     title: "🐍 Python Sintaksisi va Boshlang'ich Tushunchalar",
     description: "1-modul: O'zgaruvchilar, ma'lumot turlari, if/else va sikllar bo'yicha 10 ta oson va o'rta savollar.",
