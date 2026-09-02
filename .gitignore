@@ -14,3 +14,8 @@ build/
 # OS metadata
 .DS_Store
 *.log
+
+# Databases
+*.sqlite3
+db.sqlite3
+backend/db.sqlite3

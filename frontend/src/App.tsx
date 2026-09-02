@@ -140,6 +140,40 @@ export default function App() {
         .catch(() => setLoading(false));
     }
   }, [activeGroupId]);
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('marimov_dark_mode');
+    if (savedTheme === 'true' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setIsDarkMode(true);
+      document.documentElement.classList.add('dark');
+    } else {
+      setIsDarkMode(false);
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  const handleToggleDarkMode = () => {
+    setIsDarkMode(prev => {
+      const next = !prev;
+      localStorage.setItem('marimov_dark_mode', String(next));
+      if (next) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const lessonParam = params.get('lesson');
+    if (lessonParam && lessons.length > 0) {
+      const found = lessons.find(l => l.id === lessonParam || l.lessonNumber.toString() === lessonParam);
+      if (found) {
+        setSelectedLessonId(found.id);
+      }
+    }
+  }, [lessons]);
 
   const activeGroup = groups.find(g => g.id === activeGroupId) || null;
   const selectedLesson = lessons.find(l => l.id === selectedLessonId) || lessons[0];
@@ -422,6 +456,8 @@ export default function App() {
           onOpenAIQuizGenerator={() => setIsAIQuizModalOpen(true)}
           onOpenPlayerView={() => setCurrentView('quiz_player')}
           onBatchUpdateStatus={handleBatchUpdateStatus}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={handleToggleDarkMode}
         />
       </div>
 

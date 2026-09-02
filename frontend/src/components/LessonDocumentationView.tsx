@@ -21,7 +21,8 @@ import {
   Sparkles,
   ExternalLink,
   Tag,
-  List
+  List,
+  Share2
 } from 'lucide-react';
 import { Lesson, LessonStatus, LessonMaterial } from '../types';
 import { MarkdownDocRenderer } from './MarkdownDocRenderer';
@@ -53,8 +54,16 @@ export const LessonDocumentationView: React.FC<LessonDocumentationViewProps> = (
   // 6 TA ASOSIY TABLAR
   const [activeTab, setActiveTab] = useState<'docs' | 'code' | 'practice' | 'homework' | 'quiz' | 'resources'>('docs');
   const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
   const [selectedQuizAnswers, setSelectedQuizAnswers] = useState<Record<string, number>>({});
   const [mobileTocOpen, setMobileTocOpen] = useState(false);
+
+  const handleShareLink = () => {
+    const shareUrl = `${window.location.origin}/?lesson=${lesson.id}`;
+    navigator.clipboard.writeText(shareUrl);
+    setLinkCopied(true);
+    setTimeout(() => setLinkCopied(false), 2500);
+  };
 
   const handleQuizSelect = (quizId: string, optionIdx: number) => {
     setSelectedQuizAnswers(prev => ({
@@ -137,6 +146,16 @@ export const LessonDocumentationView: React.FC<LessonDocumentationViewProps> = (
           >
             <Edit3 className="w-3.5 h-3.5 text-slate-500" />
             <span className="hidden sm:inline">Tahrirlash</span>
+          </button>
+
+          {/* Notion-style Share / Publish Button */}
+          <button
+            onClick={handleShareLink}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 rounded-lg transition-all shadow-xs cursor-pointer"
+            title="Dars uchun unikal public havolani nusxalash"
+          >
+            <Share2 className="w-3.5 h-3.5 text-yellow-300" />
+            <span>{linkCopied ? 'Havola Nusxalandi!' : 'Publish / Ulashish'}</span>
           </button>
 
           <button

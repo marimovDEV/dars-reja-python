@@ -14,7 +14,9 @@ import {
   Gamepad2,
   Sparkles,
   CheckSquare,
-  Check
+  Check,
+  Moon,
+  Sun
 } from 'lucide-react';
 import { Lesson, LessonStatus } from '../types';
 import { Group } from '../types/group';
@@ -36,6 +38,9 @@ interface LessonSidebarProps {
   onOpenAIQuizGenerator?: () => void;
   onOpenPlayerView?: () => void;
   onBatchUpdateStatus?: (lessonIds: string[], status: LessonStatus) => void;
+  // Theme props
+  isDarkMode?: boolean;
+  onToggleDarkMode?: () => void;
 }
 
 export const LessonSidebar: React.FC<LessonSidebarProps> = ({
@@ -52,7 +57,9 @@ export const LessonSidebar: React.FC<LessonSidebarProps> = ({
   onOpenGroupDashboard,
   onOpenAIQuizGenerator,
   onOpenPlayerView,
-  onBatchUpdateStatus
+  onBatchUpdateStatus,
+  isDarkMode,
+  onToggleDarkMode
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
@@ -130,6 +137,15 @@ export const LessonSidebar: React.FC<LessonSidebarProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5">
+            {onToggleDarkMode && (
+              <button
+                onClick={onToggleDarkMode}
+                title={isDarkMode ? "Yorug' rejimga o'tish" : "Tungi rejimga (Dark Mode) o'tish"}
+                className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-amber-500 dark:text-yellow-400 flex items-center justify-center transition-all shadow-xs cursor-pointer"
+              >
+                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4 text-purple-600" />}
+              </button>
+            )}
             <button
               onClick={onOpenSettings}
               title="Sozlamalar (Notion)"
