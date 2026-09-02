@@ -337,10 +337,10 @@ export const LessonSidebar: React.FC<LessonSidebarProps> = ({
               <div
                 key={lesson.id}
                 onClick={() => onSelectLesson(lesson.id)}
-                className={`p-3 rounded-xl cursor-pointer transition-all duration-200 group border ${
+                className={`p-3 rounded-xl cursor-pointer transition-all duration-300 group border active:scale-[0.98] ${
                   isSelected
-                    ? 'bg-blue-50/90 dark:bg-blue-950/50 border-blue-200 dark:border-blue-800 shadow-xs'
-                    : 'bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800/60 border-transparent'
+                    ? 'bg-gradient-to-r from-blue-50 to-purple-50/80 dark:from-blue-950/60 dark:to-purple-950/40 border-blue-300 dark:border-blue-700 shadow-md translate-x-1'
+                    : 'bg-transparent hover:bg-slate-100/80 dark:hover:bg-slate-800/80 border-transparent hover:translate-x-1.5'
                 }`}
               >
                 <div className="flex items-start gap-3">
