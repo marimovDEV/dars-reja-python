@@ -196,6 +196,76 @@
   box-shadow: 0 12px 28px -6px rgba(99, 102, 241, 0.2);
 }
 
+/* 3D Perspective & Motion Engine */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+@keyframes float3D {
+  0%, 100% {
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px);
+  }
+  50% {
+    transform: perspective(1000px) rotateX(4deg) rotateY(-4deg) translateZ(14px);
+  }
+}
+
+.animate-float3D {
+  animation: float3D 5s ease-in-out infinite;
+}
+
+.card-3d {
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.card-3d:hover {
+  transform: perspective(1000px) rotateX(3deg) rotateY(-3deg) translateZ(10px);
+  box-shadow: -10px 20px 35px -10px rgba(99, 102, 241, 0.35);
+}
+
+.btn-3d {
+  transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.25s ease;
+  transform-style: preserve-3d;
+}
+
+.btn-3d:hover {
+  transform: perspective(600px) translateZ(6px) translateY(-2px);
+  box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+}
+
+.btn-3d:active {
+  transform: perspective(600px) translateZ(-4px) translateY(1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 3D Flip Card Container */
+.flip-card {
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

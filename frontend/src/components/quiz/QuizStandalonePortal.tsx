@@ -174,9 +174,9 @@ export function QuizStandalonePortal({ lessons = [] }: QuizStandalonePortalProps
 
             <button
               onClick={() => setIsGeneratorOpen(true)}
-              className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 text-white font-extrabold text-base rounded-2xl shadow-xl transition flex items-center justify-center gap-2 group cursor-pointer"
+              className="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 text-white font-extrabold text-base rounded-2xl shadow-xl transition flex items-center justify-center gap-2 group cursor-pointer btn-3d"
             >
-              <Zap className="w-5 h-5 text-yellow-300" /> AI Quiz Yaratish va Boshlash <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <Zap className="w-5 h-5 text-yellow-300 animate-float3D" /> AI Quiz Yaratish va Boshlash <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
 
             <button
