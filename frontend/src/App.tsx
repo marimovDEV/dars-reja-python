@@ -426,10 +426,10 @@ export default function App() {
         </div>
 
         <button
-          onClick={toggleDarkMode}
-          className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+          onClick={handleToggleDarkMode}
+          className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-amber-500 dark:text-yellow-400 cursor-pointer"
         >
-          {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5 text-purple-600" />}
         </button>
       </div>
 
