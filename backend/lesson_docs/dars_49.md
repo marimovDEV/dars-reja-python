@@ -1,40 +1,57 @@
-# 🚀 49. DRF Kirish va Serializers — Dars dokumentatsiyasi
+# 🌐 49. HTML5 Asoslari va Semantik Teglar — Dars dokumentatsiyasi
 
-**Django REST Framework (DRF)** — bu Django bazasida yuqori unumdorlikka ega, professional va moslashuvchan **RESTful API** lar qurish uchun ishlatiladigan eng asosiy va ommabop paketdir.
-
-DRF ning eng asosiy va markaziy tushunchasi **Serializer (Seriyalashtiruvchi)** di. Serializer ikki tomonlama muhim vazifani bajaradi:
-1. **Serialization**: Ma'lumotlar bazasidan kelgan murakkab Python/Django ob'yektlarini (QuerySet/Model) mijoz tushunadigan **JSON/XML** matn formatiga o'tkazadi.
-2. **Deserialization**: Mijoz yuborgan JSON ma'lumotlarini qabul qilib, ularni validatsiyadan (xavfsizlik tekshiruvidan) o'tkazadi va Python/Django ma mezonlariga o'tkazadi.
+Veb ilovalar va saytlarning ko'rinishi hamda strukturasi **HTML5 (HyperText Markup Language)** yordamida hosil qilinadi. Har bir backend dasturchi Django yoki boshqa freymvorklarda ishlashdan oldin frontendning asosiy skeletini mukammal tushunishi shart.
 
 ---
 
 ## Bu mavzu orqali nimalar qilish mumkin
 
-- DRF paketini loyihaga o mezon qilish (`pip install djangorestframework`);
-- Standart `serializers.Serializer` klassini yaratish va maydonlarini (`CharField`, `IntegerField`) belgilash;
-- JSON ma'lumotlarini validatsiya qilish va `validate()` metodlarini yozish;
-- `create()` va `update()` metodlari orqali ma'lumotlarni saqlash va yangilash.
+- Veb sahifa tayanch HTML strukturasi (`<!DOCTYPE html>`, `<html>`, `<head>`, `<body>`) ni tuzish;
+- Semantik teglar (`<header>`, `<nav>`, `<main>`, `<article>`, `<aside>`, `<footer>`) bilan ishlash;
+- Matnlar, sarlavhalar (`<h1>`-`<h6>`), ro'yxatlar (`<ul>`, `<ol>`) va havolalar (`<a>`) yaratish;
+- HTML formalari (`<form>`, `<input>`, `<select>`, `<button>`) orqali foydalanuvchidan ma'lumot qabul qilish.
 
 ---
 
-# Kod misoli — Serializer Yaratish
+## Asosiy HTML5 Teglar
 
-```python
-from rest_framework import serializers
+```html
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Mening Birinchi Veb Saytim</title>
+</head>
+<body>
+    <header>
+        <h1>Veb Dasturlash Kursi</h1>
+        <nav>
+            <a href="#home">Bosh sahifa</a> |
+            <a href="#about">Biz haqimizda</a>
+        </nav>
+    </header>
 
-class ProductSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    title = serializers.CharField(max_length=200)
-    price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    <main>
+        <section>
+            <h2>HTML5 Nima?</h2>
+            <p>HTML — bu veb sahifalarning strukturaviy karkasidir.</p>
+        </section>
 
-    def validate_price(self, value):
-        if value <= 0:
-            raise serializers.ValidationError("Narx musbat son bo'lishi kerak!")
-        return value
+        <section>
+            <h2>Ro'yxatdan O'tish Formasi</h2>
+            <form action="/submit" method="POST">
+                <label for="username">Ismingiz:</label>
+                <input type="text" id="username" name="username" required>
+                <button type="submit">Yuborish</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 MarimovDev. Barcha huquqlar himoyalangan.</p>
+    </footer>
+</body>
+</html>
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda DRF framework, Serializer tushunchasi, Serialization va Deserialization jarayonlari o'rganildi.
+Keyingi **50-dars: CSS3 Styling, Flexbox va Grid Layout** da saytga chiroyli visual bezak berishni o'rganamiz.

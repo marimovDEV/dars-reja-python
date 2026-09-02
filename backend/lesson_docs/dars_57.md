@@ -1,26 +1,24 @@
-# 🛡️ 57. Permissions va Throttling — Dars dokumentatsiyasi
+# 🔐 57. Django Forms va Validatsiya — Dars dokumentatsiyasi
 
-**Authorization (Authorization / Permissions)** — shaxsi aniqlangan foydalanuvchiga muayyan harakatni (masalan o'chirish yoki tahrirlash) bajarishga ruxsat bor-yo'qligini tekshiradi.
-
-**Throttling (Rate Limiting)** — bir daqiqada yoki kunda foydalanuvchi nechtagacha so'rov yuborishi mumkinligini cheklash (DDOS va Spamdan himoya).
+Django formalari ma'lumotlarni qabul qilish, tozalash (sanitize) va bazaga saqlashdan oldin xatoliklarni tekshirishni (validation) avtomatlashtiradi.
 
 ---
 
-# Permissions va Throttling Misoli
+## Django ModelForm Misoli
 
 ```python
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework.throttling import UserRateThrottle
+# main/forms.py
+from django import forms
+from .models import Student
 
-class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()
-    serializer_class = ProductModelSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    throttle_classes = [UserRateThrottle]
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ['full_name', 'email', 'phone']
+        widgets = {
+            'full_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda DRF Permissions (`IsAuthenticatedOrReadOnly`) va Throttling cheklovlari o'rganildi.
+Keyingi **58-dars: Django Models, Migrations va ORM So'rovlari** da bazalar bilan ishlashni o'rganamiz.

@@ -1,33 +1,24 @@
-# 🛣️ 53. ViewSets va Routers — Dars dokumentatsiyasi
+# ⚙️ 53. Django Frameworkga Kirish — Dars dokumentatsiyasi
 
-**`ViewSet`** — bu barcha CRUD amallarini (`list`, `create`, `retrieve`, `update`, `destroy`) bitta klass ichida birlashtiruvchi va URL marshrutlarini avtomatik loyihalashtiruvchi DRF ning eng yuqori darajadagi abstraksiyasidir.
-
-**`DefaultRouter`** esa ViewSet uchun kerakli barcha URL yo'nalishlarini bir qator kod bilan avtomatik yaratadi.
+**Django** — bu Python dasturlash tilida yozilgan, "batteries-included" (barcha imkoniyatlari tayyor) tamoyiliga asoslangan eng kuchli va xavfsiz veb freymvorkdir.
 
 ---
 
-# Kod misoli — ModelViewSet va Router
+## Django Loyihasini Yaratish Buyruqlari
 
-```python
-# main/views.py
-from rest_framework.viewsets import ModelViewSet
-from .models import Product
-from .serializers import ProductModelSerializer
+```bash
+# 1. Virtual muhit yaratish va faollashtirish
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
 
-class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()
-    serializer_class = ProductModelSerializer
+# 2. Django o'rnatish
+pip install django
 
-# main/urls.py
-from rest_framework.routers import DefaultRouter
-router = DefaultRouter()
-router.register(r'products', ProductViewSet)
+# 3. Yangi Django loyihasi yaratish
+django-admin startproject config .
 
-urlpatterns = router.urls
+# 4. Serverni ishga tushirish
+python manage.py runserver
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda `ModelViewSet` va `DefaultRouter` yordamida minimal kod bilan to'liq REST API yaratish o'rganildi.
+Keyingi **54-dars: Django Apps, MVT Arxitekturasi va First View** da Django ilovalari va sahifa ko'rinishlarini o'rganamiz.

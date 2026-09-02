@@ -1,30 +1,24 @@
-# 📑 54. Pagination va Filtering — Dars dokumentatsiyasi
+# 🏛 54. Django Apps va MVT Arxitekturasi — Dars dokumentatsiyasi
 
-Minglab ma'lumotlarni bitta so'rovda foydalanuvchiga qaytarish server va tarmoqqa og'ir yuk bo'ladi. 
-
-**Pagination (Sahifalash)** — ma'lumotlarni bo'laklab (masalan 10 tadan) sahifalarga bo'lib berish imkoniyatidir. **Filtering & Search** esa foydalanuvchiga kerakli ma'lumotlarni qidirish va filtrlash imkonini beradi.
+Django ilovalari **MVT (Model - View - Template)** arxitekturasiga tayanadi:
+- **Model**: Ma'lumotlar bazasi strukturasi.
+- **View**: Biznes mantiq va so'rovlarni qayta ishlash.
+- **Template**: Foydalanuvchiga ko'rinadigan HTML sahifa.
 
 ---
 
-# Kod misoli — Pagination va Search
+## Django App va First View Misoli
 
 ```python
-# settings.py
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
-    'DEFAULT_FILTER_BACKENDS': ['rest_framework.filters.SearchFilter']
-}
+# 1. Terminalda ilova yaratish:
+# python manage.py startapp main
 
-# views.py
-class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()
-    serializer_class = ProductModelSerializer
-    search_fields = ['title', 'description']
+# main/views.py
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def home_view(request):
+    return HttpResponse("<h1>Django MVT Sahifasiga Xush Kelibsiz!</h1>")
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda DRF sahifalash (`PageNumberPagination`) va qidiruv-filtrlash mexanizmi o'rganildi.
+Keyingi **55-dars: Django Templates (DTL)** da dynamic HTML sahifalar tayyorlashni o'rganamiz.

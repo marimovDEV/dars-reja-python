@@ -1,36 +1,35 @@
-# 🎛️ 51. DRF APIView va Response — Dars dokumentatsiyasi
+# 🚀 51. Bootstrap 5 Framework — Dars dokumentatsiyasi
 
-**`APIView`** — bu DRF ning klassga asoslangan (Class-Based View - CBV) eng moslashuvchan ko'rinishidir. U Django ning standart `View` klassidan ilhomlangan bo'lib, HTTP so'rovlarini (`GET`, `POST`, `PUT`, `DELETE`) alohida metodlar ko'rinishida qabul qiladi.
-
-**`Response`** ob'yekti esa berilgan ma'lumotlarni foydalanuvchining so'ragan formatiga (masalan JSON) avtomatik o'girib beruvchi DRF obyektidir.
+**Bootstrap 5** — bu tezkor va moslashuvchan (responsive) veb saytlar yaratish uchun eng ommabop tayyor CSS va JS freymvorkidir.
 
 ---
 
-# Kod misoli — APIView
+## Bootstrap 5 CDN va HTML Strukturasi
 
-```python
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Product
-from .serializers import ProductModelSerializer
-
-class ProductListAPIView(APIView):
-    def get(self, request):
-        products = Product.objects.all()
-        serializer = ProductModelSerializer(products, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request):
-        serializer = ProductModelSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+```html
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap 5 Sayt</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 p-4">
+                    <h3 class="text-primary font-bold">Python Backend</h3>
+                    <p class="text-muted">Bootstrap 5 grid tizimi orqali tayyorlangan karta.</p>
+                    <button class="btn btn-primary w-100">Batafsil</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda DRF `APIView`, `Request`, `Response` va status kodlari o'rganildi.
+Keyingi **52-dars: Responsive Web Design va Frontend Loyiha** da mobil qurilmalarga mos sayt yig'ishni o'rganamiz.

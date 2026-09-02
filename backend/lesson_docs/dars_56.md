@@ -1,32 +1,19 @@
-# 🔐 56. JWT Authentication (SimpleJWT) — Dars dokumentatsiyasi
+# 🖼 56. Django Static Files & Media Fayllar — Dars dokumentatsiyasi
 
-**JWT (JSON Web Token)** — bu zamonaviy Web va Mobile API larda eng ko'p ishlatiladigan xavfsiz va holatsiz (stateless) autentifikatsiya standartidir.
-
-JWT 2 ta tokendan iborat bo'ladi:
-1. **`Access Token`**: Qisqa muddatli (masalan 5-15 daqiqa) so'rovlar uchun.
-2. **`Refresh Token`**: Uzun muddatli (masalan 1-7 kun) yangi Access Token olish uchun.
-
-Python'da `djangorestframework-simplejwt` kutubxonasi ishlatiladi.
+Django loyihalarda CSS, JavaScript va fayllar **Static**, foydalanuvchilar yuklaydigan rasmlar esa **Media** fayllar deb yuritiladi.
 
 ---
 
-# SimpleJWT Sozlash va Qo'llash
+## settings.py Sozlamalari
 
 ```python
-# urls.py
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
-urlpatterns = [
-    path('api/token/', TokenObtainPairView.as_python_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_python_view(), name='token_refresh'),
-]
+# Media files (Foydalanuvchi rasmlari)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda JWT (JSON Web Token) standartining ishlash tamoyili va SimpleJWT o'rganildi.
+Keyingi **57-dars: Django Forms va Validatsiya** da formalarni tekshirishni o'rganamiz.

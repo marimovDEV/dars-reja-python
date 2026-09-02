@@ -272,6 +272,51 @@ def update_group_lesson_progress(request, group_id, lesson_id):
     progress.save()
     return Response(progress.to_dict())
 
+@api_view(['POST'])
+def batch_update_group_lesson_progress(request, group_id):
+    try:
+        group = Group.objects.get(group_id=group_id)
+    except Group.DoesNotExist:
+        return Response({'error': 'Guruh topilmadi.'}, status=status.HTTP_404_NOT_FOUND)
+
+    lesson_ids = request.data.get('lessonIds', [])
+    new_status = request.data.get('status')
+    if not lesson_ids or not new_status:
+        return Response({'error': 'lessonIds va status kiritilishi shart.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    num_ids = [int(x) for x in lesson_ids if str(x).isdigit()]
+    progresses = GroupLessonProgress.objects.filter(
+        group=group
+    ).filter(
+        models.Q(lesson__lesson_id__in=lesson_ids) | models.Q(lesson__lesson_number__in=num_ids)
+    )
+
+    now_time = datetime.now()
+    for p in progresses:
+        p.status = new_status
+        if new_status == 'completed' and not p.completed_at:
+            p.completed_at = now_time
+        p.save()
+
+    updated_progress_qs = GroupLessonProgress.objects.filter(group=group).select_related('lesson').order_by('lesson__lesson_number')
+    return Response([p.to_dict() for p in updated_progress_qs])
+
+@api_view(['POST'])
+def batch_update_lessons_status(request):
+    lesson_ids = request.data.get('lessonIds', [])
+    new_status = request.data.get('status')
+    if not lesson_ids or not new_status:
+        return Response({'error': 'lessonIds va status kiritilishi shart.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    num_ids = [int(x) for x in lesson_ids if str(x).isdigit()]
+    lessons = Lesson.objects.filter(
+        models.Q(lesson_id__in=lesson_ids) | models.Q(lesson_number__in=num_ids)
+    )
+    lessons.update(status=new_status)
+
+    all_lessons = Lesson.objects.all().order_by('lesson_number')
+    return Response([l.to_dict() for l in all_lessons])
+
 # ============================================================================
 # AI QUIZ ARENA API ENDPOINTS
 # ============================================================================

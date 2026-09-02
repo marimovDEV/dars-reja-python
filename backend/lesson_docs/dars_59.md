@@ -1,30 +1,20 @@
-# 📚 59. DRF Swagger va Redoc — Dars dokumentatsiyasi
+# ⚙️ 59. Django Admin Panel — Dars dokumentatsiyasi
 
-Backend dasturchi tomonidan yaratilgan API lar hujjatlashtirilishi (Documentation) va Frontend/Mobile dasturchilarga taqdim etilishi shart.
-
-**`drf-spectacular`** — bu DRF loyihasi uchun avtomatik ravishda chiroyli, interaktiv **Swagger UI** va **ReDoc** dokumentatsiyalarini yaratuvchi vositadir.
+Django avtomatik tarzda ma'lumotlarni tahrirlash va ko'rish uchun tayyor **Admin Panel** beradi.
 
 ---
 
-# Swagger Sozlanishi
+## admin.py Sozlamasi
 
 ```python
-# settings.py
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
+from django.contrib import admin
+from .models import Course
 
-# urls.py
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-
-urlpatterns = [
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-]
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title', 'price', 'created_at')
+    search_fields = ('title',)
+    list_filter = ('created_at',)
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda Avtomatik OpenAPI, Swagger UI va ReDoc dokumentatsiya yaratish o'rganildi.
+Keyingi **60-dars: 5-Modul Imtihoni va Full-Stack Web Sayt Loyihasi** da o'rganilgan barcha bilimlarni bitta loyihaga birlashtiramiz.

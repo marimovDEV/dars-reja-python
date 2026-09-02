@@ -1,17 +1,16 @@
-# 🎓 60. 5-modul imtihoni — Dars dokumentatsiyasi
+# 🎓 60. 5-Modul Imtihoni va Full-Stack Web Sayt — Dars dokumentatsiyasi
 
-5-modul imtihoni — **Django REST Framework (DRF)** (Serializers, ModelSerializer, APIView, Generic Views, ViewSets, Routers, Pagination, Filtering, JWT Auth, Custom Permissions va Swagger Documentation) bo'yicha to'liq bilimlarni sinaydi.
-
----
-
-# Imtihon Topshiriqlari
-
-1. **DRF Serializers & ViewSets**: `Book` modeli uchun `ModelSerializer` va `ModelViewSet` yaratib, router ga ulayotgan kodni yozing.
-2. **JWT Auth & Permissions**: SimpleJWT autentifikatsiyani ulalang va faqat autorizatsiyadan o'tgan foydalanuvchilar kitob yaratishi mumkin bo'lgan ruxsatnoma o'rnating.
-3. **Swagger & Custom Permission**: Kitobni faqat uni yaratgan muallifi tahrirlashi mumkin bo'lgan `IsOwnerOrReadOnly` custom permission yaratib, Swagger UI ni sozlang.
+Ushbu imtihon 49-darsdan 59-darsgacha o'rganilgan **HTML, CSS, Bootstrap 5 va Django MVT Full-Stack Web Dasturlash** ko'nikmalarini amalda sinash uchun o'tkaziladi.
 
 ---
 
-# 10. Qisqa xulosa
+## Imtihon Loyihasi: "Dinamik Full-Stack Portal"
 
-Ushbu imtihon Django REST Framework modulini muvaffaqiyatli yakunlaydi.
+### Talablar:
+1. **Frontend**: Bootstrap 5 va HTML5/CSS3 yordamida moslashuvchan (responsive) `base.html`, `index.html` va `detail.html` sahifalarini tuzish;
+2. **Django MVT**: Barcha static fayllar va shablonlarni DTL orqali integratsiya qilish;
+3. **Database & ORM**: Obyektlar uchun Django Model va Migrations tayyorlash;
+4. **Forms**: Foydalanuvchilar so'rov qoldirishi uchun Django ModelForm tayyorlash va CSRF validatsiyasini sozlash;
+5. **Admin Panel**: ModelAdmin sozlamalari bilan qulay CMS panel yaratish.
+
+Muvaffaqiyatlar yor bo'lsin!

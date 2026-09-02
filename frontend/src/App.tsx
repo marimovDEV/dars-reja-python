@@ -210,6 +210,30 @@ export default function App() {
     }
   };
 
+  const handleBatchUpdateStatus = async (lessonIds: string[], status: LessonStatus) => {
+    const next = lessons.map(l => lessonIds.includes(l.id) || lessonIds.includes(l.lessonNumber.toString()) ? { ...l, status } : l);
+    saveLessonsLocally(next);
+
+    try {
+      if (activeGroupId) {
+        await fetch(`/api/groups/${activeGroupId}/lessons/batch-status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lessonIds, status })
+        });
+        fetchGroups();
+      } else {
+        await fetch(`/api/lessons/batch-status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lessonIds, status })
+        });
+      }
+    } catch (err) {
+      console.warn("Batch status update error:", err);
+    }
+  };
+
   const handleOpenEdit = (lesson: Lesson) => {
     setEditingLesson(lesson);
     setIsEditModalOpen(true);
@@ -397,6 +421,7 @@ export default function App() {
           onOpenGroupDashboard={() => setCurrentView('groups_dashboard')}
           onOpenAIQuizGenerator={() => setIsAIQuizModalOpen(true)}
           onOpenPlayerView={() => setCurrentView('quiz_player')}
+          onBatchUpdateStatus={handleBatchUpdateStatus}
         />
       </div>
 

@@ -12,9 +12,11 @@ import {
   Users,
   Grid,
   Gamepad2,
-  Sparkles
+  Sparkles,
+  CheckSquare,
+  Check
 } from 'lucide-react';
-import { Lesson } from '../types';
+import { Lesson, LessonStatus } from '../types';
 import { Group } from '../types/group';
 
 interface LessonSidebarProps {
@@ -33,6 +35,7 @@ interface LessonSidebarProps {
   // Quiz props
   onOpenAIQuizGenerator?: () => void;
   onOpenPlayerView?: () => void;
+  onBatchUpdateStatus?: (lessonIds: string[], status: LessonStatus) => void;
 }
 
 export const LessonSidebar: React.FC<LessonSidebarProps> = ({
@@ -48,10 +51,13 @@ export const LessonSidebar: React.FC<LessonSidebarProps> = ({
   onOpenGroupSelectModal,
   onOpenGroupDashboard,
   onOpenAIQuizGenerator,
-  onOpenPlayerView
+  onOpenPlayerView,
+  onBatchUpdateStatus
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [isBatchMode, setIsBatchMode] = useState<boolean>(false);
+  const [batchSelectedIds, setBatchSelectedIds] = useState<string[]>([]);
 
   // Filter lessons
   const filteredLessons = lessons.filter(lesson => {
@@ -207,7 +213,99 @@ export const LessonSidebar: React.FC<LessonSidebarProps> = ({
             Reja ({plannedCount})
           </button>
         </div>
+
+        {/* Batch Selection Mode Toggle Bar */}
+        <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <button
+            type="button"
+            onClick={() => {
+              setIsBatchMode(!isBatchMode);
+              setBatchSelectedIds([]);
+            }}
+            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition flex items-center gap-1.5 cursor-pointer ${
+              isBatchMode 
+                ? 'bg-purple-600 text-white shadow-xs' 
+                : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300'
+            }`}
+          >
+            <CheckSquare className="w-3.5 h-3.5 text-yellow-300" />
+            {isBatchMode ? "Yopish" : "☑️ Ko'plab Tanlash Rejimi"}
+          </button>
+
+          {isBatchMode && (
+            <div className="flex items-center gap-2 text-[11px]">
+              <button
+                type="button"
+                onClick={() => {
+                  if (batchSelectedIds.length === filteredLessons.length) {
+                    setBatchSelectedIds([]);
+                  } else {
+                    setBatchSelectedIds(filteredLessons.map(l => l.id));
+                  }
+                }}
+                className="text-purple-600 dark:text-purple-400 font-extrabold hover:underline cursor-pointer"
+              >
+                {batchSelectedIds.length === filteredLessons.length ? 'Tozalash' : 'Barchasini tanlash'}
+              </button>
+              <span className="text-slate-300 dark:text-slate-700">|</span>
+              <span className="font-extrabold text-purple-600 dark:text-purple-400">{batchSelectedIds.length} ta</span>
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Batch Actions Floating Panel */}
+      {isBatchMode && batchSelectedIds.length > 0 && (
+        <div className="mx-3 mt-2 p-2.5 bg-purple-950/30 border border-purple-800/80 rounded-2xl flex flex-col gap-2 animate-fadeIn shadow-lg">
+          <div className="flex items-center justify-between text-[11px] font-extrabold text-purple-200">
+            <span>Tanlangan {batchSelectedIds.length} ta dars:</span>
+            <button 
+              onClick={() => setBatchSelectedIds([])}
+              className="text-purple-400 hover:text-purple-200 font-bold"
+            >
+              Tozalash
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-1.5">
+            <button
+              onClick={() => {
+                if (onBatchUpdateStatus) {
+                  onBatchUpdateStatus(batchSelectedIds, 'completed');
+                  setBatchSelectedIds([]);
+                }
+              }}
+              className="py-1.5 px-2 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-black rounded-xl transition flex items-center justify-center gap-1 shadow-xs cursor-pointer"
+            >
+              <CheckCircle2 className="w-3 h-3" /> ✅ O'tildi
+            </button>
+
+            <button
+              onClick={() => {
+                if (onBatchUpdateStatus) {
+                  onBatchUpdateStatus(batchSelectedIds, 'current');
+                  setBatchSelectedIds([]);
+                }
+              }}
+              className="py-1.5 px-2 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black rounded-xl transition flex items-center justify-center gap-1 shadow-xs cursor-pointer"
+            >
+              <Clock className="w-3 h-3" /> 🔄 Jarayonda
+            </button>
+
+            <button
+              onClick={() => {
+                if (onBatchUpdateStatus) {
+                  onBatchUpdateStatus(batchSelectedIds, 'planned');
+                  setBatchSelectedIds([]);
+                }
+              }}
+              className="py-1.5 px-2 bg-slate-700 hover:bg-slate-800 text-white text-[10px] font-black rounded-xl transition flex items-center justify-center gap-1 shadow-xs cursor-pointer"
+            >
+              <Calendar className="w-3 h-3" /> 📅 Reja
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Lesson List */}
       <div id="lessons-scroll-area" className="flex-1 overflow-y-auto p-2 space-y-1.5">
@@ -230,6 +328,27 @@ export const LessonSidebar: React.FC<LessonSidebarProps> = ({
                 }`}
               >
                 <div className="flex items-start gap-3">
+                  {/* Batch Select Checkbox */}
+                  {isBatchMode && (
+                    <div 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (batchSelectedIds.includes(lesson.id)) {
+                          setBatchSelectedIds(batchSelectedIds.filter(id => id !== lesson.id));
+                        } else {
+                          setBatchSelectedIds([...batchSelectedIds, lesson.id]);
+                        }
+                      }}
+                      className={`w-5 h-5 mt-2.5 rounded-lg border flex items-center justify-center cursor-pointer transition shrink-0 ${
+                        batchSelectedIds.includes(lesson.id)
+                          ? 'bg-purple-600 border-purple-600 text-white shadow-xs'
+                          : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800'
+                      }`}
+                    >
+                      {batchSelectedIds.includes(lesson.id) && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                    </div>
+                  )}
+
                   {/* Lesson Number Badge */}
                   <div
                     className={`w-10 h-10 rounded-lg flex flex-col items-center justify-center shrink-0 font-bold transition-all ${

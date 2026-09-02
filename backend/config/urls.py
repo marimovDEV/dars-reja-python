@@ -7,6 +7,7 @@ urlpatterns = [
     
     # API endpoints matching frontend routes
     path('api/lessons', views.lessons_list),
+    path('api/lessons/batch-status', views.batch_update_lessons_status),
     path('api/lessons/<str:lesson_id>', views.lesson_detail),
     path('api/lessons/<str:lesson_id>/status', views.update_status),
 
@@ -14,6 +15,7 @@ urlpatterns = [
     path('api/groups', views.groups_list),
     path('api/groups/<str:group_id>', views.group_detail),
     path('api/groups/<str:group_id>/lessons', views.group_lessons),
+    path('api/groups/<str:group_id>/lessons/batch-status', views.batch_update_group_lesson_progress),
     path('api/groups/<str:group_id>/lessons/<str:lesson_id>', views.update_group_lesson_progress),
     
     # AI Quiz Arena endpoints

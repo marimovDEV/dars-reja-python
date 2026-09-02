@@ -1,26 +1,26 @@
-# 🔒 58. Custom Permissions — Dars dokumentatsiyasi
+# 🗄 58. Django Models va ORM — Dars dokumentatsiyasi
 
-Ba'zan standart ruxsatlar yetarli bo'lmaydi (masalan: "Postni faqat uning muallifi tahrirlashi mumkin"). Shunday hollar uchun **Custom Permission (Shaxsiy Ruxsatnoma)** sinfi yoziladi.
+**Django ORM** — ma'lumotlar bazasi jadvallarini Python sinflari (`models.Model`) ko'rinishida ta'riflash va obyektlar orqali SQL so'rovlarini bajarish imkonini beradi.
 
 ---
 
-# Custom Permission Misoli
+## Django Model va ORM So'rovlari
 
 ```python
-# permissions.py
-from rest_framework import permissions
+# main/models.py
+from django.db import models
 
-class IsOwnerOrReadOnly(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
-        # O'qish so'rovlariga (GET) barchaga ruxsat
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        # Yozish so'rovlariga faqat obyekt egasiga ruxsat
-        return obj.author == request.user
+class Course(models.Model):
+    title = models.CharField(max_length=200)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+# ORM CRUD So'rovlari:
+# 1. Yaratish: Course.objects.create(title="Python", price=500000)
+# 2. Olish: Course.objects.filter(price__gte=100000)
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda Shaxsiy ruxsatnomalar (`BasePermission`, `has_object_permission`) o'rganildi.
+Keyingi **59-dars: Django Admin Panel va ModelAdmin Sozlamalari** da tayyor CMS panelni sozlashni o'rganamiz.

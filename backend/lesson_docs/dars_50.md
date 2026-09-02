@@ -1,26 +1,37 @@
-# ⚡ 50. ModelSerializer — Dars dokumentatsiyasi
+# 🎨 50. CSS3 Styling, Flexbox va Grid Layout — Dars dokumentatsiyasi
 
-Standart `serializers.Serializer` bilan ishlash ba'zan juda ko'p takroriy kod yozishni talab qiladi (barcha maydonlarni va `create`/`update` metodlarini qo'lda yozish).
-
-**`ModelSerializer`** — bu Django modellari bilan bevosita ishlovchi va avtomatik ravishda model maydonlariga mos moslashtirilgan Serializer yaratuvchi maxsus klassdir. U kod hajmini 80% ga qisqartiradi va ish unumdorligini oshiradi.
+**CSS3 (Cascading Style Sheets)** — bu HTML teglarga ko'rinish, rang, shrift va joylashuv tartibini (layout) berish uchun ishlatiladigan uslublar tilidir.
 
 ---
 
-# Kod misoli — ModelSerializer
+## Asosiy CSS va Flexbox Misoli
 
-```python
-# main/serializers.py
-from rest_framework import serializers
-from .models import Product
+```css
+/* Asosiy uslublar */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    margin: 0;
+    padding: 0;
+}
 
-class ProductModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = '__all__' # yoki ['id', 'title', 'price']
+/* Flexbox Konteyner */
+.card-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 40px;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    flex: 1;
+}
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda `ModelSerializer` klassi va uning qulayliklari o'rganildi.
+Keyingi **51-dars: Bootstrap 5 Framework** da tayyor dizayn komponentlari bilan ishlashni o'rganamiz.

@@ -1,29 +1,37 @@
-# 🔑 55. User Authentication (Session vs Token) — Dars dokumentatsiyasi
+# 📝 55. Django Templates (DTL) — Dars dokumentatsiyasi
 
-**Authentication (Autentifikatsiya)** — bu so'rov yuborgan foydalanuvchining shaxsini (kimligini) aniqlash jarayoni.
-
-Veb-ishda ikkita asosiy autentifikatsiya usuli ishlatiladi:
-1. **Session-Based Auth**: Odatda monolit veb-saytlar (HTML/Cookies) uchun.
-2. **Token-Based Auth**: REST API va Mobil ilovalar uchun. Har bir so'rov bilan birga maxsus **Token** uzatiladi.
+**Django Template Language (DTL)** — Python ma'lumotlarini HTML sahifalar ichida dinamik render qilish va sikllar hamda shartlarni ishlatish imkonini beradi.
 
 ---
 
-# Token Authentication Misoli
+## DTL Shablon Merosxo'rligi (base.html va index.html)
 
-```python
-# settings.py
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ]
-}
+```html
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <title>{% block title %}Mening Saytim{% endblock %}</title>
+</head>
+<body>
+    <header><h1>MarimovDev Portal</h1></header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
 
-# Terminalda token generator app qo'shish:
-# INSTALLED_APPS = [..., 'rest_framework.authtoken']
+<!-- templates/index.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Darslar Ro'yxati</h2>
+<ul>
+    {% for course in courses %}
+        <li>{{ course.name }} - <b>{{ course.price }} so'm</b></li>
+    {% endfor %}
+</ul>
+{% endblock %}
 ```
 
----
-
-# 10. Qisqa xulosa
-
-Bu darsda Autentifikatsiya turlari (Session va Token Auth) o'rganildi.
+Keyingi **56-dars: Django Static Files & Media** da CSS va rasmlarni ulanishini o'rganamiz.
