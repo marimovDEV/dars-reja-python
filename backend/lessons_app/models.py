@@ -56,6 +56,8 @@ class Group(models.Model):
     schedule_days = models.CharField(max_length=255, default="Dush / Chor / Juma")
     schedule_time = models.CharField(max_length=100, default="14:00 - 16:00")
     student_count = models.IntegerField(null=True, blank=True, default=0)
+    student_login = models.CharField(max_length=100, blank=True, default="")
+    student_password = models.CharField(max_length=100, blank=True, default="")
     telegram_link = models.URLField(max_length=500, blank=True, default="")
     notes = models.TextField(blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -84,6 +86,9 @@ class Group(models.Model):
             first_obj = progress_qs.filter(lesson__lesson_number=1).first()
             current_title = first_obj.lesson.title if first_obj else "1-dars"
 
+        default_login = self.student_login or (self.name.lower().replace(" ", "_") + "_group")
+        default_password = self.student_password or "marimov123"
+
         return {
             "id": self.group_id,
             "name": self.name,
@@ -91,6 +96,8 @@ class Group(models.Model):
             "scheduleDays": self.schedule_days,
             "scheduleTime": self.schedule_time,
             "studentCount": self.student_count or 0,
+            "studentLogin": default_login,
+            "studentPassword": default_password,
             "telegramLink": self.telegram_link or "",
             "notes": self.notes or "",
             "completedCount": completed_count,

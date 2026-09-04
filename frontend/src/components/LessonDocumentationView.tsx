@@ -28,10 +28,12 @@ import { Lesson, LessonStatus, LessonMaterial } from '../types';
 import { MarkdownDocRenderer } from './MarkdownDocRenderer';
 import { TableOfContents } from './TableOfContents';
 import { CodeBlock } from './CodeBlock';
-import { DocCallout } from './DocCallout';
+import { LockedLessonView } from './LockedLessonView';
 
 interface LessonDocumentationViewProps {
   lesson: Lesson;
+  userRole?: 'admin' | 'student';
+  groupName?: string;
   onUpdateStatus: (lessonId: string, status: LessonStatus) => void;
   onOpenEditModal: (lesson: Lesson) => void;
   onPreviewMaterial: (material: LessonMaterial) => void;
@@ -43,6 +45,8 @@ interface LessonDocumentationViewProps {
 
 export const LessonDocumentationView: React.FC<LessonDocumentationViewProps> = ({
   lesson,
+  userRole = 'admin',
+  groupName,
   onUpdateStatus,
   onOpenEditModal,
   onPreviewMaterial,
@@ -89,6 +93,15 @@ export const LessonDocumentationView: React.FC<LessonDocumentationViewProps> = (
   };
 
   const isExam = lesson.lessonNumber % 12 === 0;
+  const isLockedForStudent = userRole === 'student' && lesson.status !== 'completed';
+
+  if (isLockedForStudent) {
+    return (
+      <main id="lesson-documentation-view" className="flex-1 bg-slate-50 dark:bg-[#070A12] text-slate-800 dark:text-slate-200 overflow-y-auto h-screen">
+        <LockedLessonView lesson={lesson} groupName={groupName} />
+      </main>
+    );
+  }
 
   return (
     <main 
@@ -119,34 +132,38 @@ export const LessonDocumentationView: React.FC<LessonDocumentationViewProps> = (
             <span>Mundarija</span>
           </button>
 
-          {/* Status selector */}
-          <div className="flex items-center bg-slate-100 dark:bg-slate-800/80 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700/60">
-            {(['planned', 'pending', 'completed'] as LessonStatus[]).map((st) => (
-              <button
-                key={st}
-                onClick={() => onUpdateStatus(lesson.id, st)}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${
-                  lesson.status === st 
-                    ? st === 'completed'
-                      ? 'bg-emerald-600 text-white shadow-xs'
-                      : st === 'pending'
-                      ? 'bg-amber-500 text-white shadow-xs'
-                      : 'bg-blue-600 text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                {st === 'completed' ? 'Tugallandi' : st === 'pending' ? 'Jarayonda' : 'Reja'}
-              </button>
-            ))}
-          </div>
+          {/* Status selector (Admin Only) */}
+          {userRole === 'admin' && (
+            <div className="flex items-center bg-slate-100 dark:bg-slate-800/80 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700/60">
+              {(['planned', 'pending', 'completed'] as LessonStatus[]).map((st) => (
+                <button
+                  key={st}
+                  onClick={() => onUpdateStatus(lesson.id, st)}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${
+                    lesson.status === st 
+                      ? st === 'completed'
+                        ? 'bg-emerald-600 text-white shadow-xs'
+                        : st === 'pending'
+                        ? 'bg-amber-500 text-white shadow-xs'
+                        : 'bg-blue-600 text-white shadow-xs'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  {st === 'completed' ? 'Tugallandi' : st === 'pending' ? 'Jarayonda' : 'Reja'}
+                </button>
+              ))}
+            </div>
+          )}
 
-          <button
-            onClick={() => onOpenEditModal(lesson)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
-          >
-            <Edit3 className="w-3.5 h-3.5 text-slate-500" />
-            <span className="hidden sm:inline">Tahrirlash</span>
-          </button>
+          {userRole === 'admin' && (
+            <button
+              onClick={() => onOpenEditModal(lesson)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
+            >
+              <Edit3 className="w-3.5 h-3.5 text-slate-500" />
+              <span className="hidden sm:inline">Tahrirlash</span>
+            </button>
+          )}
 
           {/* Notion-style Share / Publish Button */}
           <button
@@ -174,13 +191,15 @@ export const LessonDocumentationView: React.FC<LessonDocumentationViewProps> = (
             <Printer className="w-4 h-4" />
           </button>
 
-          <button
-            onClick={handleDelete}
-            className="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
-            title="O'chirish"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
+          {userRole === 'admin' && (
+            <button
+              onClick={handleDelete}
+              className="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
+              title="O'chirish"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
 

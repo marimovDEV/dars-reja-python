@@ -39,7 +39,26 @@ export default function App() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedLessonId, setSelectedLessonId] = useState<string>('');
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => localStorage.getItem('dars_rejasi_logged_in') === 'true');
+  const [userRole, setUserRole] = useState<'admin' | 'student'>(() => {
+    return (localStorage.getItem('dars_rejasi_user_role') as 'admin' | 'student') || 'admin';
+  });
+
+  const handleLogin = (role?: 'admin' | 'student', groupData?: any) => {
+    setIsLoggedIn(true);
+    const resolvedRole = role || 'admin';
+    setUserRole(resolvedRole);
+    localStorage.setItem('dars_rejasi_user_role', resolvedRole);
+    if (resolvedRole === 'student' && groupData) {
+      setActiveGroupId(groupData.id);
+      localStorage.setItem('dars_rejasi_active_group_id', groupData.id);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('dars_rejasi_logged_in');
+    localStorage.removeItem('dars_rejasi_user_role');
+    setIsLoggedIn(false);
+  };
 
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
@@ -372,13 +391,6 @@ export default function App() {
     fetchNotionStatus();
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('dars_rejasi_logged_in');
-    localStorage.removeItem('dars_rejasi_active_group_id');
-    setIsLoggedIn(false);
-    setActiveGroupId(null);
-  };
-
   const toggleDarkMode = () => {
     setIsDarkMode(prev => {
       const next = !prev;
@@ -409,7 +421,7 @@ export default function App() {
   }
 
   if (!isLoggedIn) {
-    return <LoginView onLogin={() => setIsLoggedIn(true)} />;
+    return <LoginView onLogin={handleLogin} />;
   }
 
   // Full Screen Quiz Host View
@@ -445,7 +457,7 @@ export default function App() {
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setIsGroupSelectModalOpen(true)}
+            onClick={() => userRole === 'admin' && setIsGroupSelectModalOpen(true)}
             className="px-3 py-1 bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-lg font-bold text-xs"
           >
             {activeGroup ? activeGroup.name : 'Guruh tanlash'}
@@ -467,6 +479,7 @@ export default function App() {
         <LessonSidebar
           lessons={lessons}
           selectedLessonId={selectedLessonId}
+          userRole={userRole}
           onSelectLesson={(id) => {
             setSelectedLessonId(id);
             setIsMobileSidebarOpen(false);
@@ -515,11 +528,13 @@ export default function App() {
         ) : selectedLesson ? (
           <LessonDocumentationView
             lesson={selectedLesson}
+            userRole={userRole}
+            groupName={activeGroup?.name}
             onUpdateStatus={handleUpdateStatus}
-            onOpenEdit={() => handleOpenEdit(selectedLesson)}
-            onDeleteLesson={() => handleDeleteLesson(selectedLesson.id)}
+            onOpenEditModal={(les) => handleOpenEdit(les)}
+            onDeleteLesson={(id) => handleDeleteLesson(id)}
             onPreviewMaterial={(material) => setPreviewMaterial(material)}
-            onAddMaterialClick={() => setAddMaterialLessonId(selectedLesson.id)}
+            onAddMaterial={(id) => setAddMaterialLessonId(id)}
           />
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-400">

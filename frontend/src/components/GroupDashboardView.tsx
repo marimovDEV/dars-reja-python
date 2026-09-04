@@ -146,6 +146,14 @@ export function GroupDashboardView({
                     </div>
                   </div>
 
+                  {/* Student Login & Password Info Banner */}
+                  <div className="p-2.5 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900/40 text-[11px] font-mono flex items-center justify-between text-slate-700 dark:text-slate-300">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span>🔑 Login: <strong className="text-purple-700 dark:text-purple-300 font-bold">{group.studentLogin || group.name}</strong></span>
+                      <span>🔒 Parol: <strong className="text-purple-700 dark:text-purple-300 font-bold">{group.studentPassword || 'marimov123'}</strong></span>
+                    </div>
+                  </div>
+
                   {/* Telegram Link if available */}
                   {group.telegramLink && (
                     <a

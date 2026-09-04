@@ -5,6 +5,9 @@ from lessons_app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     
+    # Auth endpoint
+    path('api/auth/login', views.auth_login),
+
     # API endpoints matching frontend routes
     path('api/lessons', views.lessons_list),
     path('api/lessons/batch-status', views.batch_update_lessons_status),

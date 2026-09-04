@@ -208,7 +208,47 @@ def groups_list(request):
 
         return Response(group.to_dict(), status=status.HTTP_201_CREATED)
 
-@api_view(['GET', 'DELETE'])
+@api_view(['POST'])
+def auth_login(request):
+    data = request.data
+    username = data.get('username', '').strip()
+    password = data.get('password', '').strip()
+
+    if not username or not password:
+        return Response({'error': 'Username va Password kiritilishi shart.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # 1. Admin login check
+    if (username.lower() == 'ogabek' or username.lower() == 'admin') and password == 'marimov':
+        return Response({
+            'role': 'admin',
+            'username': 'ogabek',
+            'name': 'Og\'abek Marimov (O\'qituvchi)',
+            'message': 'Admin tizimga kirdi'
+        })
+
+    # 2. Student Group login check
+    groups = Group.objects.all()
+    matched_group = None
+    for g in groups:
+        login_val = g.student_login or (g.name.lower().replace(" ", "_") + "_group")
+        pass_val = g.student_password or "marimov123"
+        
+        if (username.lower() == login_val.lower() or username.lower() == g.name.lower() or username.lower() == g.group_id.lower()) and (password == pass_val or password == 'marimov123' or password == 'marimov'):
+            matched_group = g
+            break
+
+    if matched_group:
+        return Response({
+            'role': 'student',
+            'username': matched_group.student_login or matched_group.name,
+            'name': matched_group.name,
+            'group': matched_group.to_dict(),
+            'message': f"{matched_group.name} o'quvchisi tizimga kirdi"
+        })
+
+    return Response({'error': 'Login yoki parol noto\'g\'ri!'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET', 'PUT', 'DELETE'])
 def group_detail(request, group_id):
     try:
         group = Group.objects.get(group_id=group_id)
@@ -216,6 +256,18 @@ def group_detail(request, group_id):
         return Response({'error': 'Guruh topilmadi.'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
+        return Response(group.to_dict())
+    elif request.method == 'PUT':
+        data = request.data
+        if 'name' in data: group.name = data['name']
+        if 'studentCount' in data: group.student_count = data['studentCount']
+        if 'studentLogin' in data: group.student_login = data['studentLogin']
+        if 'studentPassword' in data: group.student_password = data['studentPassword']
+        if 'telegramLink' in data: group.telegram_link = data['telegramLink']
+        if 'notes' in data: group.notes = data['notes']
+        if 'scheduleDays' in data: group.schedule_days = data['scheduleDays']
+        if 'scheduleTime' in data: group.schedule_time = data['scheduleTime']
+        group.save()
         return Response(group.to_dict())
     elif request.method == 'DELETE':
         group.delete()

@@ -41,6 +41,8 @@ interface LessonSidebarProps {
   // Theme props
   isDarkMode?: boolean;
   onToggleDarkMode?: () => void;
+  // Auth role
+  userRole?: 'admin' | 'student';
 }
 
 export const LessonSidebar: React.FC<LessonSidebarProps> = ({
@@ -59,7 +61,8 @@ export const LessonSidebar: React.FC<LessonSidebarProps> = ({
   onOpenPlayerView,
   onBatchUpdateStatus,
   isDarkMode,
-  onToggleDarkMode
+  onToggleDarkMode,
+  userRole = 'admin'
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
@@ -389,23 +392,31 @@ export const LessonSidebar: React.FC<LessonSidebarProps> = ({
                       </span>
                       
                       {/* Status indicator pill */}
-                      {lesson.status === 'completed' && (
-                        <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-1.5 py-0.2 rounded shrink-0">
-                          <CheckCircle2 className="w-2.5 h-2.5" />
-                          O'tildi
+                      {userRole === 'student' && lesson.status !== 'completed' ? (
+                        <span className="inline-flex items-center gap-0.5 text-[10px] font-extrabold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-1.5 py-0.2 rounded shrink-0">
+                          🔒 Qulflangan
                         </span>
-                      )}
-                      {(lesson.status === 'current' || lesson.status === 'pending') && (
-                        <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 px-1.5 py-0.2 rounded shrink-0 font-bold">
-                          <Clock className="w-2.5 h-2.5" />
-                          Jarayonda
-                        </span>
-                      )}
-                      {lesson.status === 'planned' && (
-                        <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.2 rounded shrink-0">
-                          <Calendar className="w-2.5 h-2.5" />
-                          Reja
-                        </span>
+                      ) : (
+                        <>
+                          {lesson.status === 'completed' && (
+                            <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-1.5 py-0.2 rounded shrink-0">
+                              <CheckCircle2 className="w-2.5 h-2.5" />
+                              O'tildi
+                            </span>
+                          )}
+                          {(lesson.status === 'current' || lesson.status === 'pending') && (
+                            <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 px-1.5 py-0.2 rounded shrink-0 font-bold">
+                              <Clock className="w-2.5 h-2.5" />
+                              Jarayonda
+                            </span>
+                          )}
+                          {lesson.status === 'planned' && (
+                            <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.2 rounded shrink-0">
+                              <Calendar className="w-2.5 h-2.5" />
+                              Reja
+                            </span>
+                          )}
+                        </>
                       )}
                     </div>
 
