@@ -39,6 +39,7 @@ export default function App() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedLessonId, setSelectedLessonId] = useState<string>('');
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => localStorage.getItem('dars_rejasi_logged_in') === 'true');
   const [userRole, setUserRole] = useState<'admin' | 'student'>(() => {
     return (localStorage.getItem('dars_rejasi_user_role') as 'admin' | 'student') || 'admin';
   });
