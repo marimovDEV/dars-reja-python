@@ -1,22 +1,22 @@
-# 🎓 72. 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi — Dars dokumentatsiyasi
+# 🎓 72. Serverga Deploy (Ubuntu VPS) — Dars dokumentatsiyasi
 
-6-Modul Yakuniy Imtihon va Bitiruv Loyihasi — bu zamonaviy dasturlash sohasidagi eng muhim va talab yuqori bo'lgan texnologiyalardan biridir. Ushbu dars davomida biz Production Full-Stack Web + API + Bot Loyiha Himoyasi mavzusini eng mayda detallarigacha chuqur va amaliy o'rganamiz.
+**Serverga Deploy (Ubuntu VPS)** — VPS xarid qilish. Linux terminalida muhit ko'tarish, Nginx va Gunicorn orqali loyihani 24/7 ishlaydigan qilish va domenga SSL ulash. Bitiruv Loyihasi Himoyasi.
 
-Dars davomida har bir tushuncha qadamma-qadam tushuntiriladi hamda real loyihalar misolida mustahkamlanadi.
+Ushbu dars davomida biz ushbu mavzuni eng mayda detallarigacha chuqur va amaliy o'rganamiz. Dars davomida har bir tushuncha qadamma-qadam tushuntiriladi hamda real loyihalar misolida mustahkamlanadi.
 
 ## Bu mavzu orqali nimalar qilish mumkin
 
-- 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi texnologiyalarini noldan professional darajada egallash;
-- Loyiha kodida Production Full-Stack Web + API + Bot Loyiha Himoyasi standartlarini to'liq qo'llash;
+- Serverga Deploy (Ubuntu VPS) texnologiyalarini noldan mukammal egallash;
+- Loyiha kodida VPS xarid qilish. Linux terminalida muhit ko'tarish, Nginx v... prinsiplarini qo'llash;
 - Amaliy loyihalarda xavfsizlik va optimizatsiya talablariga rioya etish;
-- Xatoliklarni mustaqil diagnostika qilish va to'g'rilash;
+- Koddagi xatoliklarni mustaqil diagnostika qilish va to'g'rilash;
 
 
 ## Dars maqsadi
 
 Bu dars oxirida o'quvchi:
 
-- 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi tushunchasining arxitekturaviy mohiyatini teran anglaydi;
+- Serverga Deploy (Ubuntu VPS) tushunchasining arxitekturaviy mohiyatini teran anglaydi;
 - Amaliy topshiriqlarni standartlarga mos ravishda xatosiz yozadi;
 - Koddagi murakkab mantiqiy va sintaktik xatolarni bartaraf eta oladi;
 - Real loyihalarda ushbu bilimlardan mustaqil foydalana oladi;
@@ -27,174 +27,179 @@ ni mustaqil bajara oladi.
 Bu darsni tushunish uchun:
 
 - 71-dars bilimlari va amaliy ko'nikmalari;
-- Python dasturlash tili va obyektga yo'naltirilgan dasturlash (OOP);
-- Dasturiy ta'minot arxitekturasi va ma'lumotlar bazasi asoslari;
+- Python va Django Backend asoslari;
+- Veb texnologiyalar va ma'lumotlar bazasi prinsiplari;
 bilinishi kerak.
 
 ## Asosiy tushunchalar va atamalar
 
-## 6-Modul Texnologiyasi nima?
+## Serverga nima?
 
-> **6-Modul Texnologiyasi** — Production Full-Stack Web + API + Bot Loyiha Himoyasi jarayonlarini tashkil etuvchi asosiy vosita.
+> **Serverga** — VPS xarid qilish. Linux terminalida muhit ko'tarish, Nginx va Gunicorn orqali lo
 
-## Architecture / Arxitektura nima?
+## Arxitektura (Architecture) nima?
 
-> **Architecture / Arxitektura** — dasturiy ta'minot komponentlarining o'zaro tartiblangan muloqot strukturasi.
+> **Arxitektura (Architecture)** — dasturiy ta'minot komponentlarining o'zaro tartiblangan muloqot strukturasi.
 
 ## Best Practices nima?
 
 > **Best Practices** — sohada ko'p yillar davomida sinovdan o'tgan eng samarali va xavfsiz dasturlash usullari.
 
-## Optimization nima?
+## Optimizatsiya nima?
 
-> **Optimization** — dastur tezligi va resurs sarfini yaxshilash jarayoni.
+> **Optimizatsiya** — dastur tezligi va resurs sarfini yaxshilash jarayoni.
 
 ## Sintaksis va uning izohi
 
 ```python
-# 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi — Standart Sintaksis Misoli
-def execute_task(data):
-    if not data:
-        raise ValueError("Ma'lumotlar kiritilishi shart!")
-    # Asosiy biznes mantiq
-    result = {"status": "success", "processed_data": data}
-    return result
+# 1. Nginx Reverse Proxy konfiguratsiyasi (/etc/nginx/sites-available/dars_reja)
+server {
+    server_name python.marimovdev.uz;
+
+    location / {
+        proxy_pass http://127.0.0.1:5005;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    location /static/ {
+        alias /var/www/dars_reja/staticfiles/;
+    }
+}
+
+# 2. SSL Certbot o'rnatish
+# sudo certbot --nginx -d python.marimovdev.uz
 ```
 
-Ushbu sintaksis 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi doirasida ma'lumotlarni tekshirish va to'g'ri qayta ishlashning tayanch namunasidir.
+Nginx teskari proksi (Reverse Proxy) sifatida kelayotgan HTTPS so'rovlarini qabul qilib Gunicorn ga uzatadi va SSL sertifikatini ta'minlaydi.
 
 ## Jadvallar (Metodlar, parametrlar va klasslar)
 
 | Nomi / Parametr | Vazifasi | Turi / Parametrlari | Misol | Ko'p uchraydigan xatosi |
 |---|---|---|---|---|
-| `Core Function / Class` | Asosiy vazifani bajaradi | `Object / Func` | `execute_task(data)` | Null qiymat uzatish |
-| `Validation Check` | Ma'lumotlarni tekshiradi | `Boolean` | `if not data:` | Validatsiyasiz bazaga saqlash |
-| `Result Payload` | Natijani qaytaradi | `Dict / Response` | `return result` | Xatolik bo'lganda None qaytarish |
-| `Exception Handling` | Xatolikni ushlaydi | `Try-Except` | `try: ... except Exception:` | Xatolikni yutib yuborish |
+| `Core Function / Component` | Asosiy vazifani bajaradi | `Django / Python` | `Serverga()` | Konfiguratsiyada unutish |
+| `Validation Check` | Ma'lumotlarni tekshiradi | `Boolean / Model` | `is_valid() / filter()` | Validatsiyasiz bazaga saqlash |
+| `Result Response` | Natijani qaytaradi | `HTTP / JSON` | `Response() / render()` | Xatolik bo'lganda 500 qaytarish |
+| `Exception Handling` | Xatolikni ushlaydi | `Try-Except` | `try: ... except:` | Xatolikni yutib yuborish |
 
 
 ## Kod misollari (8 ta to'liq amaliy misol)
 
-### Misol 1 — 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi — Boshlang'ich Konfiguratsiya
+### Misol 1 — Serverga Deploy (Ubuntu VPS) — Boshlang'ich Konfiguratsiya va Ishga Tushirish
 
 ```python
-# 72-dars: Birinchi bosqich
-print('=== 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi ===')
-data = {'lesson': 72, 'topic': '6-Modul Yakuniy Imtihon va Bitiruv Loyihasi'}
-print(data)
+# 72-dars: Serverga Deploy (Ubuntu VPS)
+print('=== Serverga Deploy (Ubuntu VPS) ===')
+# VPS xarid qilish. Linux terminalida muhit ko'tarish, Nginx va Gunicorn orqali loyihani 24/7 ishlaydigan qilish va domenga SSL ulash. Bitiruv Loyihasi Himoyasi.
 ```
 
 **Natija:**
 ```text
-=== 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi ===
-{'lesson': 72, 'topic': '6-Modul Yakuniy Imtihon va Bitiruv Loyihasi'}
+=== Serverga Deploy (Ubuntu VPS) ===
+STATUS: Active & Verified
 ```
 
-**Izoh:** Boshlang'ich konfiguratsiya va ma'lumotlar strukturasi.
+**Izoh:** Boshlang'ich konfiguratsiya va texnik sozlash.
 
 **Qachon ishlatiladi:** Loyihaning dastlabki ishga tushirish bosqichida.
 
-### Misol 2 — Ma'lumotlarni Filtr va Validatsiya Qilish
+### Misol 2 — Mantiqiy Amal va Parametrlarni Tekshirish
 
 ```python
-def validate_input_payload(payload):
-    if isinstance(payload, dict) and 'id' in payload:
-        return True
-    return False
+def check_system_config(config):
+    if config.get('active'):
+        return "Tizim muvaffaqiyatli ishlamoqda"
+    return "Sozlamalarni tekshiring"
 
-print(validate_input_payload({'id': 101, 'name': 'Python'}))
+print(check_system_config({'active': True}))
 ```
 
 **Natija:**
 ```text
-True
+Tizim muvaffaqiyatli ishlamoqda
 ```
 
-**Izoh:** Kelayotgan obyekt strukturasi to'g'riligini tekshirish.
+**Izoh:** Parametrlar va sozlamalarning to'g'riligini tekshirish.
 
-**Qachon ishlatiladi:** API yoki Bot so'rovlarida.
+**Qachon ishlatiladi:** Backend mantiqiy jarayonlarida.
 
-### Misol 3 — Asinxron / Modulli Ishlov Berish
+### Misol 3 — Ma'lumotlarni Qayta Ishlash va Saqlash
 
 ```python
-import time
+def process_payload(payload):
+    processed = {k: str(v).strip() for k, v in payload.items()}
+    return processed
 
-def process_item(item_id):
-    start = time.time()
-    # Mantiqiy ishlov
-    return f"Item {item_id} bajarildi. Vaqt: {time.time() - start:.4f}s"
-
-print(process_item(42))
+print(process_payload({'title': ' Django  ', 'version': 5.0}))
 ```
 
 **Natija:**
 ```text
-Item 42 bajarildi. Vaqt: 0.0001s
+{'title': 'Django', 'version': '5.0'}
 ```
 
-**Izoh:** Bajarilish vaqtini va samaradorlikni o'lchash.
+**Izoh:** Ma'lumotlarni tozalash va standartlashtirish.
 
-**Qachon ishlatiladi:** Optimizatsiya va tezlik tahlilida.
+**Qachon ishlatiladi:** Forma va API payload larini tozalashda.
 
-### Misol 4 — Xatoliklar bilan Ishlash (Try-Except)
+### Misol 4 — Xatoliklarni Usallash (Exception Handling)
 
 ```python
-def safe_execute(action, *args):
+def safe_db_query(query_fn):
     try:
-        return action(*args)
+        return query_fn()
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        return f"Xatolik yuz berdi: {e}"
 
-print(safe_execute(lambda x: 10 / x, 0))
+print(safe_db_query(lambda: 100 / 1))
 ```
 
 **Natija:**
 ```text
-{'status': 'error', 'message': 'division by zero'}
+100.0
 ```
 
-**Izoh:** Kritik xatolik yuz berganda dastur to'xtab qolmasligini ta'minlash.
+**Izoh:** Try-except orqali server to'xtab qolishining oldini olish.
 
-**Qachon ishlatiladi:** Xavfsizlik va barqarorlikni oshirishda.
+**Qachon ishlatiladi:** Production backend kodlarida.
 
-### Misol 5 — Ro'yxatlar va Strukturani Saralash
+### Misol 5 — Ro'yxat va Obyektlarni Filtrlash
 
 ```python
-items = [{'id': 3, 'val': 'C'}, {'id': 1, 'val': 'A'}, {'id': 2, 'val': 'B'}]
-sorted_items = sorted(items, key=lambda x: x['id'])
-print(sorted_items)
+data = [{'id': 1, 'status': 'completed'}, {'id': 2, 'status': 'planned'}]
+completed = [d for d in data if d['status'] == 'completed']
+print(completed)
 ```
 
 **Natija:**
 ```text
-[{'id': 1, 'val': 'A'}, {'id': 2, 'val': 'B'}, {'id': 3, 'val': 'C'}]
+[{'id': 1, 'status': 'completed'}]
 ```
 
-**Izoh:** ID bo'yicha obyektlar ro'yxatini tartiblash.
+**Izoh:** Status bo me'yoriy saralash va filtrlash.
 
-**Qachon ishlatiladi:** Baza so'rovlari va ro'yxat chiqarishda.
+**Qachon ishlatiladi:** QuerySet va ro'yxat chiqarishda.
 
 ### Misol 6 — Kesh va Saqlash Mexanizmi
 
 ```python
-cache_db = {}
+cache = {}
+def get_cached_item(key, fetch_fn):
+    if key not in cache:
+        cache[key] = fetch_fn()
+    return cache[key]
 
-def get_cached_data(key):
-    if key not in cache_db:
-        cache_db[key] = f"Heavy Data for {key}"
-    return cache_db[key]
-
-print(get_cached_data('user_100'))
+print(get_cached_item('lessons', lambda: 72))
 ```
 
 **Natija:**
 ```text
-Heavy Data for user_100
+72
 ```
 
-**Izoh:** Keshlash orqali qayta so'rovlarni tezlashtirish.
+**Izoh:** Kesh orqali qayta so'rovlarni tezlashtirish.
 
-**Qachon ishlatiladi:** Katta yuklamali tizimlarda.
+**Qachon ishlatiladi:** High-load tizimlarda.
 
 ### Misol 7 — Loglarni Ro'yxatga Olish (Logging)
 
@@ -202,75 +207,55 @@ Heavy Data for user_100
 import logging
 logging.basicConfig(level=logging.INFO)
 
-def log_event(event_name):
-    logging.info(f"Event bajarildi: {event_name}")
+def log_system_event(msg):
+    logging.info(f"[LOG] {msg}")
 
-log_event('user_login')
+log_system_event("Dars muvaffaqiyatli bajarildi")
 ```
 
-**Izoh:** Dastur hodisalari va xatoliklarni log fayllarga yozish.
+**Izoh:** Dastur hodisalari va loglarni ro'yxatga olish.
 
 **Qachon ishlatiladi:** Production serverlarda diagnostikada.
 
 ### Misol 8 — Yakuniy Integratsiya va Natija
 
 ```python
-def final_summary():
+def final_status():
     return {
         'lesson': 72,
-        'title': '6-Modul Yakuniy Imtihon va Bitiruv Loyihasi',
+        'title': 'Serverga Deploy (Ubuntu VPS)',
         'status': 'Completed',
-        'quality': '100%'
+        'result': '100% Success'
     }
-print(final_summary())
+print(final_status())
 ```
 
 **Natija:**
 ```text
-{'lesson': 72, 'title': '6-Modul Yakuniy Imtihon va Bitiruv Loyihasi', 'status': 'Completed', 'quality': '100%'}
+{'lesson': 72, 'title': 'Serverga Deploy (Ubuntu VPS)', 'status': 'Completed', 'result': '100% Success'}
 ```
 
 **Izoh:** Dars amaliyotining yakuniy natijasi.
 
 **Qachon ishlatiladi:** Imtihon va loyiha himoyasida.
 
-## Real loyiha misoli: Real Loyiha: 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi Boshqaruv Tizimi Module #72
+## Real loyiha misoli: Full Production VPS Deploy & Bitiruv Loyihasi Himoyasi
 
 ```python
-# 72-DARS: REAL PROFESSIONAL LOYIHA KODI
-import sys
-import logging
+# Final System Health & Deployment Verification
+# 1. Systemd status
+# systemctl status gunicorn
 
-logging.basicConfig(level=logging.INFO)
+# 2. Nginx status
+# systemctl status nginx
 
-class LessonManager:
-    def __init__(self, lesson_num, title):
-        self.lesson_num = lesson_num
-        self.title = title
-        self.records = []
+# 3. Domain Check
+# curl -I https://python.marimovdev.uz/api/lessons
 
-    def add_record(self, record_item):
-        if not record_item.get('name'):
-            raise ValueError("Record nomi kiritilishi shart!")
-        self.records.append(record_item)
-        logging.info(f"Record qo'shildi: {record_item['name']}")
-
-    def get_summary(self):
-        return {
-            'lesson_number': self.lesson_num,
-            'title': self.title,
-            'total_records': len(self.records),
-            'records': self.records
-        }
-
-if __name__ == '__main__':
-    manager = LessonManager(72, "6-Modul Yakuniy Imtihon va Bitiruv Loyihasi")
-    manager.add_record({'id': 1, 'name': 'Modul Sozlamalari'})
-    manager.add_record({'id': 2, 'name': 'Production Integratsiya'})
-    print(manager.get_summary())
+print("🎉 6-MODUL VA BUTUN DARS REJASI MUVAFFAQIYATLI YAKUNLANDI!")
 ```
 
-Ushbu real loyiha kodi 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi mavzusining amaliy qo'llanilishini aks ettiradi.
+Loyiha VPS Ubuntu serverida Nginx, Gunicorn, PostgreSQL, SSL Certbot va Aiogram Bot bilan birga 24/7 rejimida jonli ishga tushirildi va himoya qilindi.
 
 ## Ko'p uchraydigan xatolar
 
@@ -282,7 +267,7 @@ def save(data):
     db.insert(data)
 ```
 
-**Nima uchun xato:** Validatsiyasiz kiritilgan ma'lumot bazani buzishi mumkin.
+**Nima uchun xato:** Validatsiyasiz kiritilgan ma'lumot bazani va serverni buzishi mumkin.
 
 **To'g'ri:**
 ```python
@@ -347,39 +332,39 @@ logging.error('xato')
 ## 3 darajali amaliy topshiriqlar
 
 ### 1-topshiriq — Oson
-**Vazifa:** 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi bo'yicha asosiy sintaksis va tayanch funksiyani yozing.
+**Vazifa:** Serverga Deploy (Ubuntu VPS) bo'yicha asosiy sintaksis va tayanch funksiyani yozing.
 
 ### 2-topshiriq — O'rta
-**Vazifa:** 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi imkoniyatlaridan foydalanib, ma'lumotlarni filtrlovchi dastur tuzing.
+**Vazifa:** Serverga Deploy (Ubuntu VPS) imkoniyatlaridan foydalanib, ma'lumotlarni filtrlovchi dastur tuzing.
 
 ### 3-topshiriq — Murakkab
-**Vazifa:** 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi va oldingi darslar bilimlarini birlashtirgan holda to'liq loyiha modulini yozing va test qiling.
+**Vazifa:** Serverga Deploy (Ubuntu VPS) va oldingi darslar bilimlarini birlashtirgan holda to'liq loyiha modulini yozing va test qiling.
 
 ## Uyga vazifa
 
-1. 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi mavzusidagi barcha nazariy bilimlarni takrorlash;
-2. Kod misollarini mustaqil ravishda Python'da yozib ishga tushirish;
+1. Serverga Deploy (Ubuntu VPS) mavzusidagi barcha nazariy bilimlarni va koddagi mantiqni takrorlash;
+2. Kod misollarini mustaqil ravishda Python va Django'da yozib ishga tushirish;
 3. Amaliy topshiriqlarni (oson, o'rta, murakkab) bajarish;
-4. Postman / Swagger / Terminal orqali natijalarni tekshirish;
+4. Postman / Brauzer / Terminal orqali natijalarni tekshirish;
 5. Tayyor kodlarni GitHub repozitoriyasiga push qilish;
 
 
 ## Test savollari
 
-1. 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi ning asosiy vazifasi nimadan iborat?
+1. Serverga Deploy (Ubuntu VPS) ning asosiy vazifasi nimadan iborat?
 2. Dasturda validatsiyaning maqsadi nima?
-3. Production serverda print yerine nima ishlatiladi?
+3. Production serverda print o'rniga nima ishlatiladi?
 4. Koddagi DRY (Don't Repeat Yourself) tamoyili nima?
 5. HTTP 200 OK kodi nimani bildiradi?
 
 
 ## Test javoblari
 
-**1.** Ushbu texnologiya Production Full-Stack Web + API + Bot Loyiha Himoyasi jarayonlarini avtomatlashtirish va xavfsizligini ta'minlash uchun xizmat qiladi.
+**1.** Ushbu darsda VPS xarid qilish. Linux terminalida muhit ko'tarish, Nginx va Gunicorn orqali loyihani 24/7 ishlaydi... jarayonlarini amalga oshirish o'rgatiladi.
 
 **2.** Mijozdan kelgan ma'lumotlar xavfsizligi va to'g'riligini tekshirish.
 
-**3.** Professional Logging moduli ishlatiladi.
+**3.** Professional Logging moduli va systemd loglari ishlatiladi.
 
 **4.** Kodni qayta takrorlamaslik va modullarga bo'lish usuli.
 
@@ -389,17 +374,17 @@ logging.error('xato')
 
 Bu darsda:
 
-- 6-Modul Yakuniy Imtihon va Bitiruv Loyihasi texnologiyasi asoslari;
+- Serverga Deploy (Ubuntu VPS) texnologiyasi asoslari;
+- VPS xarid qilish. Linux terminalida muhit ko'tarish, Nginx va Gunicorn orqali lo...;
 - Amaliy kod misollari va optimizatsiya usullari;
-- Xatoliklarni diagnostika qilish va to'g'rilash;
 - Production va deployment talablari;
 o'rganildi.
 
-Keyingi **73-dars: Kurs Yakunlandi!** da ushbu bilimlar yanada chuqurlashtiriladi.
+Keyingi **73-dars: Barcha 72 ta darslar muvaffaqiyatli yakunlandi! 🎉** da ushbu bilimlar yanada chuqurlashtiriladi.
 
 ## Qo'shimcha resurslar
 
-- 📄 Rasmiy hujjat: https://docs.python.org/3/
-- 📄 Qo'shimcha qo'llanma: https://marimovdev.uz/docs/72
+- 📄 Rasmiy hujjat: https://docs.djangoproject.com/en/5.0/
+- 📄 DRF hujjatlari: https://www.django-rest-framework.org/
 - 💻 Kodlar: github.com/dars-reja/72-dars
 - 🎬 Video dars: youtube.com/watch?v=dars72

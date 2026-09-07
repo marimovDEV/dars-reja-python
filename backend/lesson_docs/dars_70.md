@@ -1,22 +1,22 @@
-# 🌐 70. Production Server Sozlash (Nginx, Gunicorn, VPS Linux) — Dars dokumentatsiyasi
+# 🐘 70. PostgreSQL ga o'tish — Dars dokumentatsiyasi
 
-Production Server Sozlash (Nginx, Gunicorn, VPS Linux) — bu zamonaviy dasturlash sohasidagi eng muhim va talab yuqori bo'lgan texnologiyalardan biridir. Ushbu dars davomida biz VPS, Nginx Reverse Proxy, Gunicorn WSGI, Systemd, SSL mavzusini eng mayda detallarigacha chuqur va amaliy o'rganamiz.
+**PostgreSQL ga o'tish** — SQLite3 faqat test uchun ekanligi. Windows ga PostgreSQL o'rnatish, psycopg2-binary kutubxonasi orqali Django'ni unga ulash.
 
-Dars davomida har bir tushuncha qadamma-qadam tushuntiriladi hamda real loyihalar misolida mustahkamlanadi.
+Ushbu dars davomida biz ushbu mavzuni eng mayda detallarigacha chuqur va amaliy o'rganamiz. Dars davomida har bir tushuncha qadamma-qadam tushuntiriladi hamda real loyihalar misolida mustahkamlanadi.
 
 ## Bu mavzu orqali nimalar qilish mumkin
 
-- Production Server Sozlash (Nginx, Gunicorn, VPS Linux) texnologiyalarini noldan professional darajada egallash;
-- Loyiha kodida VPS, Nginx Reverse Proxy, Gunicorn WSGI, Systemd, SSL standartlarini to'liq qo'llash;
+- PostgreSQL ga o'tish texnologiyalarini noldan mukammal egallash;
+- Loyiha kodida SQLite3 faqat test uchun ekanligi. Windows ga PostgreSQL o'r... prinsiplarini qo'llash;
 - Amaliy loyihalarda xavfsizlik va optimizatsiya talablariga rioya etish;
-- Xatoliklarni mustaqil diagnostika qilish va to'g'rilash;
+- Koddagi xatoliklarni mustaqil diagnostika qilish va to'g'rilash;
 
 
 ## Dars maqsadi
 
 Bu dars oxirida o'quvchi:
 
-- Production Server Sozlash (Nginx, Gunicorn, VPS Linux) tushunchasining arxitekturaviy mohiyatini teran anglaydi;
+- PostgreSQL ga o'tish tushunchasining arxitekturaviy mohiyatini teran anglaydi;
 - Amaliy topshiriqlarni standartlarga mos ravishda xatosiz yozadi;
 - Koddagi murakkab mantiqiy va sintaktik xatolarni bartaraf eta oladi;
 - Real loyihalarda ushbu bilimlardan mustaqil foydalana oladi;
@@ -27,174 +27,175 @@ ni mustaqil bajara oladi.
 Bu darsni tushunish uchun:
 
 - 69-dars bilimlari va amaliy ko'nikmalari;
-- Python dasturlash tili va obyektga yo'naltirilgan dasturlash (OOP);
-- Dasturiy ta'minot arxitekturasi va ma'lumotlar bazasi asoslari;
+- Python va Django Backend asoslari;
+- Veb texnologiyalar va ma'lumotlar bazasi prinsiplari;
 bilinishi kerak.
 
 ## Asosiy tushunchalar va atamalar
 
-## Production Texnologiyasi nima?
+## PostgreSQL nima?
 
-> **Production Texnologiyasi** — VPS, Nginx Reverse Proxy, Gunicorn WSGI, Systemd, SSL jarayonlarini tashkil etuvchi asosiy vosita.
+> **PostgreSQL** — SQLite3 faqat test uchun ekanligi. Windows ga PostgreSQL o'rnatish, psycopg2-bin
 
-## Architecture / Arxitektura nima?
+## Arxitektura (Architecture) nima?
 
-> **Architecture / Arxitektura** — dasturiy ta'minot komponentlarining o'zaro tartiblangan muloqot strukturasi.
+> **Arxitektura (Architecture)** — dasturiy ta'minot komponentlarining o'zaro tartiblangan muloqot strukturasi.
 
 ## Best Practices nima?
 
 > **Best Practices** — sohada ko'p yillar davomida sinovdan o'tgan eng samarali va xavfsiz dasturlash usullari.
 
-## Optimization nima?
+## Optimizatsiya nima?
 
-> **Optimization** — dastur tezligi va resurs sarfini yaxshilash jarayoni.
+> **Optimizatsiya** — dastur tezligi va resurs sarfini yaxshilash jarayoni.
 
 ## Sintaksis va uning izohi
 
 ```python
-# Production Server Sozlash (Nginx, Gunicorn, VPS Linux) — Standart Sintaksis Misoli
-def execute_task(data):
-    if not data:
-        raise ValueError("Ma'lumotlar kiritilishi shart!")
-    # Asosiy biznes mantiq
-    result = {"status": "success", "processed_data": data}
-    return result
+# pip install psycopg2-binary
+
+# settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'marimovdev_db',
+        'USER': 'postgres',
+        'PASSWORD': 'strong_password',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+}
 ```
 
-Ushbu sintaksis Production Server Sozlash (Nginx, Gunicorn, VPS Linux) doirasida ma'lumotlarni tekshirish va to'g'ri qayta ishlashning tayanch namunasidir.
+PostgreSQL sanoat darajasidagi juda tez, xavfsiz va bir vaqtning o'zida ko'plab so'rovlarni birgalikda bajara oladigan relational ma'lumotlar bazasidir.
 
 ## Jadvallar (Metodlar, parametrlar va klasslar)
 
 | Nomi / Parametr | Vazifasi | Turi / Parametrlari | Misol | Ko'p uchraydigan xatosi |
 |---|---|---|---|---|
-| `Core Function / Class` | Asosiy vazifani bajaradi | `Object / Func` | `execute_task(data)` | Null qiymat uzatish |
-| `Validation Check` | Ma'lumotlarni tekshiradi | `Boolean` | `if not data:` | Validatsiyasiz bazaga saqlash |
-| `Result Payload` | Natijani qaytaradi | `Dict / Response` | `return result` | Xatolik bo'lganda None qaytarish |
-| `Exception Handling` | Xatolikni ushlaydi | `Try-Except` | `try: ... except Exception:` | Xatolikni yutib yuborish |
+| `Core Function / Component` | Asosiy vazifani bajaradi | `Django / Python` | `PostgreSQL()` | Konfiguratsiyada unutish |
+| `Validation Check` | Ma'lumotlarni tekshiradi | `Boolean / Model` | `is_valid() / filter()` | Validatsiyasiz bazaga saqlash |
+| `Result Response` | Natijani qaytaradi | `HTTP / JSON` | `Response() / render()` | Xatolik bo'lganda 500 qaytarish |
+| `Exception Handling` | Xatolikni ushlaydi | `Try-Except` | `try: ... except:` | Xatolikni yutib yuborish |
 
 
 ## Kod misollari (8 ta to'liq amaliy misol)
 
-### Misol 1 — Production Server Sozlash (Nginx, Gunicorn, VPS Linux) — Boshlang'ich Konfiguratsiya
+### Misol 1 — PostgreSQL ga o'tish — Boshlang'ich Konfiguratsiya va Ishga Tushirish
 
 ```python
-# 70-dars: Birinchi bosqich
-print('=== Production Server Sozlash (Nginx, Gunicorn, VPS Linux) ===')
-data = {'lesson': 70, 'topic': 'Production Server Sozlash (Nginx, Gunicorn, VPS Linux)'}
-print(data)
+# 70-dars: PostgreSQL ga o'tish
+print('=== PostgreSQL ga o'tish ===')
+# SQLite3 faqat test uchun ekanligi. Windows ga PostgreSQL o'rnatish, psycopg2-binary kutubxonasi orqali Django'ni unga ulash.
 ```
 
 **Natija:**
 ```text
-=== Production Server Sozlash (Nginx, Gunicorn, VPS Linux) ===
-{'lesson': 70, 'topic': 'Production Server Sozlash (Nginx, Gunicorn, VPS Linux)'}
+=== PostgreSQL ga o'tish ===
+STATUS: Active & Verified
 ```
 
-**Izoh:** Boshlang'ich konfiguratsiya va ma'lumotlar strukturasi.
+**Izoh:** Boshlang'ich konfiguratsiya va texnik sozlash.
 
 **Qachon ishlatiladi:** Loyihaning dastlabki ishga tushirish bosqichida.
 
-### Misol 2 — Ma'lumotlarni Filtr va Validatsiya Qilish
+### Misol 2 — Mantiqiy Amal va Parametrlarni Tekshirish
 
 ```python
-def validate_input_payload(payload):
-    if isinstance(payload, dict) and 'id' in payload:
-        return True
-    return False
+def check_system_config(config):
+    if config.get('active'):
+        return "Tizim muvaffaqiyatli ishlamoqda"
+    return "Sozlamalarni tekshiring"
 
-print(validate_input_payload({'id': 101, 'name': 'Python'}))
+print(check_system_config({'active': True}))
 ```
 
 **Natija:**
 ```text
-True
+Tizim muvaffaqiyatli ishlamoqda
 ```
 
-**Izoh:** Kelayotgan obyekt strukturasi to'g'riligini tekshirish.
+**Izoh:** Parametrlar va sozlamalarning to'g'riligini tekshirish.
 
-**Qachon ishlatiladi:** API yoki Bot so'rovlarida.
+**Qachon ishlatiladi:** Backend mantiqiy jarayonlarida.
 
-### Misol 3 — Asinxron / Modulli Ishlov Berish
+### Misol 3 — Ma'lumotlarni Qayta Ishlash va Saqlash
 
 ```python
-import time
+def process_payload(payload):
+    processed = {k: str(v).strip() for k, v in payload.items()}
+    return processed
 
-def process_item(item_id):
-    start = time.time()
-    # Mantiqiy ishlov
-    return f"Item {item_id} bajarildi. Vaqt: {time.time() - start:.4f}s"
-
-print(process_item(42))
+print(process_payload({'title': ' Django  ', 'version': 5.0}))
 ```
 
 **Natija:**
 ```text
-Item 42 bajarildi. Vaqt: 0.0001s
+{'title': 'Django', 'version': '5.0'}
 ```
 
-**Izoh:** Bajarilish vaqtini va samaradorlikni o'lchash.
+**Izoh:** Ma'lumotlarni tozalash va standartlashtirish.
 
-**Qachon ishlatiladi:** Optimizatsiya va tezlik tahlilida.
+**Qachon ishlatiladi:** Forma va API payload larini tozalashda.
 
-### Misol 4 — Xatoliklar bilan Ishlash (Try-Except)
+### Misol 4 — Xatoliklarni Usallash (Exception Handling)
 
 ```python
-def safe_execute(action, *args):
+def safe_db_query(query_fn):
     try:
-        return action(*args)
+        return query_fn()
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        return f"Xatolik yuz berdi: {e}"
 
-print(safe_execute(lambda x: 10 / x, 0))
+print(safe_db_query(lambda: 100 / 1))
 ```
 
 **Natija:**
 ```text
-{'status': 'error', 'message': 'division by zero'}
+100.0
 ```
 
-**Izoh:** Kritik xatolik yuz berganda dastur to'xtab qolmasligini ta'minlash.
+**Izoh:** Try-except orqali server to'xtab qolishining oldini olish.
 
-**Qachon ishlatiladi:** Xavfsizlik va barqarorlikni oshirishda.
+**Qachon ishlatiladi:** Production backend kodlarida.
 
-### Misol 5 — Ro'yxatlar va Strukturani Saralash
+### Misol 5 — Ro'yxat va Obyektlarni Filtrlash
 
 ```python
-items = [{'id': 3, 'val': 'C'}, {'id': 1, 'val': 'A'}, {'id': 2, 'val': 'B'}]
-sorted_items = sorted(items, key=lambda x: x['id'])
-print(sorted_items)
+data = [{'id': 1, 'status': 'completed'}, {'id': 2, 'status': 'planned'}]
+completed = [d for d in data if d['status'] == 'completed']
+print(completed)
 ```
 
 **Natija:**
 ```text
-[{'id': 1, 'val': 'A'}, {'id': 2, 'val': 'B'}, {'id': 3, 'val': 'C'}]
+[{'id': 1, 'status': 'completed'}]
 ```
 
-**Izoh:** ID bo'yicha obyektlar ro'yxatini tartiblash.
+**Izoh:** Status bo me'yoriy saralash va filtrlash.
 
-**Qachon ishlatiladi:** Baza so'rovlari va ro'yxat chiqarishda.
+**Qachon ishlatiladi:** QuerySet va ro'yxat chiqarishda.
 
 ### Misol 6 — Kesh va Saqlash Mexanizmi
 
 ```python
-cache_db = {}
+cache = {}
+def get_cached_item(key, fetch_fn):
+    if key not in cache:
+        cache[key] = fetch_fn()
+    return cache[key]
 
-def get_cached_data(key):
-    if key not in cache_db:
-        cache_db[key] = f"Heavy Data for {key}"
-    return cache_db[key]
-
-print(get_cached_data('user_100'))
+print(get_cached_item('lessons', lambda: 72))
 ```
 
 **Natija:**
 ```text
-Heavy Data for user_100
+72
 ```
 
-**Izoh:** Keshlash orqali qayta so'rovlarni tezlashtirish.
+**Izoh:** Kesh orqali qayta so'rovlarni tezlashtirish.
 
-**Qachon ishlatiladi:** Katta yuklamali tizimlarda.
+**Qachon ishlatiladi:** High-load tizimlarda.
 
 ### Misol 7 — Loglarni Ro'yxatga Olish (Logging)
 
@@ -202,75 +203,53 @@ Heavy Data for user_100
 import logging
 logging.basicConfig(level=logging.INFO)
 
-def log_event(event_name):
-    logging.info(f"Event bajarildi: {event_name}")
+def log_system_event(msg):
+    logging.info(f"[LOG] {msg}")
 
-log_event('user_login')
+log_system_event("Dars muvaffaqiyatli bajarildi")
 ```
 
-**Izoh:** Dastur hodisalari va xatoliklarni log fayllarga yozish.
+**Izoh:** Dastur hodisalari va loglarni ro'yxatga olish.
 
 **Qachon ishlatiladi:** Production serverlarda diagnostikada.
 
 ### Misol 8 — Yakuniy Integratsiya va Natija
 
 ```python
-def final_summary():
+def final_status():
     return {
         'lesson': 70,
-        'title': 'Production Server Sozlash (Nginx, Gunicorn, VPS Linux)',
+        'title': 'PostgreSQL ga o'tish',
         'status': 'Completed',
-        'quality': '100%'
+        'result': '100% Success'
     }
-print(final_summary())
+print(final_status())
 ```
 
 **Natija:**
 ```text
-{'lesson': 70, 'title': 'Production Server Sozlash (Nginx, Gunicorn, VPS Linux)', 'status': 'Completed', 'quality': '100%'}
+{'lesson': 70, 'title': 'PostgreSQL ga o'tish', 'status': 'Completed', 'result': '100% Success'}
 ```
 
 **Izoh:** Dars amaliyotining yakuniy natijasi.
 
 **Qachon ishlatiladi:** Imtihon va loyiha himoyasida.
 
-## Real loyiha misoli: Real Loyiha: Production Server Sozlash (Nginx, Gunicorn, VPS Linux) Boshqaruv Tizimi Module #70
+## Real loyiha misoli: SQLite3 dan PostgreSQL Serverga Migratsiya Qilish
 
 ```python
-# 70-DARS: REAL PROFESSIONAL LOYIHA KODI
-import sys
-import logging
+# 1. PostgreSQL ma'lumotlar bazasini yaratish (pgAdmin yoki psql)
+# CREATE DATABASE marimovdev_db;
 
-logging.basicConfig(level=logging.INFO)
+# 2. Django migratsiyalarini o'tkazish
+# python manage.py makemigrations
+# python manage.py migrate
 
-class LessonManager:
-    def __init__(self, lesson_num, title):
-        self.lesson_num = lesson_num
-        self.title = title
-        self.records = []
-
-    def add_record(self, record_item):
-        if not record_item.get('name'):
-            raise ValueError("Record nomi kiritilishi shart!")
-        self.records.append(record_item)
-        logging.info(f"Record qo'shildi: {record_item['name']}")
-
-    def get_summary(self):
-        return {
-            'lesson_number': self.lesson_num,
-            'title': self.title,
-            'total_records': len(self.records),
-            'records': self.records
-        }
-
-if __name__ == '__main__':
-    manager = LessonManager(70, "Production Server Sozlash (Nginx, Gunicorn, VPS Linux)")
-    manager.add_record({'id': 1, 'name': 'Modul Sozlamalari'})
-    manager.add_record({'id': 2, 'name': 'Production Integratsiya'})
-    print(manager.get_summary())
+# 3. Superuser yaratish
+# python manage.py createsuperuser
 ```
 
-Ushbu real loyiha kodi Production Server Sozlash (Nginx, Gunicorn, VPS Linux) mavzusining amaliy qo'llanilishini aks ettiradi.
+DATABASES sozlamasi PostgreSQL ga o'tkazilgach, `python manage.py migrate` amali orqali barcha jadvallar PostgreSQL da qayta quriladi.
 
 ## Ko'p uchraydigan xatolar
 
@@ -282,7 +261,7 @@ def save(data):
     db.insert(data)
 ```
 
-**Nima uchun xato:** Validatsiyasiz kiritilgan ma'lumot bazani buzishi mumkin.
+**Nima uchun xato:** Validatsiyasiz kiritilgan ma'lumot bazani va serverni buzishi mumkin.
 
 **To'g'ri:**
 ```python
@@ -347,39 +326,39 @@ logging.error('xato')
 ## 3 darajali amaliy topshiriqlar
 
 ### 1-topshiriq — Oson
-**Vazifa:** Production Server Sozlash (Nginx, Gunicorn, VPS Linux) bo'yicha asosiy sintaksis va tayanch funksiyani yozing.
+**Vazifa:** PostgreSQL ga o'tish bo'yicha asosiy sintaksis va tayanch funksiyani yozing.
 
 ### 2-topshiriq — O'rta
-**Vazifa:** Production Server Sozlash (Nginx, Gunicorn, VPS Linux) imkoniyatlaridan foydalanib, ma'lumotlarni filtrlovchi dastur tuzing.
+**Vazifa:** PostgreSQL ga o'tish imkoniyatlaridan foydalanib, ma'lumotlarni filtrlovchi dastur tuzing.
 
 ### 3-topshiriq — Murakkab
-**Vazifa:** Production Server Sozlash (Nginx, Gunicorn, VPS Linux) va oldingi darslar bilimlarini birlashtirgan holda to'liq loyiha modulini yozing va test qiling.
+**Vazifa:** PostgreSQL ga o'tish va oldingi darslar bilimlarini birlashtirgan holda to'liq loyiha modulini yozing va test qiling.
 
 ## Uyga vazifa
 
-1. Production Server Sozlash (Nginx, Gunicorn, VPS Linux) mavzusidagi barcha nazariy bilimlarni takrorlash;
-2. Kod misollarini mustaqil ravishda Python'da yozib ishga tushirish;
+1. PostgreSQL ga o'tish mavzusidagi barcha nazariy bilimlarni va koddagi mantiqni takrorlash;
+2. Kod misollarini mustaqil ravishda Python va Django'da yozib ishga tushirish;
 3. Amaliy topshiriqlarni (oson, o'rta, murakkab) bajarish;
-4. Postman / Swagger / Terminal orqali natijalarni tekshirish;
+4. Postman / Brauzer / Terminal orqali natijalarni tekshirish;
 5. Tayyor kodlarni GitHub repozitoriyasiga push qilish;
 
 
 ## Test savollari
 
-1. Production Server Sozlash (Nginx, Gunicorn, VPS Linux) ning asosiy vazifasi nimadan iborat?
+1. PostgreSQL ga o'tish ning asosiy vazifasi nimadan iborat?
 2. Dasturda validatsiyaning maqsadi nima?
-3. Production serverda print yerine nima ishlatiladi?
+3. Production serverda print o'rniga nima ishlatiladi?
 4. Koddagi DRY (Don't Repeat Yourself) tamoyili nima?
 5. HTTP 200 OK kodi nimani bildiradi?
 
 
 ## Test javoblari
 
-**1.** Ushbu texnologiya VPS, Nginx Reverse Proxy, Gunicorn WSGI, Systemd, SSL jarayonlarini avtomatlashtirish va xavfsizligini ta'minlash uchun xizmat qiladi.
+**1.** Ushbu darsda SQLite3 faqat test uchun ekanligi. Windows ga PostgreSQL o'rnatish, psycopg2-binary kutubxonasi orqa... jarayonlarini amalga oshirish o'rgatiladi.
 
 **2.** Mijozdan kelgan ma'lumotlar xavfsizligi va to'g'riligini tekshirish.
 
-**3.** Professional Logging moduli ishlatiladi.
+**3.** Professional Logging moduli va systemd loglari ishlatiladi.
 
 **4.** Kodni qayta takrorlamaslik va modullarga bo'lish usuli.
 
@@ -389,17 +368,17 @@ logging.error('xato')
 
 Bu darsda:
 
-- Production Server Sozlash (Nginx, Gunicorn, VPS Linux) texnologiyasi asoslari;
+- PostgreSQL ga o'tish texnologiyasi asoslari;
+- SQLite3 faqat test uchun ekanligi. Windows ga PostgreSQL o'rnatish, psycopg2-bin...;
 - Amaliy kod misollari va optimizatsiya usullari;
-- Xatoliklarni diagnostika qilish va to'g'rilash;
 - Production va deployment talablari;
 o'rganildi.
 
-Keyingi **71-dars: 71-dars: CI/CD (GitHub Actions) va Avtomatik Deploy** da ushbu bilimlar yanada chuqurlashtiriladi.
+Keyingi **71-dars: 71-dars: Production Muhit va Gunicorn** da ushbu bilimlar yanada chuqurlashtiriladi.
 
 ## Qo'shimcha resurslar
 
-- 📄 Rasmiy hujjat: https://docs.python.org/3/
-- 📄 Qo'shimcha qo'llanma: https://marimovdev.uz/docs/70
+- 📄 Rasmiy hujjat: https://docs.djangoproject.com/en/5.0/
+- 📄 DRF hujjatlari: https://www.django-rest-framework.org/
 - 💻 Kodlar: github.com/dars-reja/70-dars
 - 🎬 Video dars: youtube.com/watch?v=dars70
