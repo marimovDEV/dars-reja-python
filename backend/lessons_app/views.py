@@ -5,6 +5,8 @@ import time
 import random
 from datetime import datetime, timedelta, date
 from django.http import JsonResponse
+from django.db import DatabaseError, OperationalError, models
+from django.core.management import call_command
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,6 +14,13 @@ from rest_framework import status
 from .models import Lesson, Group, GroupLessonProgress, Quiz, QuizSession, QuizTemplate
 from .scraper import scrape_single_notion_page, SETTINGS_FILE
 from .ai_quiz_generator import generate_ai_quiz
+
+def try_auto_migrate():
+    try:
+        call_command('migrate', interactive=False)
+    except Exception as e:
+        print(f"Auto-migrate error: {e}")
+
 
 def get_settings():
     if os.path.exists(SETTINGS_FILE):
@@ -157,8 +166,16 @@ def update_status(request, lesson_id):
 @api_view(['GET', 'POST'])
 def groups_list(request):
     if request.method == 'GET':
-        groups = Group.objects.all()
-        return Response([g.to_dict() for g in groups])
+        try:
+            groups = Group.objects.all()
+            return Response([g.to_dict() for g in groups])
+        except (OperationalError, DatabaseError):
+            try_auto_migrate()
+            try:
+                groups = Group.objects.all()
+                return Response([g.to_dict() for g in groups])
+            except Exception as e:
+                return Response({'error': f'Baza xatoligi: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     elif request.method == 'POST':
         data = request.data
@@ -176,16 +193,29 @@ def groups_list(request):
             return Response({'error': 'Sana YYYY-MM-DD formatida bo\'lishi kerak.'}, status=status.HTTP_400_BAD_REQUEST)
 
         group_id = f"grp-{int(time.time()*1000)}"
-        group = Group.objects.create(
-            group_id=group_id,
-            name=name,
-            start_date=start_date_obj,
-            schedule_days=schedule_days,
-            schedule_time=schedule_time,
-            student_count=data.get('studentCount', 0),
-            telegram_link=data.get('telegramLink', ''),
-            notes=data.get('notes', '')
-        )
+        try:
+            group = Group.objects.create(
+                group_id=group_id,
+                name=name,
+                start_date=start_date_obj,
+                schedule_days=schedule_days,
+                schedule_time=schedule_time,
+                student_count=data.get('studentCount', 0),
+                telegram_link=data.get('telegramLink', ''),
+                notes=data.get('notes', '')
+            )
+        except (OperationalError, DatabaseError):
+            try_auto_migrate()
+            group = Group.objects.create(
+                group_id=group_id,
+                name=name,
+                start_date=start_date_obj,
+                schedule_days=schedule_days,
+                schedule_time=schedule_time,
+                student_count=data.get('studentCount', 0),
+                telegram_link=data.get('telegramLink', ''),
+                notes=data.get('notes', '')
+            )
 
         all_lessons = list(Lesson.objects.all().order_by('lesson_number'))
         lesson_dates = calculate_lesson_dates(start_date_obj, schedule_days, total_lessons=len(all_lessons) or 72)
@@ -227,11 +257,16 @@ def auth_login(request):
         })
 
     # 2. Student Group login check
-    groups = Group.objects.all()
+    try:
+        groups = list(Group.objects.all())
+    except (OperationalError, DatabaseError):
+        try_auto_migrate()
+        groups = list(Group.objects.all())
+
     matched_group = None
     for g in groups:
-        login_val = g.student_login or (g.name.lower().replace(" ", "_") + "_group")
-        pass_val = g.student_password or "marimov123"
+        login_val = getattr(g, 'student_login', '') or (g.name.lower().replace(" ", "_") + "_group")
+        pass_val = getattr(g, 'student_password', '') or "marimov123"
         
         if (username.lower() == login_val.lower() or username.lower() == g.name.lower() or username.lower() == g.group_id.lower()) and (password == pass_val or password == 'marimov123' or password == 'marimov'):
             matched_group = g
@@ -240,7 +275,7 @@ def auth_login(request):
     if matched_group:
         return Response({
             'role': 'student',
-            'username': matched_group.student_login or matched_group.name,
+            'username': getattr(matched_group, 'student_login', '') or matched_group.name,
             'name': matched_group.name,
             'group': matched_group.to_dict(),
             'message': f"{matched_group.name} o'quvchisi tizimga kirdi"
@@ -254,6 +289,12 @@ def group_detail(request, group_id):
         group = Group.objects.get(group_id=group_id)
     except Group.DoesNotExist:
         return Response({'error': 'Guruh topilmadi.'}, status=status.HTTP_404_NOT_FOUND)
+    except (OperationalError, DatabaseError):
+        try_auto_migrate()
+        try:
+            group = Group.objects.get(group_id=group_id)
+        except Group.DoesNotExist:
+            return Response({'error': 'Guruh topilmadi.'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         return Response(group.to_dict())
@@ -279,25 +320,36 @@ def group_lessons(request, group_id):
         group = Group.objects.get(group_id=group_id)
     except Group.DoesNotExist:
         return Response({'error': 'Guruh topilmadi.'}, status=status.HTTP_404_NOT_FOUND)
+    except (OperationalError, DatabaseError):
+        try_auto_migrate()
+        try:
+            group = Group.objects.get(group_id=group_id)
+        except Group.DoesNotExist:
+            return Response({'error': 'Guruh topilmadi.'}, status=status.HTTP_404_NOT_FOUND)
 
-    progress_qs = GroupLessonProgress.objects.filter(group=group).select_related('lesson').order_by('lesson__lesson_number')
-    
-    if not progress_qs.exists():
-        all_lessons = list(Lesson.objects.all().order_by('lesson_number'))
-        lesson_dates = calculate_lesson_dates(group.start_date, group.schedule_days, total_lessons=len(all_lessons))
-        objs = [
-            GroupLessonProgress(
-                group=group,
-                lesson=l,
-                status="current" if idx == 0 else "planned",
-                scheduled_at=lesson_dates[idx] if idx < len(lesson_dates) else None
-            )
-            for idx, l in enumerate(all_lessons)
-        ]
-        GroupLessonProgress.objects.bulk_create(objs)
+    try:
         progress_qs = GroupLessonProgress.objects.filter(group=group).select_related('lesson').order_by('lesson__lesson_number')
+        
+        if not progress_qs.exists():
+            all_lessons = list(Lesson.objects.all().order_by('lesson_number'))
+            lesson_dates = calculate_lesson_dates(group.start_date, group.schedule_days, total_lessons=len(all_lessons))
+            objs = [
+                GroupLessonProgress(
+                    group=group,
+                    lesson=l,
+                    status="current" if idx == 0 else "planned",
+                    scheduled_at=lesson_dates[idx] if idx < len(lesson_dates) else None
+                )
+                for idx, l in enumerate(all_lessons)
+            ]
+            GroupLessonProgress.objects.bulk_create(objs)
+            progress_qs = GroupLessonProgress.objects.filter(group=group).select_related('lesson').order_by('lesson__lesson_number')
 
-    return Response([p.to_dict() for p in progress_qs])
+        return Response([p.to_dict() for p in progress_qs])
+    except (OperationalError, DatabaseError):
+        try_auto_migrate()
+        progress_qs = GroupLessonProgress.objects.filter(group=group).select_related('lesson').order_by('lesson__lesson_number')
+        return Response([p.to_dict() for p in progress_qs])
 
 @api_view(['PUT'])
 def update_group_lesson_progress(request, group_id, lesson_id):

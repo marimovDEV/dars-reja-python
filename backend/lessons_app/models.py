@@ -86,8 +86,8 @@ class Group(models.Model):
             first_obj = progress_qs.filter(lesson__lesson_number=1).first()
             current_title = first_obj.lesson.title if first_obj else "1-dars"
 
-        default_login = self.student_login or (self.name.lower().replace(" ", "_") + "_group")
-        default_password = self.student_password or "marimov123"
+        default_login = getattr(self, 'student_login', '') or (self.name.lower().replace(" ", "_") + "_group")
+        default_password = getattr(self, 'student_password', '') or "marimov123"
 
         return {
             "id": self.group_id,
