@@ -13,14 +13,15 @@ export const getSocketUrl = (): string => {
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL;
   }
-  if (typeof window !== 'undefined' && window.location.port === '3005') {
-    return `http://${window.location.hostname}:5006`;
-  }
-  // Production default for Vercel
-  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+  if (typeof window !== 'undefined') {
+    // Development mode (localhost or 127.0.0.1)
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return `http://${window.location.hostname}:5006`;
+    }
+    // Production default (VPS where Socket.IO runs on api.marimovdev.uz)
     return 'https://api.marimovdev.uz';
   }
-  return typeof window !== 'undefined' ? window.location.origin : '';
+  return '';
 };
 
 export const getApiUrl = (path: string): string => {

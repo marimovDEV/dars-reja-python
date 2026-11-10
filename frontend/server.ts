@@ -493,7 +493,8 @@ io.on('connection', (socket) => {
     if (!player || player.lastAnswerIndex !== null) return; // double answer protection
 
     const question = session.quiz.questions[session.currentQuestionIndex];
-    const isCorrect = optionIndex === question.correctOptionIndex;
+    const correctIdx = question.correctOptionIndex !== undefined ? question.correctOptionIndex : question.correctAnswer;
+    const isCorrect = optionIndex === correctIdx;
 
     const serverResponseTimeMs = Math.max(50, Date.now() - session.questionStartTimeMs);
 
@@ -569,9 +570,11 @@ io.on('connection', (socket) => {
         streak: p.streak
       }));
 
+    const correctIdx = question.correctOptionIndex !== undefined ? question.correctOptionIndex : question.correctAnswer;
+
     io.to(`host:${session.code}`).emit('host:question-result', {
       questionIndex: session.currentQuestionIndex,
-      correctOptionIndex: question.correctOptionIndex,
+      correctOptionIndex: correctIdx,
       explanation: question.explanation,
       optionCounts,
       leaderboard: leaderboard.slice(0, 5)
@@ -579,11 +582,11 @@ io.on('connection', (socket) => {
 
     leaderboard.forEach((item) => {
       const p = session.players.get(item.socketId);
-      const wasCorrect = p ? p.lastAnswerIndex === question.correctOptionIndex : false;
+      const wasCorrect = p ? p.lastAnswerIndex === correctIdx : false;
 
       io.to(item.socketId).emit('player:round-summary', {
         isCorrect: wasCorrect,
-        correctOptionIndex: question.correctOptionIndex,
+        correctOptionIndex: correctIdx,
         rank: item.rank,
         score: item.score,
         pointsEarned: item.lastPoints,

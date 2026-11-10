@@ -205,9 +205,21 @@ export function AIQuizGeneratorModal({
     setError(null);
 
     try {
-      let finalQuestions: QuizQuestion[] = tpl.customQuestions || [];
+      let finalQuestions: QuizQuestion[] = [];
 
-      if (finalQuestions.length === 0) {
+      if (tpl.customQuestions && tpl.customQuestions.length > 0) {
+        finalQuestions = tpl.customQuestions.map((q: any) => ({
+          question: q.question,
+          type: q.type || 'single_choice',
+          options: q.options,
+          correctOptionIndex: q.correctOptionIndex !== undefined ? q.correctOptionIndex : (q.correctAnswer !== undefined ? q.correctAnswer : 0),
+          explanation: q.explanation || '',
+          lessonId: q.lessonId || (tpl.lessonIds && tpl.lessonIds[0]) || 1,
+          durationSeconds: q.durationSeconds || q.duration || 20,
+          codeSnippet: q.codeSnippet || '',
+          imageUrl: q.imageUrl || ''
+        }));
+      } else {
         const res = await fetch('/api/ai/quizzes/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

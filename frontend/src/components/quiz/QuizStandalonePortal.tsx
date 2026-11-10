@@ -73,7 +73,12 @@ export function QuizStandalonePortal({ lessons = [] }: QuizStandalonePortalProps
 
   // 1. ROOT DOMAIN (https://game.marimovdev.uz/) -> STUDENT ONLY VIEW
   if (!isCreateRoute && mode === 'player') {
-    return <QuizPlayerView onExit={() => {}} />;
+    return (
+      <QuizPlayerView
+        onExit={() => {}}
+        onOpenTeacherPortal={() => setMode('create_dashboard')}
+      />
+    );
   }
 
   // 2. LIVE HOST GAME VIEW
@@ -105,12 +110,17 @@ export function QuizStandalonePortal({ lessons = [] }: QuizStandalonePortalProps
           </div>
         </div>
 
-        <a
-          href="https://game.marimovdev.uz"
-          className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 rounded-xl transition"
+        <button
+          onClick={() => {
+            setMode('player');
+            if (window.location.pathname.endsWith('/create')) {
+              window.history.pushState({}, '', '/');
+            }
+          }}
+          className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 rounded-xl transition cursor-pointer"
         >
           📱 O'quvchi Rejimiga Qaytish
-        </a>
+        </button>
       </header>
 
       {/* Main Area */}

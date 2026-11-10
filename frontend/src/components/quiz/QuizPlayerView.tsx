@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { quizAudio } from '../../services/QuizAudioService';
-import { Flame, Trophy, Volume2, VolumeX, Send, Loader2, Sparkles, Gamepad2, ShieldCheck, Zap, CheckCircle2 } from 'lucide-react';
+import { Flame, Trophy, Volume2, VolumeX, Send, Loader2, Sparkles, Gamepad2, ShieldCheck, Zap, CheckCircle2, KeyRound } from 'lucide-react';
 import { getSocketUrl } from '../../config/apiConfig';
 
 interface QuizPlayerViewProps {
-  onExit: () => void;
+  onExit?: () => void;
+  onOpenTeacherPortal?: () => void;
 }
 
 export const ARENA_PLAYER_BUTTONS = [
@@ -15,10 +16,16 @@ export const ARENA_PLAYER_BUTTONS = [
   { shape: '■', color: '#26890c', hoverBg: 'hover:bg-[#1e6d09]', shadowColor: 'shadow-emerald-900/50', label: 'D' }  // Green Square
 ];
 
-export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
+export function QuizPlayerView({ onExit, onOpenTeacherPortal }: QuizPlayerViewProps) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [pinCode, setPinCode] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
+  const nicknameRef = useRef(nickname);
+
+  useEffect(() => {
+    nicknameRef.current = nickname;
+  }, [nickname]);
+
   const [avatar, setAvatar] = useState<{ emoji: string; name: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -85,21 +92,23 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
 
     sock.on('game:finished', ({ leaderboard }) => {
       setGameState('finished');
-      const myInfo = leaderboard.find((p: any) => p.nickname === nickname);
+      const currentName = (nicknameRef.current || '').trim().toLowerCase();
+      const myInfo = leaderboard.find((p: any) => (p.nickname || '').trim().toLowerCase() === currentName);
       if (myInfo) setRank(myInfo.rank);
       quizAudio.playFanfare();
     });
   };
 
   useEffect(() => {
-    const newSocket = io(getSocketUrl(), { transports: ['websocket', 'polling'] });
+    const socketUrl = getSocketUrl();
+    const newSocket = io(socketUrl, { transports: ['websocket', 'polling'] });
     setSocket(newSocket);
     initSocketListeners(newSocket);
 
     return () => {
       newSocket.disconnect();
     };
-  }, [nickname]);
+  }, []);
 
   // Question countdown
   useEffect(() => {
@@ -184,6 +193,21 @@ export function QuizPlayerView({ onExit }: QuizPlayerViewProps) {
           <button onClick={toggleMute} className="p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 transition cursor-pointer">
             {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
           </button>
+
+          <a
+            href="/create"
+            onClick={(e) => {
+              if (onOpenTeacherPortal) {
+                e.preventDefault();
+                onOpenTeacherPortal();
+              }
+            }}
+            className="px-3 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 border border-purple-800/80 text-purple-200 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-md"
+            title="O'qituvchi / Host paneli"
+          >
+            <KeyRound className="w-3.5 h-3.5 text-yellow-400" />
+            <span className="hidden sm:inline">O'qituvchi</span>
+          </a>
         </div>
       </header>
 
