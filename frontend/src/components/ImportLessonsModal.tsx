@@ -7,14 +7,14 @@ interface ImportLessonsModalProps {
   isOpen: boolean;
   onClose: () => void;
   onImport: (importedLessons: Lesson[], overwrite: boolean) => void;
-  currentLessonsCount: number;
+  currentLessonsCount?: number;
 }
 
 export const ImportLessonsModal: React.FC<ImportLessonsModalProps> = ({
   isOpen,
   onClose,
   onImport,
-  currentLessonsCount
+  currentLessonsCount = 0
 }) => {
   const [activeTab, setActiveTab] = useState<'upload' | 'guide'>('upload');
   const [dragActive, setDragActive] = useState(false);

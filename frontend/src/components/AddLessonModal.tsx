@@ -5,7 +5,8 @@ import { Lesson } from '../types';
 interface AddLessonModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (newLesson: Lesson) => void;
+  onAdd?: (newLesson: Lesson) => void;
+  onAddLesson?: (newLesson: Lesson) => void;
   nextLessonNumber: number;
 }
 
@@ -13,6 +14,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
   isOpen,
   onClose,
   onAdd,
+  onAddLesson,
   nextLessonNumber,
 }) => {
   if (!isOpen) return null;
@@ -58,7 +60,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
       ]
     };
 
-    onAdd(newLesson);
+    (onAddLesson || onAdd)?.(newLesson);
     onClose();
   };
 

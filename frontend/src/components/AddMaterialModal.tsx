@@ -5,13 +5,15 @@ import { LessonMaterial } from '../types';
 interface AddMaterialModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (material: LessonMaterial) => void;
+  onAdd?: (material: LessonMaterial) => void;
+  onAddMaterial?: (material: LessonMaterial) => void;
 }
 
 export const AddMaterialModal: React.FC<AddMaterialModalProps> = ({
   isOpen,
   onClose,
   onAdd,
+  onAddMaterial,
 }) => {
   if (!isOpen) return null;
 
@@ -30,7 +32,10 @@ export const AddMaterialModal: React.FC<AddMaterialModalProps> = ({
       size,
     };
 
-    onAdd(newMaterial);
+    const handleAdd = onAddMaterial || onAdd;
+    if (handleAdd) {
+      handleAdd(newMaterial);
+    }
     onClose();
   };
 

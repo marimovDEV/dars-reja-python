@@ -29,6 +29,7 @@ import { MarkdownDocRenderer } from './MarkdownDocRenderer';
 import { TableOfContents } from './TableOfContents';
 import { CodeBlock } from './CodeBlock';
 import { LockedLessonView } from './LockedLessonView';
+import { DocCallout } from './DocCallout';
 
 interface LessonDocumentationViewProps {
   lesson: Lesson;

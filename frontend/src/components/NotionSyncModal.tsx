@@ -5,16 +5,19 @@ import { NotionPreviewResponse } from '../notion/notionTypes';
 interface NotionSyncModalProps {
   isOpen: boolean;
   onClose: () => void;
-  notionUrl: string;
+  notionUrl?: string;
+  settings?: any;
   onSyncComplete: () => void;
 }
 
 export const NotionSyncModal: React.FC<NotionSyncModalProps> = ({
   isOpen,
   onClose,
-  notionUrl,
+  notionUrl: propNotionUrl,
+  settings,
   onSyncComplete
 }) => {
+  const notionUrl = propNotionUrl || settings?.notionUrl || '';
   const [step, setStep] = useState<'loading' | 'preview' | 'syncing' | 'success'>('loading');
   const [previewData, setPreviewData] = useState<NotionPreviewResponse | null>(null);
   const [error, setError] = useState<string>('');

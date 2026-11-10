@@ -3,11 +3,14 @@ import { Link2, ShieldCheck, CheckCircle2, AlertTriangle, RefreshCw, Unlink, Loa
 import { NotionSettings } from '../notion/notionTypes';
 
 interface NotionSettingsViewProps {
-  onBack: () => void;
+  settings?: NotionSettings | null;
+  onBack?: () => void;
+  onBackToLessons?: () => void;
   onOpenSyncModal: (url: string) => void;
 }
 
-export const NotionSettingsView: React.FC<NotionSettingsViewProps> = ({ onBack, onOpenSyncModal }) => {
+export const NotionSettingsView: React.FC<NotionSettingsViewProps> = ({ onBack, onBackToLessons, onOpenSyncModal }) => {
+  const handleBack = onBackToLessons || onBack || (() => {});
   const [notionUrl, setNotionUrl] = useState('');
   const [settings, setSettings] = useState<NotionSettings>({
     notionUrl: '',
@@ -113,7 +116,7 @@ export const NotionSettingsView: React.FC<NotionSettingsViewProps> = ({ onBack, 
       {/* Back button header */}
       <div className="flex items-center gap-3">
         <button
-          onClick={onBack}
+          onClick={handleBack}
           className="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />

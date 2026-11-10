@@ -319,7 +319,7 @@ export const PublicSharedLessonView: React.FC<PublicSharedLessonViewProps> = ({
                   <div className="space-y-2">
                     {q.options.map((opt, optIdx) => {
                       const isSelected = selectedQuizAnswers[q.id || idx.toString()] === optIdx;
-                      const isCorrect = optIdx === q.correctAnswer;
+                      const isCorrect = optIdx === (q.correctAnswer ?? q.correctIndex);
                       return (
                         <button
                           key={optIdx}

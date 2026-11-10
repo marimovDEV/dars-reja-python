@@ -37,7 +37,10 @@ export function QuizStandalonePortal({ lessons = [] }: QuizStandalonePortalProps
     title: `${i + 1}-dars: Python Backend`,
     description: `Python Backend darsligi #${i + 1}`,
     status: 'planned' as const,
-    date: new Date().toISOString()
+    date: new Date().toISOString(),
+    time: '18:00',
+    content: '',
+    homework: ''
   }));
 
   useEffect(() => {

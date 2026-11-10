@@ -12,6 +12,8 @@ export interface Group {
   currentLessonTitle: string;
   totalLessons: number;
   createdAt: string;
+  studentLogin?: string;
+  studentPassword?: string;
 }
 
 export interface GroupFormData {

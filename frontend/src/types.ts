@@ -1,4 +1,4 @@
-export type LessonStatus = 'completed' | 'pending' | 'planned';
+export type LessonStatus = 'completed' | 'pending' | 'planned' | 'current' | 'cancelled';
 
 export interface LessonMaterial {
   id: string;
@@ -16,6 +16,7 @@ export interface LessonTask {
   question: string;
   answer?: string;
   hints?: string[];
+  description?: string;
 }
 
 export interface CodeExample {
@@ -24,6 +25,7 @@ export interface CodeExample {
   code: string;
   language: string;
   explanation: string; // Qatorma-qator kod tushuntirishi
+  description?: string;
 }
 
 export interface QuizQuestion {
@@ -31,6 +33,7 @@ export interface QuizQuestion {
   question: string;
   options: string[];
   correctIndex: number;
+  correctAnswer?: number;
   explanation: string;
 }
 

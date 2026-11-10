@@ -6,6 +6,8 @@ export interface QuizQuestion {
   explanation: string;
   lessonId: number;
   durationSeconds: number;
+  imageUrl?: string;
+  codeSnippet?: string;
 }
 
 export interface Quiz {
